@@ -90,7 +90,7 @@ track <- function(data = NULL, refresh = 100) {
 
   # sample
   fit <- stan(
-    file = "Stan/DCRW.stan",
+    file = "../Stan/DCRW.stan",
     data = stan.data,
     chains = 4,
     warmup = 1000,
