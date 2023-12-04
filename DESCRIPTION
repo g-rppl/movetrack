@@ -5,6 +5,12 @@ Authors@R:
     person("Georg", "Rüppel", , "g-rppl@posteo.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-5459-6717"))
 Description: Estimate flight tracks from Motus data.
+Imports:
+    HDInterval,
+    dplyr,
+    geosphere,
+    lubridate,
+    rstan
 License: use_mit_license()
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
