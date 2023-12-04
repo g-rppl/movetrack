@@ -19,8 +19,7 @@
 #'
 #' @export
 #'
-est_loc <- function(data = NULL, det_range = 12e3, dtime = 1) {
-
+locate <- function(data = NULL, det_range = 12e3, dtime = 1) {
   data <- data %>% filter(!is.na(antBearing))
 
   # estimate location based on antenna bearing
@@ -58,7 +57,6 @@ est_loc <- function(data = NULL, det_range = 12e3, dtime = 1) {
 
   # proportions of time intervals
   d$w <- dtime / c(dtime, diff(as.numeric(d$ts.round) / 60))
-
   return(d)
 }
 
@@ -66,22 +64,19 @@ est_loc <- function(data = NULL, det_range = 12e3, dtime = 1) {
 #' Model data
 #'
 #' @param data : \code{data.frame}. Data
-#' @param refresh : \code{numeric}. refresh value for Stan
+#' @param refresh : \code{numeric}. Refresh value for Stan
 #'
 #' @return \code{data.frame}
 #'
 #' @details
 #'
-#' returns location estimates for each time interval
+#' Returns location estimates for each time interval.
 #'
-#' @import cmdstanr
+#' @import rstan
 #'
 #' @export
 #'
-model_loc <- function(data = NULL, refresh = 100) {
-
-  # compile model
-  mod <- cmdstan_model("Stan/DCRW.stan")
+track <- function(data = NULL, refresh = 100) {
 
   # prepare data
   loc <- as.matrix(data[, c("lon.est", "lat.est")])
@@ -94,34 +89,94 @@ model_loc <- function(data = NULL, refresh = 100) {
   )
 
   # sample
-  fit <- mod$sample(
+  fit <- stan(
+    file = "Stan/DCRW.stan",
     data = stan.data,
-    chains = 4, parallel_chains = 4,
+    chains = 4,
+    warmup = 1000,
+    iter = 2000,
+    cores = 4,
     refresh = refresh
   )
-
   return(fit)
 }
 
 
-##### SUMMARISE POSTERIOR #####
-
-summary_loc <- function(drws, mdata = NULL, prob = 0.9) {
-  require(HDInterval)
+#' Extract estimates
+#'
+#' @param fit : \code{stanfit}. Model output
+#' @param mdata : \code{data.frame}. Metadata for each time interval
+#' @param prob : \code{numeric}. Probability for HDI
+#'
+#' @return \code{data.frame}
+#'
+#' @details
+#'
+#' Returns mean, lower and upper bound of the highest density interval.
+#'
+#' @import HDInterval
+#'
+#' @export
+#'
+estimates <- function(fit, mdata = NULL, prob = 0.9) {
   HDI <- function(x) {
     hdi(c(x), credMass = prob)
   }
 
+  drws <- as.matrix(fit, pars = "y")
+
   s <- data.frame(
-    time = unique(mdata$ts),
+    time = unique(mdata$ts.round),
     name = rep(c("lon", "lat"), each = length(mdata$ts)),
-    mean = c(apply(drws, 3, mean)),
-    lwr = c(apply(drws, 3, HDI)[1, ]),
-    upr = c(apply(drws, 3, HDI)[2, ]),
-    flightID = rep(mdata$flightID, 2),
-    motudTagID = rep(mdata$motusTagID, 2),
+    mean = c(apply(drws, 2, mean)),
+    lwr = c(apply(drws, 2, HDI)[1, ]),
+    upr = c(apply(drws, 2, HDI)[2, ]),
+    motusTagID = rep(mdata$motusTagID, 2),
     speciesEN = rep(mdata$speciesEN, 2)
   )
-
   return(s)
+}
+
+
+#' Calculate distances
+#'
+#' @param x : \code{data.frame}. Data in wide format
+#'
+#' @return \code{vector}
+#'
+#' @details
+#'
+#' Returns distances between consecutive locations in meters.
+#'
+#' @import geosphere
+#'
+#' @export
+#'
+distance <- function(x) {
+  require(geosphere)
+  dist <- rep(NA, nrow(x))
+  for (i in 2:nrow(x)) {
+    dist[i] <- distGeo(x[i, c("lon", "lat")], x[i-1, c("lon", "lat")])
+  }
+  return(dist)
+}
+
+
+#' Calculate speed
+#'
+#' @param x : \code{data.frame}. Data in wide format
+#'
+#' @return \code{vector}
+#'
+#' @details
+#'
+#' Returns speed between consecutive locations in m/s.
+#'
+#' @import lubridate
+#'
+#' @export
+#'
+speed <- function(x) {
+  spd <- distance(x) / (c(NA, diff(x$time)) * 60)
+  return(spd)
 }
