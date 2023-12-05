@@ -4,20 +4,20 @@
 \alias{locate}
 \title{Estimate location}
 \usage{
-locate(data = NULL, det_range = 12000, dtime = 1)
+locate(data = NULL, det_range = 12, dtime = 1)
 }
 \arguments{
-\item{data}{: \code{data.frame}. Motus data}
+\item{data}{\code{data.frame} Motus data}
 
-\item{det_range}{: \code{numeric}. Detection range of antennas in meters}
+\item{det_range}{\code{numeric} Detection range of antennas in kilometers}
 
-\item{dtime}{: \code{numeric}. Time interval in minutes}
+\item{dtime}{\code{numeric} Time interval in minutes}
 }
 \value{
-\code{data.frame}
+a \code{data.frame}
 }
 \description{
-Estimate location
+Estimate location based on antenna bearing and signal strength.
 }
 \details{
 \itemize{

@@ -1,24 +1,27 @@
 #' Estimate location
 #'
-#' @param data : \code{data.frame}. Motus data
-#' @param det_range : \code{numeric}. Detection range of antennas in meters
-#' @param dtime : \code{numeric}. Time interval in minutes
+#' @description
+#' Estimate location based on antenna bearing and signal strength.
 #'
-#' @return \code{data.frame}
+#' @param data `data.frame` Motus data
+#' @param det_range `numeric` Detection range of antennas in kilometers
+#' @param dtime `numeric` Time interval in minutes
+#'
+#' @return a `data.frame`
 #'
 #' @details
 #'
-#' - Estimate location for each detection: half of detection range
-#'   along the directional beam
-#' - Derive oscillating measurement error
-#' - Weighted means (by signal strength) for each minute interval
+#'   - Estimate location for each detection: half of detection range
+#'     along the directional beam
+#'   - Derive oscillating measurement error
+#'   - Weighted means (by signal strength) for each minute interval
 #'
 #' @import dplyr 
 #' @import lubridate
 #'
 #' @export
 #'
-locate <- function(data = NULL, det_range = 12e3, dtime = 1) {
+locate <- function(data = NULL, det_range = 12, dtime = 1) {
   data <- data %>% filter(!is.na(antBearing))
 
   # estimate location based on antenna bearing
@@ -31,10 +34,10 @@ locate <- function(data = NULL, det_range = 12e3, dtime = 1) {
   d <- cbind(data, tmp) %>%
     arrange(ts) %>%
     mutate(
-      lon.sd = (det_range / 6e3) * sin(1 / 90 * pi * antBearing - pi / 2)
-        + det_range / 3e3,
-      lat.sd = (det_range / 6e3) * cos(1 / 90 * pi * antBearing)
-        + det_range / 3e3
+      lon.sd = (det_range / 6) * sin(1 / 90 * pi * antBearing - pi / 2)
+        + det_range / 3,
+      lat.sd = (det_range / 6) * cos(1 / 90 * pi * antBearing)
+        + det_range / 3
     )
 
   # transform to degrees

@@ -1,10 +1,13 @@
 #' Extract estimates
 #'
-#' @param fit : \code{stanfit}. Model output
-#' @param mdata : \code{data.frame}. Metadata for each time interval
-#' @param prob : \code{numeric}. Probability for HDI
+#' @description
+#' Extract estimates from model output.
 #'
-#' @return \code{data.frame}
+#' @param fit `stanfit` Model output
+#' @param mdata `data.frame` Metadata for each time interval
+#' @param prob `numeric` Probability for HDI
+#'
+#' @return a `data.frame`
 #'
 #' @details
 #'

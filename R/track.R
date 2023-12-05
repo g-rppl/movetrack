@@ -1,9 +1,12 @@
 #' Model data
+#' 
+#' @description 
+#' Model data using a DCRW model.
 #'
-#' @param data : \code{data.frame}. Data
-#' @param refresh : \code{numeric}. Refresh value for Stan
+#' @param data `data.frame` Data
+#' @param refresh `numeric` Refresh value for Stan
 #'
-#' @return \code{data.frame}
+#' @return a `data.frame`
 #'
 #' @details
 #'
