@@ -13,7 +13,8 @@
 #'
 #' Returns mean, lower and upper bound of the highest density interval.
 #'
-#' @import HDInterval
+#' @import cmdstanr
+#' @importFrom HDInterval hdi
 #'
 #' @export
 #'
@@ -22,14 +23,14 @@ estimates <- function(fit, mdata = NULL, prob = 0.9) {
     hdi(c(x), credMass = prob)
   }
 
-  drws <- as.matrix(fit, pars = "y")
+  drws <- fit$draws("y")
 
   s <- data.frame(
     time = unique(mdata$ts.round),
     name = rep(c("lon", "lat"), each = length(mdata$ts)),
-    mean = c(apply(drws, 2, mean)),
-    lwr = c(apply(drws, 2, HDI)[1, ]),
-    upr = c(apply(drws, 2, HDI)[2, ]),
+    mean = c(apply(drws, 3, mean)),
+    lwr = c(apply(drws, 3, HDI)[1, ]),
+    upr = c(apply(drws, 3, HDI)[2, ]),
     motusTagID = rep(mdata$motusTagID, 2),
     speciesEN = rep(mdata$speciesEN, 2)
   )

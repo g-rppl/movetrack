@@ -7,9 +7,9 @@ Authors@R:
 Description: Estimate flight tracks from Motus data.
 Imports:
     HDInterval,
+    cmdstanr,
     dplyr,
-    lubridate,
-    rstan
+    lubridate
 License: MIT
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

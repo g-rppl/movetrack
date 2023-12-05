@@ -12,11 +12,14 @@
 #'
 #' Returns location estimates for each time interval.
 #'
-#' @import rstan
+#' @import cmdstanr
 #'
 #' @export
 #'
 track <- function(data = NULL, refresh = 100) {
+
+  # compile model
+  mod <- cmdstan_model(file.path(system.file(package = "motusTrack"), "Stan", "DCRW.stan"))
 
   # prepare data
   loc <- as.matrix(data[, c("lon.est", "lat.est")])
@@ -29,13 +32,9 @@ track <- function(data = NULL, refresh = 100) {
   )
 
   # sample
-  fit <- stan(
-    file = file.path(system.file(package = "motusTrack"), "Stan", "DCRW.stan"),
+  fit <- mod$sample(
     data = stan.data,
-    chains = 4,
-    warmup = 1000,
-    iter = 2000,
-    cores = 4,
+    chains = 4, parallel_chains = 4,
     refresh = refresh
   )
   return(fit)
