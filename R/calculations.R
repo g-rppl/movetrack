@@ -13,9 +13,9 @@
 distance <- function(x) {
   dist <- rep(NA, nrow(x))
   for (i in 2:nrow(x)) {
-    dist[i] <- .distGeo(x$lon[i], x$lat[1], x$lon[i-1], x$lat[i-1])
+    dist[i] <- .distGeo(x$lon[i], x$lat[i], x$lon[i-1], x$lat[i-1])
   }
-  return(dist)
+  return(dist * 1e3)
 }
 
 #' Calculate speed
