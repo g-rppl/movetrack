@@ -41,8 +41,8 @@ locate <- function(data = NULL, det_range = 12, dtime = 1) {
     )
 
   # transform to degrees
-  d$lon.sd <- .destPoint(d$lon, d$lat, 90, d$lon.sd)[, 1] - d$lon
-  d$lat.sd <- .destPoint(d$lon, d$lat, 0, d$lat.sd)[, 2] - d$lat
+  d$lon.sd <- .circDiff(.destPoint(d$lon, d$lat, 90, d$lon.sd)[, 1], d$lon)
+  d$lat.sd <- abs(.destPoint(d$lon, d$lat, 0, d$lat.sd)[, 2] - d$lat)
 
   # weighted means per minute interval
   d$ts.round <- round_date(d$ts, unit = paste(dtime, "min"))

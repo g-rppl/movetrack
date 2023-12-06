@@ -8,6 +8,11 @@
     return(rad * 180 / pi)
 }
 
+# Circular difference
+.circDiff <- function(x, y) {
+    180 - abs(abs(x - y) - 180)
+}
+
 # Distance between geographic points
 .distGeo <- function(lon1, lat1, lon2, lat2, r = 6378.137) {
     dLon <- .toRad(lon2 - lon1)

@@ -29,8 +29,8 @@ Now you can install `motusTrack` using:
 
 ```r
 library(devtools)
-install_github("g-rppl/motusTrack",  ref = "main", dependencies = TRUE,
-auth_token = "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" )
+install_github("g-rppl/motusTrack", ref = "main", dependencies = TRUE,
+auth_token = "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")
 ```
 
 ## Example workflow
