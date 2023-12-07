@@ -7,14 +7,11 @@
 distance(x)
 }
 \arguments{
-\item{x}{: \code{data.frame}. Data in wide format}
+\item{x}{A \code{data.frame} in wide format.}
 }
 \value{
-\code{vector}
+Returns a vector of distances between consecutive locations in metres.
 }
 \description{
-Calculate distances
-}
-\details{
-Returns distances between consecutive locations in metres.
+Calculate distances between consecutive locations.
 }

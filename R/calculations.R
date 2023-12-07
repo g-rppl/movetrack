@@ -1,12 +1,12 @@
 #' Calculate distances
 #'
-#' @param x : \code{data.frame}. Data in wide format
+#' @description
+#' Calculate distances between consecutive locations.
 #'
-#' @return \code{vector}
+#' @param x A `data.frame` in wide format.
 #'
-#' @details
-#'
-#' Returns distances between consecutive locations in metres.
+#' @return
+#' Returns a vector of distances between consecutive locations in metres.
 #'
 #' @export
 #'
@@ -20,13 +20,13 @@ distance <- function(x) {
 
 #' Calculate speed
 #'
-#' @param x : \code{data.frame}. Data in wide format
+#' @description
+#' Calculate flight speed between consecutive locations.
 #'
-#' @return \code{vector}
+#' @param x A `data.frame` in wide format.
 #'
-#' @details
-#'
-#' Returns speed between consecutive locations in m/s.
+#' @return 
+#' Returns a vector of speeds between consecutive locations in m/s.
 #'
 #' @import lubridate
 #'

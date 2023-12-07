@@ -20,8 +20,8 @@
 #'
 #' @details
 #'
-#'   - Estimate location for each detection: half of detection range
-#'     along the directional beam.
+#'   - Estimate location for each detection: half of detection range along the
+#'     directional beam.
 #'   - Derive oscillating measurement error.
 #'   - Weighted means (by signal strength) for each time interval.
 #'

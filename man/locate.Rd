@@ -43,8 +43,8 @@ Calculate point estimates based on antenna bearing and signal strength.
 }
 \details{
 \itemize{
-\item Estimate location for each detection: half of detection range
-along the directional beam.
+\item Estimate location for each detection: half of detection range along the
+directional beam.
 \item Derive oscillating measurement error.
 \item Weighted means (by signal strength) for each time interval.
 }
