@@ -16,5 +16,5 @@ distance(x)
 Calculate distances
 }
 \details{
-Returns distances between consecutive locations in meters.
+Returns distances between consecutive locations in metres.
 }

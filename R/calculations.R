@@ -6,14 +6,14 @@
 #'
 #' @details
 #'
-#' Returns distances between consecutive locations in meters.
+#' Returns distances between consecutive locations in metres.
 #'
 #' @export
 #'
 distance <- function(x) {
   dist <- rep(NA, nrow(x))
   for (i in 2:nrow(x)) {
-    dist[i] <- .distGeo(x$lon[i], x$lat[i], x$lon[i-1], x$lat[i-1])
+    dist[i] <- .distGeo(x$lon[i], x$lat[i], x$lon[i - 1], x$lat[i - 1])
   }
   return(dist * 1e3)
 }

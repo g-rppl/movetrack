@@ -7,16 +7,14 @@
 track(data = NULL, refresh = 100)
 }
 \arguments{
-\item{data}{\code{data.frame} Data}
+\item{data}{A \code{data.frame} containing the point estimate data.}
 
-\item{refresh}{\code{numeric} Refresh value for Stan}
+\item{refresh}{The number of iterations between printed screen updates.
+If \code{refresh = 0}, only error messages will be printed.}
 }
 \value{
-a \code{data.frame}
+A \code{CmdStanMCMC} object.
 }
 \description{
-Model data using a DCRW model.
-}
-\details{
-Returns location estimates for each time interval.
+Model flight path from point estimates using a DCRW model.
 }

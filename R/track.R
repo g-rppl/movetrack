@@ -1,37 +1,36 @@
 #' Model data
-#' 
-#' @description 
-#' Model data using a DCRW model.
 #'
-#' @param data `data.frame` Data
-#' @param refresh `numeric` Refresh value for Stan
+#' @description
+#' Model flight path from point estimates using a DCRW model.
 #'
-#' @return a `data.frame`
+#' @param data A `data.frame` containing the point estimate data.
+#' @param refresh The number of iterations between printed screen updates.
+#'   If `refresh = 0`, only error messages will be printed.
 #'
-#' @details
-#'
-#' Returns location estimates for each time interval.
+#' @return
+#' A `CmdStanMCMC` object.
 #'
 #' @import cmdstanr
 #'
 #' @export
 #'
 track <- function(data = NULL, refresh = 100) {
+  # Compile model
+  mod <- cmdstan_model(
+    file.path(system.file(package = "motusTrack"), "Stan", "DCRW.stan")
+  )
 
-  # compile model
-  mod <- cmdstan_model(file.path(system.file(package = "motusTrack"), "Stan", "DCRW.stan"))
+  # Prepare data
+  loc <- as.matrix(data[, c("lon", "lat")])
+  sigma <- as.matrix(data[, c("lon_sd", "lat_sd")])
 
-  # prepare data
-  loc <- as.matrix(data[, c("lon.est", "lat.est")])
-  sigma <- as.matrix(data[, c("lon.sd.est", "lat.sd.est")])
-
-  # bundle data
+  # Bundle data
   stan.data <- list(
     loc = loc, sigma = sigma,
     N = nrow(loc), w = data$w
   )
 
-  # sample
+  # Sample
   fit <- mod$sample(
     data = stan.data,
     chains = 4, parallel_chains = 4,

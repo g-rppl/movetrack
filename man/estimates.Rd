@@ -7,18 +7,17 @@
 estimates(fit, mdata = NULL, prob = 0.9)
 }
 \arguments{
-\item{fit}{\code{stanfit} Model output}
+\item{fit}{A \code{CmdStanMCMC} object containing the model output.}
 
-\item{mdata}{\code{data.frame} Metadata for each time interval}
+\item{mdata}{A \code{data.frame} containing metadata for each time interval.}
 
-\item{prob}{\code{numeric} Probability for HDI}
+\item{prob}{A scalar \verb{[0, 1]} specifying the mass within the credible
+interval.}
 }
 \value{
-a \code{data.frame}
+Returns a \code{data.frame} containing the mean and lower and upper bound of the
+highest density interval for each time interval.
 }
 \description{
 Extract estimates from model output.
-}
-\details{
-Returns mean, lower and upper bound of the highest density interval.
 }
