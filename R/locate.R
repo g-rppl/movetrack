@@ -27,6 +27,7 @@
 #'
 #' @import dplyr
 #' @import lubridate
+#' @importFrom stats complete.cases weighted.mean
 #'
 #' @export
 #'
@@ -39,6 +40,8 @@ locate <- function(
     aBearing = "antBearing",
     det_range = 12,
     dtime = 2) {
+  lon <- lat <- NULL
+
   # Build data
   d <- .buildData(data, ts, sig, aLon, aLat, aBearing)
 

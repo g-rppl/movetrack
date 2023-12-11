@@ -1,5 +1,6 @@
 # motusTrack
 
+[![R-CMD-check](https://github.com/g-rppl/motusTrack/workflows/R-CMD-check/badge.svg)](https://github.com/g-rppl/motusTrack/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/motusTrack/blob/main/LICENSE)
 
 `motusTrack` is a `R` package that provides simple functionality to estimate flight tracks from [Motus](https://motus.org/) data using random walk models written in [Stan](https://mc-stan.org/).

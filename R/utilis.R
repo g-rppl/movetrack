@@ -1,3 +1,11 @@
+#' Motus test data
+#'
+#' @name testdata
+#' @docType data
+#' @references \url{https://motus.org/}
+#' @keywords data
+NULL
+
 # Build data
 .buildData <- function(data, ts, sig, aLon, aLat, aBearing) {
   d <- data.frame(
