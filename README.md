@@ -1,5 +1,6 @@
 # motusTrack
 
+[![R-CMD-check](https://github.com/g-rppl/motusTrack/workflows/R-CMD-check/badge.svg)](https://github.com/g-rppl/motusTrack/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/motusTrack/blob/main/LICENSE)
 
 `motusTrack` is a `R` package that provides simple functionality to estimate flight tracks from [Motus](https://motus.org/) data using random walk models written in [Stan](https://mc-stan.org/).
@@ -29,8 +30,8 @@ Now you can install `motusTrack` using:
 
 ```r
 library(devtools)
-install_github("g-rppl/motusTrack",  ref = "main", dependencies = TRUE,
-auth_token = "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" )
+install_github("g-rppl/motusTrack", ref = "main", dependencies = TRUE,
+auth_token = "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")
 ```
 
 ## Example workflow
@@ -44,16 +45,13 @@ library(leaflet)
 data(testdata)
 
 # estimate locations based on antenna bearings and signal strength
-loc <- locate(testdata, dtime = 1)
+loc <- locate(testdata, dtime = 2)
 
 # model flight path
 fit <- track(loc, refresh = 1e3)
 
-# extract estimates
-est <- estimates(fit, loc)
-
 # for now transform data manually
-map <- est %>%
+map <- fit$summary %>%
     select(-c("lwr", "upr")) %>%
     pivot_wider(values_from = mean)
 
@@ -68,7 +66,7 @@ leaflet(map) %>%
     addCircles(
         lng = ~recvDeployLon,
         lat = ~recvDeployLat,
-        data = loc,
+        data = testdata,
         color = "black",
         opacity = 1)
 

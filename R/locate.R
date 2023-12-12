@@ -1,63 +1,83 @@
 #' Estimate location
 #'
 #' @description
-#' Estimate location based on antenna bearing and signal strength.
+#' Calculate point estimates based on antenna bearing and signal strength.
 #'
-#' @param data `data.frame` Motus data
-#' @param det_range `numeric` Detection range of antennas in kilometers
-#' @param dtime `numeric` Time interval in minutes
+#' @param data A `data.frame` containing the telemetry data.
+#' @param ts Timestamp column.
+#' @param sig Signal strength column.
+#' @param aLon Antenna longitude column.
+#' @param aLat Antenna latitude column.
+#' @param aBearing Antenna bearing column.
+#' @param det_range Assumed maximum detection range of antennas in kilometres.
+#' @param dtime Time interval in minutes for which point estimates are to be
+#'   calculated.
 #'
-#' @return a `data.frame`
+#' @return
+#' Returns a `data.frame` containing estimated coordinates and measurement
+#' errors for each time interval together with the proportions of time
+#' intervals `w`.
 #'
 #' @details
 #'
-#'   - Estimate location for each detection: half of detection range
-#'     along the directional beam
-#'   - Derive oscillating measurement error
-#'   - Weighted means (by signal strength) for each minute interval
+#'   - Estimate location for each detection: half of detection range along the
+#'     directional beam.
+#'   - Derive oscillating measurement error.
+#'   - Weighted means (by signal strength) for each time interval.
 #'
-#' @import dplyr 
+#' @import dplyr
 #' @import lubridate
+#' @importFrom stats complete.cases weighted.mean
 #'
 #' @export
 #'
-locate <- function(data = NULL, det_range = 12, dtime = 1) {
-  data <- data %>% filter(!is.na(antBearing))
+locate <- function(
+    data = NULL,
+    ts = "ts",
+    sig = "sig",
+    aLon = "recvDeployLon",
+    aLat = "recvDeployLat",
+    aBearing = "antBearing",
+    det_range = 12,
+    dtime = 2) {
+  lon <- lat <- NULL
 
-  # estimate location based on antenna bearing
+  # Build data
+  d <- .buildData(data, ts, sig, aLon, aLat, aBearing)
+
+  # Estimate location based on antenna bearing
   tmp <- as.data.frame(.destPoint(
-    data$recvDeployLon, data$recvDeployLat,
-    data$antBearing, det_range / 2
+    d$aLon, d$aLat, d$aBearing, det_range / 2
   ))
 
-  # estimate oscillating error based on antenna bearing
-  d <- cbind(data, tmp) %>%
-    arrange(ts) %>%
-    mutate(
-      lon.sd = (det_range / 6) * sin(1 / 90 * pi * antBearing - pi / 2)
-        + det_range / 3,
-      lat.sd = (det_range / 6) * cos(1 / 90 * pi * antBearing)
-        + det_range / 3
-    )
+  d <- cbind(d, tmp) %>% arrange(ts)
 
-  # transform to degrees
-  d$lon.sd <- .destPoint(d$lon, d$lat, 90, d$lon.sd)[, 1] - d$lon
-  d$lat.sd <- .destPoint(d$lon, d$lat, 0, d$lat.sd)[, 2] - d$lat
+  # Estimate oscillating error based on antenna bearing
+  lon_sd <- (det_range / 6) * sin(1 / 90 * pi * d$aBearing - pi / 2) +
+    det_range / 3
+  lat_sd <- (det_range / 6) * cos(1 / 90 * pi * d$aBearing) +
+    det_range / 3
 
-  # weighted means per minute interval
-  d$ts.round <- round_date(d$ts, unit = paste(dtime, "min"))
+  # Transform to degrees
+  d$lon_sd <- .circDiff(.destPoint(d$lon, d$lat, 90, lon_sd)[, 1], d$lon)
+  d$lat_sd <- abs(.destPoint(d$lon, d$lat, 0, lat_sd)[, 2] - d$lat)
+
+  # Weighted means per minute interval
+  d$ts <- round_date(d$ts, unit = paste(dtime, "min"))
 
   d <- d %>%
-    group_by(ts.round) %>%
+    group_by(ts) %>%
     mutate(
-      lon.est = weighted.mean(lon, sig),
-      lat.est = weighted.mean(lat, sig),
-      lon.sd.est = weighted.mean(lon.sd, sig),
-      lat.sd.est = weighted.mean(lat.sd, sig)
+      lon = weighted.mean(lon, sig),
+      lat = weighted.mean(lat, sig),
+      lon_sd = weighted.mean(lon_sd, sig),
+      lat_sd = weighted.mean(lat_sd, sig)
     ) %>%
-    distinct(ts.round, .keep_all = TRUE)
+    distinct(ts, .keep_all = TRUE) %>%
+    select(-c(sig, aLon, aLat, aBearing))
 
-  # proportions of time intervals
-  d$w <- dtime / c(dtime, diff(as.numeric(d$ts.round) / 60))
+  # Proportions of time intervals
+  d$w <- dtime / c(dtime, diff(as.numeric(d$ts) / 60))
+
   return(d)
 }

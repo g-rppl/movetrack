@@ -4,19 +4,19 @@
 \alias{track}
 \title{Model data}
 \usage{
-track(data = NULL, refresh = 100)
+track(data = NULL, refresh = 100, prob = 0.9)
 }
 \arguments{
-\item{data}{\code{data.frame} Data}
+\item{data}{A \code{data.frame} containing the point estimate data.}
 
-\item{refresh}{\code{numeric} Refresh value for Stan}
+\item{refresh}{The number of iterations between printed screen updates.
+If \code{refresh = 0}, only error messages will be printed.}
+
+\item{prob}{The probability mass of the HDI.}
 }
 \value{
-a \code{data.frame}
+Returns a list containing the model summary and the \code{CmdStanMCMC} object.
 }
 \description{
-Model data using a DCRW model.
-}
-\details{
-Returns location estimates for each time interval.
+Model flight path from point estimates using a DCRW model.
 }

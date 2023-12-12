@@ -7,14 +7,11 @@
 speed(x)
 }
 \arguments{
-\item{x}{: \code{data.frame}. Data in wide format}
+\item{x}{A \code{data.frame} in wide format.}
 }
 \value{
-\code{vector}
+Returns a vector of speeds between consecutive locations in m/s.
 }
 \description{
-Calculate speed
-}
-\details{
-Returns speed between consecutive locations in m/s.
+Calculate flight speed between consecutive locations.
 }

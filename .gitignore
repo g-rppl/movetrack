@@ -1,0 +1,5 @@
+*.Rproj
+*.exe
+inst/doc
+docs
+.github/workflows/pkgdown.yml

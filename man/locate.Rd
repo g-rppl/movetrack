@@ -4,26 +4,48 @@
 \alias{locate}
 \title{Estimate location}
 \usage{
-locate(data = NULL, det_range = 12, dtime = 1)
+locate(
+  data = NULL,
+  ts = "ts",
+  sig = "sig",
+  aLon = "recvDeployLon",
+  aLat = "recvDeployLat",
+  aBearing = "antBearing",
+  det_range = 12,
+  dtime = 2
+)
 }
 \arguments{
-\item{data}{\code{data.frame} Motus data}
+\item{data}{A \code{data.frame} containing the telemetry data.}
 
-\item{det_range}{\code{numeric} Detection range of antennas in kilometers}
+\item{ts}{Timestamp column.}
 
-\item{dtime}{\code{numeric} Time interval in minutes}
+\item{sig}{Signal strength column.}
+
+\item{aLon}{Antenna longitude column.}
+
+\item{aLat}{Antenna latitude column.}
+
+\item{aBearing}{Antenna bearing column.}
+
+\item{det_range}{Assumed maximum detection range of antennas in kilometres.}
+
+\item{dtime}{Time interval in minutes for which point estimates are to be
+calculated.}
 }
 \value{
-a \code{data.frame}
+Returns a \code{data.frame} containing estimated coordinates and measurement
+errors for each time interval together with the proportions of time
+intervals \code{w}.
 }
 \description{
-Estimate location based on antenna bearing and signal strength.
+Calculate point estimates based on antenna bearing and signal strength.
 }
 \details{
 \itemize{
-\item Estimate location for each detection: half of detection range
-along the directional beam
-\item Derive oscillating measurement error
-\item Weighted means (by signal strength) for each minute interval
+\item Estimate location for each detection: half of detection range along the
+directional beam.
+\item Derive oscillating measurement error.
+\item Weighted means (by signal strength) for each time interval.
 }
 }
