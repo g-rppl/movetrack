@@ -6,7 +6,6 @@ reference:
     contents:
       - "`locate`"
       - "`track`"
-      - "`estimates`"
   - title: Analyse
     contents:
       - "`distance`"

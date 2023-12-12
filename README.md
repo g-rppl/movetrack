@@ -45,16 +45,13 @@ library(leaflet)
 data(testdata)
 
 # estimate locations based on antenna bearings and signal strength
-loc <- locate(testdata, dtime = 1)
+loc <- locate(testdata, dtime = 2)
 
 # model flight path
 fit <- track(loc, refresh = 1e3)
 
-# extract estimates
-est <- estimates(fit, loc)
-
 # for now transform data manually
-map <- est %>%
+map <- fit$summary %>%
     select(-c("lwr", "upr")) %>%
     pivot_wider(values_from = mean)
 
@@ -69,7 +66,7 @@ leaflet(map) %>%
     addCircles(
         lng = ~recvDeployLon,
         lat = ~recvDeployLat,
-        data = loc,
+        data = testdata,
         color = "black",
         opacity = 1)
 
