@@ -1,16 +1,28 @@
 Package: motusTrack
 Title: Estimate flight tracks from Motus data
+Description: `motusTrack` is a `R` package that provides simple functionality
+    to estimate flight tracks from Motus data using random walk models written
+    in Stan.
 Version: 0.1.0.9000
+License: MIT + file LICENSE
 Authors@R: 
     person("Georg", "Rüppel", , "g-rppl@posteo.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-5459-6717"))
-Description: Estimate flight tracks from Motus data.
+Depends:
+  R (>= 4.0.0)
 Imports:
     HDInterval,
     cmdstanr,
     dplyr,
     lubridate
-License: MIT + file LICENSE
+Additional_repositories:
+    https://mc-stan.org/r-packages/
+SystemRequirements: CmdStan (https://mc-stan.org/users/interfaces/cmdstan)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
