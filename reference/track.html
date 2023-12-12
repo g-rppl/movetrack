@@ -44,7 +44,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">track</span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, refresh <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">track</span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, refresh <span class="op">=</span> <span class="fl">100</span>, prob <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -57,12 +57,16 @@
 <dd><p>The number of iterations between printed screen updates.
 If <code>refresh = 0</code>, only error messages will be printed.</p></dd>
 
+
+<dt>prob</dt>
+<dd><p>The probability mass of the HDI.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>A <code>CmdStanMCMC</code> object.</p>
+<p>Returns a list containing the model summary and the <code>CmdStanMCMC</code> object.</p>
     </div>
 
   </div>
