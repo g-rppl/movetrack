@@ -50,28 +50,21 @@ loc <- locate(testdata, dtime = 2)
 # model flight path
 fit <- track(loc, parallel_chains = 4, refresh = 1e3)
 
-# for now transform data manually
-map <- fit$summary %>%
-    select(-c("lwr", "upr")) %>%
-    pivot_wider(values_from = mean)
-
-# calculate speed
-map$speed <- speed(map)
-
 # plot flight path
-leaflet(map) %>%
+leaflet(fit$summary) %>%
     addTiles() %>%
-    addCircles(lng = ~lon, lat = ~lat) %>%
-    addPolylines(lng = ~lon, lat = ~lat) %>%
+    addCircles(lng = ~mean.lon, lat = ~mean.lat) %>%
+    addPolylines(lng = ~mean.lon, lat = ~mean.lat) %>%
     addCircles(
         lng = ~recvDeployLon,
         lat = ~recvDeployLat,
         data = testdata,
         color = "black",
-        opacity = 1)
+        opacity = 1
+    )
 
 # plot flight speed
-ggplot(map) +
-    geom_path(aes(x = lon, y = lat, color = speed)) +
+ggplot(fit$summary) +
+    geom_path(aes(x = mean.lon, y = mean.lat, colour = speed)) +
     scale_color_viridis_c()
 ```

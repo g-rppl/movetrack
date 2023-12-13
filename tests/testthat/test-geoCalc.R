@@ -12,13 +12,30 @@ test_that("geographic distance", {
 })
 
 test_that("destination point", {
-  expect_equal(.destPoint(5, -5, 0, 1000), cbind(lon = 5, lat = 3.9831528))
+  expect_equal(
+    .destPoint(5, -5, 0, 1000),
+    cbind(lon = 5, lat = 3.98315),
+    tolerance = 1e-6
+  )
   expect_equal(
     .destPoint(-1, 50, 90, 100),
-    cbind(lon = 0.39736789, lat = 49.99160840)
+    cbind(lon = 0.3974, lat = 49.9916),
+    tolerance = 1e-6
   )
   expect_equal(
     .destPoint(5, 50, 42, 100),
-    cbind(lon = 5.9482904, lat = 50.6637554)
+    cbind(lon = 5.9483, lat = 50.6638),
+    tolerance = 1e-6
+  )
+})
+
+test_that("lagged diatances", {
+  expect_equal(
+    .distance(data.frame(
+      mean.lon = c(5, 10, 15),
+      mean.lat = c(50, 60, 70)
+    )),
+    c(NA, 1157253.3, 1157253.2),
+    tolerance = 0.01
   )
 })

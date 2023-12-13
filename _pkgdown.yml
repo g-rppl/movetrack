@@ -6,7 +6,3 @@ reference:
     contents:
       - "`locate`"
       - "`track`"
-  - title: Analyse
-    contents:
-      - "`distance`"
-      - "`speed`"

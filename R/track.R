@@ -13,12 +13,17 @@
 #' @return
 #' Returns a list containing the model summary and the `CmdStanMCMC` object.
 #'
+#' @import lubridate
 #' @import cmdstanr
+#' @importFrom stats median quantile
 #' @importFrom HDInterval hdi
 #'
 #' @export
 #'
 track <- function(data = NULL, ci = "HDI", prob = 0.9, ...) {
+  # Bind variables locally so that R CMD check doesn't complain
+  name <- NULL
+
   # Check data
   if (is.null(data)) {
     stop("No data provided.")
@@ -48,11 +53,6 @@ track <- function(data = NULL, ci = "HDI", prob = 0.9, ...) {
   # Sample
   fit <- mod$sample(data = stan.data, ...)
 
-  # HDI function
-  HDI <- function(x) {
-    hdi(c(x), credMass = prob)
-  }
-
   # Summarise draws
   drws <- fit$draws("y")
 
@@ -61,14 +61,23 @@ track <- function(data = NULL, ci = "HDI", prob = 0.9, ...) {
     name = rep(c("lon", "lat"), each = length(data$ts)),
     mean = c(apply(drws, 3, mean)),
     median = c(apply(drws, 3, median)),
-    lwr = ifelse(ci == "ETI",
-      c(apply(drws, 3, quantile, prob = (1 - prob) / 2)),
-      c(apply(drws, 3, HDI)[1, ])
-    ),
-    upr = ifelse(ci == "ETI",
-      c(apply(drws, 3, quantile, prob = 1 - (1 - prob) / 2)),
-      c(apply(drws, 3, HDI)[2, ])
-    )
-  )
+    lwr = if (ci == "ETI") {
+      c(apply(drws, 3, quantile, prob = (1 - prob) / 2))
+    } else {
+      c(apply(drws, 3, hdi, credMass = prob)[1, ])
+    },
+    upr = if (ci == "ETI") {
+      c(apply(drws, 3, quantile, prob = 1 - (1 - prob) / 2))
+    } else {
+      c(apply(drws, 3, hdi, credMass = prob)[2, ])
+    }
+  ) %>%
+    group_split(name, .keep = FALSE)
+
+  # Wide format and additional variables
+  s <- merge(s[[2]], s[[1]], by = "time", suffix = c(".lon", ".lat"))
+  s$distance <- .distance(s)
+  s$speed <- s$distance / (c(NA, diff(s$time)) * 60)
+
   return(list(summary = s, stanfit = fit))
 }
