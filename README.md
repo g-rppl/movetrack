@@ -48,7 +48,7 @@ data(testdata)
 loc <- locate(testdata, dtime = 2)
 
 # model flight path
-fit <- track(loc, refresh = 1e3)
+fit <- track(loc, parallel_chains = 4, refresh = 1e3)
 
 # for now transform data manually
 map <- fit$summary %>%

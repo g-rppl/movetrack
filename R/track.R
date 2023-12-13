@@ -4,9 +4,11 @@
 #' Model flight path from point estimates using a DCRW model.
 #'
 #' @param data A `data.frame` containing the point estimate data.
-#' @param refresh The number of iterations between printed screen updates.
-#'   If `refresh = 0`, only error messages will be printed.
-#' @param prob The probability mass of the HDI.
+#' @param ci The method used to calculate the credible intervals. Available
+#'   options are `'HDI'` for the highest posterior density interval and `'ETI'`
+#'   for the equal-tailed interval; defaults to `'HDI'`.
+#' @param prob The probability mass of the credible interval; defaults to `0.9`.
+#' @param ... Additional arguments passed to `cmdstanr::sample()`.
 #'
 #' @return
 #' Returns a list containing the model summary and the `CmdStanMCMC` object.
@@ -16,7 +18,20 @@
 #'
 #' @export
 #'
-track <- function(data = NULL, refresh = 100, prob = 0.9) {
+track <- function(data = NULL, ci = "HDI", prob = 0.9, ...) {
+  # Check data
+  if (is.null(data)) {
+    stop("No data provided.")
+  }
+  if (!ci %in% c("HDI", "ETI")) {
+    stop(
+      "Invalid credible interval method. Available options are 'HDI' and 'ETI'."
+    )
+  }
+  if (prob < 0 || prob > 1) {
+    stop("Probability mass must be between 0 und 1.")
+  }
+
   # Compile model
   mod <- cmdstan_model(system.file("Stan", "DCRW.stan", package = "motusTrack"))
 
@@ -31,11 +46,7 @@ track <- function(data = NULL, refresh = 100, prob = 0.9) {
   )
 
   # Sample
-  fit <- mod$sample(
-    data = stan.data,
-    chains = 4, parallel_chains = 4,
-    refresh = refresh
-  )
+  fit <- mod$sample(data = stan.data, ...)
 
   # HDI function
   HDI <- function(x) {
@@ -49,8 +60,15 @@ track <- function(data = NULL, refresh = 100, prob = 0.9) {
     time = unique(data$ts),
     name = rep(c("lon", "lat"), each = length(data$ts)),
     mean = c(apply(drws, 3, mean)),
-    lwr = c(apply(drws, 3, HDI)[1, ]),
-    upr = c(apply(drws, 3, HDI)[2, ])
+    median = c(apply(drws, 3, median)),
+    lwr = ifelse(ci == "ETI",
+      c(apply(drws, 3, quantile, prob = (1 - prob) / 2)),
+      c(apply(drws, 3, HDI)[1, ])
+    ),
+    upr = ifelse(ci == "ETI",
+      c(apply(drws, 3, quantile, prob = 1 - (1 - prob) / 2)),
+      c(apply(drws, 3, HDI)[2, ])
+    )
   )
   return(list(summary = s, stanfit = fit))
 }
