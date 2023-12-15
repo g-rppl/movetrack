@@ -1,7 +1,7 @@
 reference:
   - title: Data
     contents:
-      - "`testdata`"
+      - "`motusData`"
   - title: Model
     contents:
       - "`locate`"

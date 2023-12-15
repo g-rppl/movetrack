@@ -29,7 +29,7 @@ test_that("destination point", {
   )
 })
 
-test_that("lagged diatances", {
+test_that("lagged distances", {
   expect_equal(
     .distance(data.frame(
       mean.lon = c(5, 10, 15),

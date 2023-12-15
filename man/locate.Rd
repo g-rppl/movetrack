@@ -6,6 +6,7 @@
 \usage{
 locate(
   data = NULL,
+  ID = "tagDeployID",
   ts = "ts",
   sig = "sig",
   aLon = "recvDeployLon",
@@ -17,6 +18,8 @@ locate(
 }
 \arguments{
 \item{data}{A \code{data.frame} containing the telemetry data.}
+
+\item{ID}{Unique identifier for individuals or tag deployments.}
 
 \item{ts}{Timestamp column.}
 

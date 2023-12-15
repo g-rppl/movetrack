@@ -3,7 +3,7 @@
 [![R-CMD-check](https://github.com/g-rppl/motusTrack/workflows/R-CMD-check/badge.svg)](https://github.com/g-rppl/motusTrack/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/motusTrack/blob/main/LICENSE)
 
-`motusTrack` is a `R` package that provides simple functionality to estimate flight tracks from [Motus](https://motus.org/) data using random walk models written in [Stan](https://mc-stan.org/).
+`motusTrack` is a `R` package that provides simple functionality to estimate flight tracks from radio-telemetry data such as [Motus](https://motus.org/) using random walk models written in [Stan](https://mc-stan.org/).
 
 ## Installation
 
@@ -17,7 +17,7 @@ Check whether there is a suitable C++ toolchain installed on your system:
 
 ```r
 library(cmdstanr)
-check_cmdstan_toolchain()
+check_cmdstan_toolchain(fix = TRUE)
 ```
 
 If not, go to <https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#cpp-toolchain> and follow the instructions for your platform. Once your toolchain is configured correctly `CmdStan` can be installed:
@@ -42,29 +42,46 @@ library(tidyverse)
 library(leaflet)
 
 # load data
-data(testdata)
+data(motusData)
 
 # estimate locations based on antenna bearings and signal strength
-loc <- locate(testdata, dtime = 2)
+loc <- locate(motusData, dtime = 2)
 
 # model flight path
 fit <- track(loc, parallel_chains = 4, refresh = 1e3)
 
 # plot flight path
-leaflet(fit$summary) %>%
+leaflet() %>%
     addTiles() %>%
-    addCircles(lng = ~mean.lon, lat = ~mean.lat) %>%
-    addPolylines(lng = ~mean.lon, lat = ~mean.lat) %>%
+    addCircles(
+        lng = ~mean.lon, lat = ~mean.lat,
+        data = fit[fit$ID == 49237, ]
+    ) %>%
+    addCircles(
+        lng = ~mean.lon, lat = ~mean.lat,
+        data = fit[fit$ID == 50893, ], color = "orange"
+    ) %>%
+    addPolylines(
+        lng = ~mean.lon, lat = ~mean.lat,
+        data = fit[fit$ID == 49237, ]
+    ) %>%
+    addPolylines(
+        lng = ~mean.lon, lat = ~mean.lat,
+        data = fit[fit$ID == 50893, ], color = "orange"
+    ) %>%
     addCircles(
         lng = ~recvDeployLon,
         lat = ~recvDeployLat,
-        data = testdata,
+        data = motusData,
         color = "black",
         opacity = 1
     )
 
 # plot flight speed
-ggplot(fit$summary) +
-    geom_path(aes(x = mean.lon, y = mean.lat, colour = speed)) +
+ggplot(fit) +
+    geom_path(aes(
+        x = mean.lon, y = mean.lat,
+        group = ID, colour = speed
+    )) +
     scale_color_viridis_c()
 ```
