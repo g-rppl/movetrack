@@ -1,7 +1,7 @@
-# motusTrack
+# motusTrack <img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo_tm.png" align="right" width="120" />
 
 [![R-CMD-check](https://github.com/g-rppl/motusTrack/workflows/R-CMD-check/badge.svg)](https://github.com/g-rppl/motusTrack/actions)
-<!-- [![codecov](https://codecov.io/gh/g-rppl/motusTrack/branch/main/graph/badge.svg)](https://app.codecov.io/gh/g-rppl/motusTrack) -->
+[![codecov](https://codecov.io/gh/g-rppl/motusTrack/branch/main/graph/badge.svg)](https://app.codecov.io/gh/g-rppl/motusTrack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/motusTrack/blob/main/LICENSE)
 
 `motusTrack` is a `R` package that provides simple functionality to estimate flight tracks from radio-telemetry data such as [Motus](https://motus.org/) using random walk models written in [Stan](https://mc-stan.org/).

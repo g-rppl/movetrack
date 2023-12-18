@@ -8,6 +8,8 @@ License: MIT + file LICENSE
 Authors@R: 
   person("Georg", "Rüppel", , "g-rppl@posteo.de", role = c("aut", "cre"),
         comment = c(ORCID = "0000-0001-5459-6717"))
+URL: https://github.com/g-rppl/motusTrack
+BugReports: https://github.com/g-rppl/motusTrack/issues
 Depends:
   R (>= 4.0.0)
 Imports:
