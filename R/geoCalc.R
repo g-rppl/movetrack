@@ -43,3 +43,15 @@
     lat = .toDeg(lat2)
   ))
 }
+
+# Calculate lagged distances in metres
+.distance <- function(x) {
+  dist <- rep(NA, nrow(x))
+  for (i in 2:nrow(x)) {
+    dist[i] <- .distGeo(
+      x$mean.lon[i], x$mean.lat[i],
+      x$mean.lon[i - 1], x$mean.lat[i - 1]
+    )
+  }
+  return(dist * 1e3)
+}

@@ -4,6 +4,7 @@
 #' Calculate point estimates based on antenna bearing and signal strength.
 #'
 #' @param data A `data.frame` containing the telemetry data.
+#' @param ID Unique identifier for individuals or tag deployments.
 #' @param ts Timestamp column.
 #' @param sig Signal strength column.
 #' @param aLon Antenna longitude column.
@@ -33,6 +34,7 @@
 #'
 locate <- function(
     data = NULL,
+    ID = "tagDeployID",
     ts = "ts",
     sig = "sig",
     aLon = "recvDeployLon",
@@ -43,14 +45,14 @@ locate <- function(
   lon <- lat <- NULL
 
   # Build data
-  d <- .buildData(data, ts, sig, aLon, aLat, aBearing)
+  d <- .buildData(data, ID, ts, sig, aLon, aLat, aBearing)
 
   # Estimate location based on antenna bearing
   tmp <- as.data.frame(.destPoint(
     d$aLon, d$aLat, d$aBearing, det_range / 2
   ))
 
-  d <- cbind(d, tmp) %>% arrange(ts)
+  d <- cbind(d, tmp) %>% arrange(ID, ts)
 
   # Estimate oscillating error based on antenna bearing
   lon_sd <- (det_range / 6) * sin(1 / 90 * pi * d$aBearing - pi / 2) +
@@ -66,7 +68,7 @@ locate <- function(
   d$ts <- round_date(d$ts, unit = paste(dtime, "min"))
 
   d <- d %>%
-    group_by(ts) %>%
+    group_by(ID, ts) %>%
     mutate(
       lon = weighted.mean(lon, sig),
       lat = weighted.mean(lat, sig),
@@ -77,7 +79,9 @@ locate <- function(
     select(-c(sig, aLon, aLat, aBearing))
 
   # Proportions of time intervals
-  d$w <- dtime / c(dtime, diff(as.numeric(d$ts) / 60))
+  d <- d %>%
+    group_by(ID) %>%
+    mutate(w = dtime / c(dtime, diff(as.numeric(ts) / 60)))
 
-  return(d)
+  return(as.data.frame(d))
 }
