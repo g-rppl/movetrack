@@ -30,7 +30,7 @@ track <- function(
     output_dir = getwd(),
     ...) {
   # Bind variables locally so that R CMD check doesn't complain
-  name <- NULL
+  . <- ID <- name <- NULL
 
   # Check data
   if (is.null(data)) {
@@ -43,6 +43,22 @@ track <- function(
   }
   if (prob < 0 || prob > 1) {
     stop("Probability mass must be between 0 und 1.")
+  }
+
+  ids <- data %>%
+    group_by(ID) %>%
+    summarise(n = n()) %>%
+    filter(n < 3) %>%
+    .$ID
+  if (length(ids) > 0) {
+    warning(paste0(
+      ifelse(length(ids) < 2, "ID ", "IDs "), paste(ids, collapse = ", "),
+      " had less than 3 observations and ",
+      ifelse(length(ids) < 2, "was", "were"),
+      " not modelled. You may want to decrease the `dtime` argument in",
+      " `locate()` to increase the number of observations."
+    ))
+    data <- data[!data$ID %in% ids, ]
   }
 
   # Compile model

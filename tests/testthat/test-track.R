@@ -1,3 +1,5 @@
+data(motusData)
+motusData$tagDeployID[1] <- 1
 suppressMessages(loc <- locate(motusData, dtime = 10))
 
 test_that("track errors", {
@@ -13,16 +15,27 @@ test_that("track errors", {
 })
 
 test_that("track", {
-  fit <- track(loc,
+  expect_warning(fit <- track(loc,
     parallel_chains = 4, seed = 42,
     refresh = 0, output_dir = NULL
-  )
-
+  ))
   expected <- c(
-    319.0876, 319.1591, 314.4943, 323.6472, 2255.9851, 2256.0860,
-    2252.7292, 2259.1937, 2106042, 593570.1623, 712.9220
+    319.09, 319.16, 314.49, 323.65, 2255.99, 2256.09,
+    2252.73, 2259.19, 2106042, 593570.16, 712.92
   )
   expect_equal(colSums(fit[-c(1)], na.rm = TRUE), expected,
+    ignore_attr = TRUE, tolerance = 0.01
+  )
+
+  expect_warning(fit <- track(loc,
+    parallel_chains = 4, seed = 42,
+    refresh = 0, output_dir = NULL,
+    ci = "ETI"
+  ))
+  expected <- c(314.20, 323.79, 2252.45, 2259.12)
+  expect_equal(
+    colSums(fit[, c("lwr.lon", "upr.lon", "lwr.lat", "upr.lat")], na.rm = TRUE),
+    expected,
     ignore_attr = TRUE, tolerance = 0.01
   )
 })
