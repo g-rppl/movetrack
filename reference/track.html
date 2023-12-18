@@ -44,7 +44,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">track</span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, refresh <span class="op">=</span> <span class="fl">100</span>, prob <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">track</span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, ci <span class="op">=</span> <span class="st">"HDI"</span>, prob <span class="op">=</span> <span class="fl">0.9</span>, output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -53,13 +53,24 @@
 <dd><p>A <code>data.frame</code> containing the point estimate data.</p></dd>
 
 
-<dt>refresh</dt>
-<dd><p>The number of iterations between printed screen updates.
-If <code>refresh = 0</code>, only error messages will be printed.</p></dd>
+<dt>ci</dt>
+<dd><p>The method used to calculate the credible intervals. Available
+options are <code>'HDI'</code> for the highest posterior density interval and <code>'ETI'</code>
+for the equal-tailed interval; defaults to <code>'HDI'</code>.</p></dd>
 
 
 <dt>prob</dt>
-<dd><p>The probability mass of the HDI.</p></dd>
+<dd><p>The probability mass of the credible interval; defaults to <code>0.9</code>.</p></dd>
+
+
+<dt>output_dir</dt>
+<dd><p>The directory to save the <code>CmdStanMCMC</code> objects to;
+defaults to the current working directory. If <code>NULL</code>, the objects are not
+saved.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional arguments passed to <code><a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link">cmdstanr::sample()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
