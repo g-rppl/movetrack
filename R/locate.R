@@ -20,11 +20,15 @@
 #' intervals `w`.
 #'
 #' @details
+#' This function performs the following steps as described in
+#' [Baldwin et al. 2018](https://doi.org/10.1016/j.ecolmodel.2018.08.006):
 #'
-#'   - Estimate location for each detection: half of detection range along the
-#'     directional beam.
-#'   - Derive oscillating measurement error.
-#'   - Weighted means (by signal strength) for each time interval.
+#'   - Estimate locations for each detection: half of the maximum detection
+#'     range `det_range` along the directional beam.
+#'   - Derive oscillating measurement error arising from antenna geometry and
+#'     orientation.
+#'   - Calculate weighted means (by signal strength) for each time interval
+#'     `dtime`.
 #'
 #' @import dplyr
 #' @import lubridate

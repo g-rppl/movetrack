@@ -1,10 +1,10 @@
-# motusTrack
+# stantrackr
 
-[![R-CMD-check](https://github.com/g-rppl/motusTrack/workflows/R-CMD-check/badge.svg)](https://github.com/g-rppl/motusTrack/actions)
-<!-- [![codecov](https://codecov.io/gh/g-rppl/motusTrack/branch/main/graph/badge.svg)](https://app.codecov.io/gh/g-rppl/motusTrack) -->
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/motusTrack/blob/main/LICENSE)
+[![R-CMD-check](https://github.com/g-rppl/stantrackr/workflows/R-CMD-check/badge.svg)](https://github.com/g-rppl/stantrackr/actions)
+[![codecov](https://codecov.io/gh/g-rppl/stantrackr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/g-rppl/stantrackr)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/stantrackr/blob/main/LICENSE)
 
-`motusTrack` is a `R` package that provides simple functionality to estimate flight tracks from radio-telemetry data such as [Motus](https://motus.org/) using random walk models written in [Stan](https://mc-stan.org/).
+`stantrackr` is a `R` package that provides simple functionality to estimate individual flight tracks from radio-telemetry data such as [Motus](https://motus.org/) using random walk models written in [Stan](https://mc-stan.org/).
 
 ## Installation
 
@@ -27,12 +27,11 @@ If not, go to <https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#
 install_cmdstan(cores = 2)
 ```
 
-Now you can install `motusTrack` using:
+Now you can install `stantrackr` using:
 
 ```r
 library(devtools)
-install_github("g-rppl/motusTrack", ref = "main", dependencies = TRUE,
-auth_token = "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")
+install_github("g-rppl/stantrackr")
 ```
 
 ## Example workflow
@@ -40,6 +39,7 @@ auth_token = "github_pat_11AM2SNZI02vg8w4FMrX78_UsuGvvY0KRES9vj6cRMKdB2RirY3SlCX
 ```r
 library(motusTrack)
 library(tidyverse)
+library(sfheaders)
 library(leaflet)
 
 # load data
@@ -48,28 +48,15 @@ data(motusData)
 # estimate locations based on antenna bearings and signal strength
 loc <- locate(motusData, dtime = 2)
 
-# model flight path
+# model flight paths
 fit <- track(loc, parallel_chains = 4, refresh = 1e3)
 
-# plot flight path
-leaflet() %>%
+# plot flight paths
+fit %>%
+    sf_linestring("mean.lon", "mean.lat", linestring_id = "ID") %>%
+    leaflet() %>%
     addTiles() %>%
-    addCircles(
-        lng = ~mean.lon, lat = ~mean.lat,
-        data = fit[fit$ID == 49237, ]
-    ) %>%
-    addCircles(
-        lng = ~mean.lon, lat = ~mean.lat,
-        data = fit[fit$ID == 50893, ], color = "orange"
-    ) %>%
-    addPolylines(
-        lng = ~mean.lon, lat = ~mean.lat,
-        data = fit[fit$ID == 49237, ]
-    ) %>%
-    addPolylines(
-        lng = ~mean.lon, lat = ~mean.lat,
-        data = fit[fit$ID == 50893, ], color = "orange"
-    ) %>%
+    addPolylines(color = ~c("orange", "blue")) %>%
     addCircles(
         lng = ~recvDeployLon,
         lat = ~recvDeployLat,
@@ -86,3 +73,15 @@ ggplot(fit) +
     )) +
     scale_color_viridis_c()
 ```
+
+## Details
+
+This package provides two main functions: `locate()` and `track()`. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using random walk models written in [Stan](https://mc-stan.org/).
+
+## References
+
+Auger‐Méthé, M., Newman, K., Cole, D., Empacher, F., Gryba, R., King, A. A., ... & Thomas, L. (2021). A guide to state–space modeling of ecological time series. *Ecological Monographs*, 91(4), e01470. doi: [10.1002/ecm.1470](https://doi.org/10.1002/ecm.1470)
+
+Baldwin, J. W., Leap, K., Finn, J. T., & Smetzer, J. R. (2018). Bayesian state-space models reveal unobserved off-shore nocturnal migration from Motus data. *Ecological Modelling*, 386, 38-46. doi: [10.1016/j.ecolmodel.2018.08.006](https://doi.org/10.1016/j.ecolmodel.2018.08.006)
+
+Jonsen, I. D., Flemming, J. M., & Myers, R. A. (2005). Robust state–space modeling of animal movement data. *Ecology*, 86(11), 2874-2880. doi: [10.1890/04-1852](https://doi.org/10.1890/04-1852)

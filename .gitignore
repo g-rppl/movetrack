@@ -2,5 +2,5 @@
 *.exe
 inst/doc
 docs
-.github/workflows/pkgdown.yml
-.github/workflows/test-coverage.yml
+TODO.md
+test.R

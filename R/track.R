@@ -14,8 +14,19 @@
 #' @param ... Additional arguments passed to `cmdstanr::sample()`.
 #'
 #' @return
-#' Returns a list containing the model summary and the `CmdStanMCMC` object.
+#' Returns a `data.frame` containing the model summaries.
 #'
+#' @details
+#' This function is a wrapper around `cmdstanr::sample()` and uses a difference
+#' correlated random walk model (DCRW) to estimate individual flight paths. The
+#' model is described in more detail in
+#' [Jonsen et al. 2005](https://doi.org/10.1890/04-1852) and
+#' [Baldwin et al. 2018](https://doi.org/10.1016/j.ecolmodel.2018.08.006). To
+#' learn more about state-space models in animal movement in general,
+#' [Auger-Méthé et al. 2021](https://doi.org/10.1002/ecm.1470) is a good
+#' starting point.
+#'
+#' @import dplyr
 #' @import lubridate
 #' @import cmdstanr
 #' @importFrom stats median quantile
@@ -62,7 +73,7 @@ track <- function(
   }
 
   # Compile model
-  mod <- cmdstan_model(system.file("Stan", "DCRW.stan", package = "motusTrack"))
+  mod <- cmdstan_model(system.file("Stan", "DCRW.stan", package = "stantrackr"))
 
   for (i in unique(data$ID)) {
     # Subset data
