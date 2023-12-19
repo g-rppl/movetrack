@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(motusTrack)
+library(stantrackr)
 
-test_check("motusTrack")
+test_check("stantrackr")

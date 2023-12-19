@@ -22,8 +22,18 @@ saved.}
 \item{...}{Additional arguments passed to \code{cmdstanr::sample()}.}
 }
 \value{
-Returns a list containing the model summary and the \code{CmdStanMCMC} object.
+Returns a \code{data.frame} containing the model summaries.
 }
 \description{
 Model flight path from point estimates using a DCRW model.
+}
+\details{
+This function is a wrapper around \code{cmdstanr::sample()} and uses a difference
+correlated random walk model (DCRW) to estimate individual flight paths. The
+model is described in more detail in
+\href{https://doi.org/10.1890/04-1852}{Jonsen et al. 2005} and
+\href{https://doi.org/10.1016/j.ecolmodel.2018.08.006}{Baldwin et al. 2018}. To
+learn more about state-space models in animal movement in general,
+\href{https://doi.org/10.1002/ecm.1470}{Auger-Méthé et al. 2021} is a good
+starting point.
 }

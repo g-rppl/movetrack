@@ -1,7 +1,9 @@
-^motusTrack\.Rproj$
+^stantrackr\.Rproj$
 ^\.Rproj\.user$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
 ^\.github$
-inst/Stan/.*\.exe$
+^inst/Stan/.*\.exe$
+^test\.R$
+^TODO\.md$

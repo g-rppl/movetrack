@@ -45,10 +45,14 @@ intervals \code{w}.
 Calculate point estimates based on antenna bearing and signal strength.
 }
 \details{
+This function performs the following steps as described in
+\href{https://doi.org/10.1016/j.ecolmodel.2018.08.006}{Baldwin et al. 2018}:
 \itemize{
-\item Estimate location for each detection: half of detection range along the
-directional beam.
-\item Derive oscillating measurement error.
-\item Weighted means (by signal strength) for each time interval.
+\item Estimate locations for each detection: half of the maximum detection
+range \code{det_range} along the directional beam.
+\item Derive oscillating measurement error arising from antenna geometry and
+orientation.
+\item Calculate weighted means (by signal strength) for each time interval
+\code{dtime}.
 }
 }
