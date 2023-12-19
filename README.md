@@ -31,8 +31,7 @@ Now you can install `stantrackr` using:
 
 ```r
 library(devtools)
-install_github("g-rppl/stantrackr", ref = "main", dependencies = TRUE,
-auth_token = "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")
+install_github("g-rppl/stantrackr")
 ```
 
 ## Example workflow
