@@ -13,12 +13,6 @@
     <loc>/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/reference/distance.html</loc>
-  </url>
-  <url>
-    <loc>/reference/estimates.html</loc>
-  </url>
-  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
@@ -28,12 +22,9 @@
     <loc>/reference/motusData.html</loc>
   </url>
   <url>
-    <loc>/reference/speed.html</loc>
-  </url>
-  <url>
-    <loc>/reference/testdata.html</loc>
-  </url>
-  <url>
     <loc>/reference/track.html</loc>
+  </url>
+  <url>
+    <loc>/TODO.html</loc>
   </url>
 </urlset>
