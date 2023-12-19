@@ -8,13 +8,14 @@
 
 ## Installation
 
-First make sure that `cmdstanr` and `CmdStan` are available on your system. You can find more information [here](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).
+You can install `stantrackr` from GitHub using the `devtools` package:
 
 ```r
-install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+library(devtools)
+install_github("g-rppl/stantrackr")
 ```
 
-Check whether there is a suitable C++ toolchain installed on your system:
+During the initial installation, make sure that the C++ toolchain required for `CmdStan` is set up properly. You can find more information [here](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).
 
 ```r
 library(cmdstanr)
@@ -27,18 +28,14 @@ If not, go to <https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#
 install_cmdstan(cores = 2)
 ```
 
-Now you can install `stantrackr` using:
+## Details
 
-```r
-library(devtools)
-install_github("g-rppl/stantrackr", ref = "main", dependencies = TRUE,
-auth_token = "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")
-```
+This package provides two main functions: `locate()` and `track()`. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using random walk models written in [Stan](https://mc-stan.org/).
 
-## Example workflow
+## Quickstart example
     
 ```r
-library(motusTrack)
+library(stantrackr)
 library(tidyverse)
 library(sfheaders)
 library(leaflet)
@@ -74,10 +71,6 @@ ggplot(fit) +
     )) +
     scale_color_viridis_c()
 ```
-
-## Details
-
-This package provides two main functions: `locate()` and `track()`. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using random walk models written in [Stan](https://mc-stan.org/).
 
 ## References
 
