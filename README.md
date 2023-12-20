@@ -34,10 +34,14 @@ library(devtools)
 install_github("g-rppl/stantrackr")
 ```
 
+## Details
+
+This package provides two main functions: `locate()` and `track()`. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using random walk models written in [Stan](https://mc-stan.org/).
+
 ## Example workflow
     
 ```r
-library(motusTrack)
+library(stantrackr)
 library(tidyverse)
 library(sfheaders)
 library(leaflet)
@@ -73,10 +77,6 @@ ggplot(fit) +
     )) +
     scale_color_viridis_c()
 ```
-
-## Details
-
-This package provides two main functions: `locate()` and `track()`. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using random walk models written in [Stan](https://mc-stan.org/).
 
 ## References
 
