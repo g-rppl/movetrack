@@ -72,20 +72,17 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>First make sure that <code>cmdstanr</code> and <code>CmdStan</code> are available on your system. You can find more information <a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html" class="external-link">here</a>.</p>
+<p>You can install <code>stantrackr</code> from GitHub using the <code>devtools</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"cmdstanr"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://mc-stan.org/r-packages/"</span>, <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"repos"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Check whether there is a suitable C++ toolchain installed on your system:</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"g-rppl/stantrackr"</span><span class="op">)</span></span></code></pre></div>
+<p>During the initial installation, make sure that the C++ toolchain required for <code>CmdStan</code> is set up properly. You can find more information <a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html" class="external-link">here</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/cmdstanr/" class="external-link">cmdstanr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://mc-stan.org/cmdstanr/reference/install_cmdstan.html" class="external-link">check_cmdstan_toolchain</a></span><span class="op">(</span>fix <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If not, go to <a href="https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#cpp-toolchain" class="external-link uri">https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#cpp-toolchain</a> and follow the instructions for your platform. Once your toolchain is configured correctly <code>CmdStan</code> can be installed:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/cmdstanr/reference/install_cmdstan.html" class="external-link">install_cmdstan</a></span><span class="op">(</span>cores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p>Now you can install <code>stantrackr</code> using:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"g-rppl/stantrackr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a>
@@ -93,9 +90,9 @@
 <p>This package provides two main functions: <code><a href="reference/locate.html">locate()</a></code> and <code><a href="reference/track.html">track()</a></code>. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using random walk models written in <a href="https://mc-stan.org/" class="external-link">Stan</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="example-workflow">Example workflow<a class="anchor" aria-label="anchor" href="#example-workflow"></a>
+<h2 id="quickstart-example">Quickstart example<a class="anchor" aria-label="anchor" href="#quickstart-example"></a>
 </h2>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://g-rppl.github.io/stantrackr/" class="external-link">stantrackr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dcooley.github.io/sfheaders/" class="external-link">sfheaders</a></span><span class="op">)</span></span>
@@ -111,12 +108,12 @@
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/track.html">track</a></span><span class="op">(</span><span class="va">loc</span>, parallel_chains <span class="op">=</span> <span class="fl">4</span>, refresh <span class="op">=</span> <span class="fl">1e3</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># plot flight paths</span></span>
-<span><span class="va">fit</span> <span class="op">%&gt;%</span></span>
-<span>    <span class="fu">sf_linestring</span><span class="op">(</span><span class="st">"mean.lon"</span>, <span class="st">"mean.lat"</span>, linestring_id <span class="op">=</span> <span class="st">"ID"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>    <span class="fu">leaflet</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>    <span class="fu">addTiles</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>    <span class="fu">addPolylines</span><span class="op">(</span>color <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>    <span class="fu">addCircles</span><span class="op">(</span></span>
+<span><span class="va">fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dcooley.github.io/sfheaders/reference/sf_linestring.html" class="external-link">sf_linestring</a></span><span class="op">(</span><span class="st">"mean.lon"</span>, <span class="st">"mean.lat"</span>, linestring_id <span class="op">=</span> <span class="st">"ID"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html" class="external-link">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">addTiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">addPolylines</a></span><span class="op">(</span>color <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">addCircles</a></span><span class="op">(</span></span>
 <span>        lng <span class="op">=</span> <span class="op">~</span><span class="va">recvDeployLon</span>,</span>
 <span>        lat <span class="op">=</span> <span class="op">~</span><span class="va">recvDeployLat</span>,</span>
 <span>        data <span class="op">=</span> <span class="va">motusData</span>,</span>
@@ -125,12 +122,12 @@
 <span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># plot flight speed</span></span>
-<span><span class="fu">ggplot</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">geom_path</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
 <span>        x <span class="op">=</span> <span class="va">mean.lon</span>, y <span class="op">=</span> <span class="va">mean.lat</span>,</span>
 <span>        group <span class="op">=</span> <span class="va">ID</span>, colour <span class="op">=</span> <span class="va">speed</span></span>
 <span>    <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu">scale_color_viridis_c</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_color_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
