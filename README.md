@@ -51,10 +51,11 @@ fit <- track(loc, parallel_chains = 4, refresh = 1e3)
 
 # plot flight paths
 fit %>%
-    sf_linestring("mean.lon", "mean.lat", linestring_id = "ID") %>%
+    as.data.frame() %>%
+    sf_linestring("lon", "lat", linestring_id = "ID") %>%
     leaflet() %>%
     addTiles() %>%
-    addPolylines(color = ~c("orange", "blue")) %>%
+    addPolylines(color = ~ c("orange", "blue")) %>%
     addCircles(
         lng = ~recvDeployLon,
         lat = ~recvDeployLat,
@@ -64,12 +65,13 @@ fit %>%
     )
 
 # plot flight speed
-ggplot(fit) +
-    geom_path(aes(
-        x = mean.lon, y = mean.lat,
-        group = ID, colour = speed
-    )) +
-    scale_color_viridis_c()
+summary(fit, "speed") %>%
+    filter(ID == 49237) %>%
+    ggplot() +
+    geom_segment(aes(
+        x = time, y = lower, xend = time, yend = upper
+    ), alpha = 0.2) +
+    geom_point(aes(x = time, y = mean))
 ```
 
 ## References
