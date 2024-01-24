@@ -4,16 +4,10 @@
 \alias{track}
 \title{Model data}
 \usage{
-track(data = NULL, ci = "HDI", prob = 0.9, output_dir = getwd(), ...)
+track(data, output_dir = getwd(), ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} containing the point estimate data.}
-
-\item{ci}{The method used to calculate the credible intervals. Available
-options are \code{'HDI'} for the highest posterior density interval and \code{'ETI'}
-for the equal-tailed interval; defaults to \code{'HDI'}.}
-
-\item{prob}{The probability mass of the credible interval; defaults to \code{0.9}.}
 
 \item{output_dir}{The directory to save the \code{CmdStanMCMC} objects to;
 defaults to the current working directory. If \code{NULL}, the objects are not
@@ -22,7 +16,8 @@ saved.}
 \item{...}{Additional arguments passed to \code{cmdstanr::sample()}.}
 }
 \value{
-Returns a \code{data.frame} containing the model summaries.
+Returns a \code{stantrackr} object containing the posterior distributions for
+longitude, latitude, distance and speed.
 }
 \description{
 Model flight path from point estimates using a DCRW model.

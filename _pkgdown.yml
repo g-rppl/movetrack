@@ -7,3 +7,8 @@ reference:
     contents:
       - "`locate`"
       - "`track`"
+  - title: Analyse
+    contents:
+      - "`print.stantrackr`"
+      - "`summary.stantrackr`"
+      - "`as.data.frame.stantrackr`"
