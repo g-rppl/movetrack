@@ -83,8 +83,8 @@ track <- function(data, output_dir = getwd(), ...) {
     ids <- 1:(dim(drws)[3] / 2)
     lon <- drws[, , ids]
     lat <- drws[, , -c(ids)]
-    distance <- .distance(lon, lat)
-    speed <- .speed(distance, d$ts)
+    distance <- .distanceMCMC(lon, lat)
+    speed <- .speedMCMC(distance, d$ts)
 
     # Build output
     s <- list(list(
