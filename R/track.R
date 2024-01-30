@@ -24,8 +24,7 @@
 #' starting point.
 #'
 #' @import dplyr
-#' @import lubridate
-#' @import cmdstanr
+#' @importFrom cmdstanr cmdstan_model
 #'
 #' @export
 #'
