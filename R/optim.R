@@ -62,17 +62,17 @@ optim <- function(data, ...) {
     ids <- 1:(nrow(drws) / 2)
     lon <- drws$estimate[ids]
     lat <- drws$estimate[-c(ids)]
-    # distance <- .distance(lon, lat)
-    # speed <- .speed(distance, d$ts)
+    distance <- .distance(lon, lat)
+    speed <- .speed(distance, d$ts)
 
     # Build output
     s <- data.frame(
       ID = i,
       time = unique(d$ts),
       lon = lon,
-      lat = lat
-      # distance = distance,
-      # speed = speed
+      lat = lat,
+      distance = distance,
+      speed = speed
     )
 
     # Add to output
