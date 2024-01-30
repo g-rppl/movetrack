@@ -4,14 +4,10 @@
 \alias{optim}
 \title{Optimisation method for \code{track()}}
 \usage{
-optim(data, output_dir = getwd(), ...)
+optim(data, ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} containing the point estimate data.}
-
-\item{output_dir}{The directory to save the \code{CmdStanMCMC} objects to;
-defaults to the current working directory. If \code{NULL}, the objects are not
-saved.}
 
 \item{...}{Additional arguments passed to \code{cmdstanr::optimize()}.}
 }
