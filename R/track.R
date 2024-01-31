@@ -23,7 +23,7 @@
 #' [Auger-Méthé et al. 2021](https://doi.org/10.1002/ecm.1470) is a good
 #' starting point.
 #'
-#' @import dplyr
+#' @importFrom dplyr %>% group_by summarise filter
 #' @importFrom cmdstanr cmdstan_model
 #'
 #' @export

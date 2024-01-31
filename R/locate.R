@@ -30,8 +30,8 @@
 #'   - Calculate weighted means (by signal strength) for each time interval
 #'     `dtime`.
 #'
-#' @import dplyr
-#' @import lubridate
+#' @importFrom dplyr %>% arrange distinct group_by mutate select
+#' @importFrom lubridate round_date
 #' @importFrom stats complete.cases weighted.mean
 #'
 #' @export
