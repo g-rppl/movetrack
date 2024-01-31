@@ -4,16 +4,16 @@
 \alias{track}
 \title{Model data}
 \usage{
-track(data, output_dir = getwd(), ...)
+track(data, method = "mcmc", ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} containing the point estimate data.}
 
-\item{output_dir}{The directory to save the \code{CmdStanMCMC} objects to;
-defaults to the current working directory. If \code{NULL}, the objects are not
-saved.}
+\item{method}{The estimation method to use. Either \code{"mcmc"} or \code{"optim"};
+defaults to \code{"mcmc"}.}
 
-\item{...}{Additional arguments passed to \link[cmdstanr]{sample}.}
+\item{...}{Additional arguments passed to \code{cmdstanr::sample()} or
+\code{cmdstanr::optimize()}, respectively.}
 }
 \value{
 Returns a \code{stantrackr} object containing the posterior distributions for
@@ -23,12 +23,16 @@ longitude, latitude, distance and speed.
 Model flight path from point estimates using a DCRW model.
 }
 \details{
-This function is a wrapper around \code{cmdstanr::sample()} and uses a difference
-correlated random walk model (DCRW) to estimate individual flight paths. The
-model is described in more detail in
+This function calls \href{https://mc-stan.org/}{Stan} via
+\href{https://mc-stan.org/cmdstanr/index.html}{cmdstanr} and uses a difference
+correlated random walk model (DCRW) to estimate individual flight paths.
+The model is described in more detail in
 \href{https://doi.org/10.1890/04-1852}{Jonsen et al. 2005} and
 \href{https://doi.org/10.1016/j.ecolmodel.2018.08.006}{Baldwin et al. 2018}. To
 learn more about state-space models in animal movement in general,
 \href{https://doi.org/10.1002/ecm.1470}{Auger-Méthé et al. 2021} is a good
 starting point.
+}
+\seealso{
+\code{cmdstanr::sample()} \code{cmdstanr::optimize()}
 }
