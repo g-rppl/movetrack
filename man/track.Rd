@@ -16,8 +16,9 @@ defaults to \code{"mcmc"}.}
 \code{cmdstanr::optimize()}, respectively.}
 }
 \value{
-Returns a \code{stantrackr} object containing the posterior distributions for
-longitude, latitude, distance and speed.
+Returns a \code{data.frame} containing estimates for longitude, latitude, distance
+and speed per time interval or a \code{stantrackr} object including the full
+posterior distributions.
 }
 \description{
 Model flight path from point estimates using a DCRW model.
@@ -31,7 +32,11 @@ The model is described in more detail in
 \href{https://doi.org/10.1016/j.ecolmodel.2018.08.006}{Baldwin et al. 2018}. To
 learn more about state-space models in animal movement in general,
 \href{https://doi.org/10.1002/ecm.1470}{Auger-Méthé et al. 2021} is a good
-starting point.
+starting point. Available estimation methods are Stan's main Markov chain
+Monte Carlo algorithm and Stan's optimizer to obtain a (penalized) maximum
+likelihood estimate or a maximum a posteriori estimate (if \code{jacobian=TRUE}).
+See the \href{https://mc-stan.org/docs/cmdstan-guide}{CmdStan User's Guide} for
+more details.
 }
 \seealso{
 \code{cmdstanr::sample()} \code{cmdstanr::optimize()}
