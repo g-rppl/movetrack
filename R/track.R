@@ -10,23 +10,28 @@
 #'   `cmdstanr::optimize()`, respectively.
 #'
 #' @return
-#' Returns a `stantrackr` object containing the posterior distributions for
-#'   longitude, latitude, distance and speed.
+#' Returns a `data.frame` containing estimates for longitude, latitude, distance
+#' and speed per time interval or a `stantrackr` object including the full
+#' posterior distributions.
 #'
 #' @details
 #' This function calls [Stan](https://mc-stan.org/) via
-#'   [cmdstanr](https://mc-stan.org/cmdstanr/index.html) and uses a difference
-#'   correlated random walk model (DCRW) to estimate individual flight paths.
-#'   The model is described in more detail in
-#'   [Jonsen et al. 2005](https://doi.org/10.1890/04-1852) and
-#'   [Baldwin et al. 2018](https://doi.org/10.1016/j.ecolmodel.2018.08.006). To
-#'   learn more about state-space models in animal movement in general,
-#'   [Auger-Méthé et al. 2021](https://doi.org/10.1002/ecm.1470) is a good
-#'   starting point.
+#' [cmdstanr](https://mc-stan.org/cmdstanr/index.html) and uses a difference
+#' correlated random walk model (DCRW) to estimate individual flight paths.
+#' The model is described in more detail in
+#' [Jonsen et al. 2005](https://doi.org/10.1890/04-1852) and
+#' [Baldwin et al. 2018](https://doi.org/10.1016/j.ecolmodel.2018.08.006). To
+#' learn more about state-space models in animal movement in general,
+#' [Auger-Méthé et al. 2021](https://doi.org/10.1002/ecm.1470) is a good
+#' starting point. Available estimation methods are Stan's main Markov chain
+#' Monte Carlo algorithm and Stan's optimizer to obtain a (penalized) maximum
+#' likelihood estimate or a maximum a posteriori estimate (if `jacobian=TRUE`).
+#' See the [CmdStan User's Guide](https://mc-stan.org/docs/cmdstan-guide) for
+#' more details.
 #'
 #' @seealso `cmdstanr::sample()` `cmdstanr::optimize()`
 #'
-#' @importFrom dplyr %>% group_by summarise filter
+#' @importFrom dplyr %>% n group_by summarise filter
 #' @importFrom cmdstanr cmdstan_model
 #'
 #' @export
@@ -103,8 +108,6 @@ track <- function(data, method = "mcmc", ...) {
       } else {
         out <- append(out, s)
       }
-      names(out) <- unique(data$ID)
-      class(out) <- "stantrackr"
     } else if (method == "optim") {
       # Optimise
       fit <- mod$optimize(data = stan.data, init = list(list(y = loc)), ...)
@@ -139,6 +142,10 @@ track <- function(data, method = "mcmc", ...) {
 
     # Print progress
     cat(paste0("\n Done with ID ", i, ".\n \n"))
+  }
+  if (method == "mcmc") {
+    names(out) <- unique(data$ID)
+    class(out) <- "stantrackr"
   }
   return(out)
 }

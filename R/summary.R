@@ -29,12 +29,12 @@ summary.stantrackr <- function(object, var = "lon", ci = "HDI", prob = 0.9) {
       mean = apply(drws, 3, mean),
       median = apply(drws, 3, median),
       lower = if (ci == "ETI") {
-        c(apply(drws, 3, quantile, prob = (1 - prob) / 2))
+        c(apply(drws, 3, quantile, prob = (1 - prob) / 2, na.rm = TRUE))
       } else {
         c(apply(drws, 3, hdi, credMass = prob)[1, ])
       },
       upper = if (ci == "ETI") {
-        c(apply(drws, 3, quantile, prob = 1 - (1 - prob) / 2))
+        c(apply(drws, 3, quantile, prob = 1 - (1 - prob) / 2, na.rm = TRUE))
       } else {
         c(apply(drws, 3, hdi, credMass = prob)[2, ])
       },

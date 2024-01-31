@@ -31,7 +31,7 @@
 #'     `dtime`.
 #'
 #' @importFrom dplyr %>% arrange distinct group_by mutate select
-#' @importFrom lubridate round_date
+#' @importFrom lubridate round_date is.POSIXct
 #' @importFrom stats complete.cases weighted.mean
 #'
 #' @export
