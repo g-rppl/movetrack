@@ -15,5 +15,5 @@
 Print a summary for a \code{stantrackr} object
 }
 \seealso{
-\code{\link{summary.stantrackr}}
+\verb{\link{summary.stantrackr}}
 }
