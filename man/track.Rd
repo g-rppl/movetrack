@@ -13,7 +13,7 @@ track(data, output_dir = getwd(), ...)
 defaults to the current working directory. If \code{NULL}, the objects are not
 saved.}
 
-\item{...}{Additional arguments passed to \code{cmdstanr::sample()}.}
+\item{...}{Additional arguments passed to \link[cmdstanr]{sample}.}
 }
 \value{
 Returns a \code{stantrackr} object containing the posterior distributions for

@@ -7,7 +7,7 @@
 #' @param data A `data.frame` containing the point estimate data.
 #' @param ... Additional arguments passed to `cmdstanr::optimize()`.
 #'
-#' @import dplyr
+#' @importFrom dplyr %>% group_by summarise filter
 #' @importFrom cmdstanr cmdstan_model
 #'
 #' @export
