@@ -14,11 +14,6 @@
 #' @param dtime Time interval in minutes for which point estimates are to be
 #'   calculated.
 #'
-#' @return
-#' Returns a `data.frame` containing estimated coordinates and measurement
-#' errors for each time interval together with the proportions of time
-#' intervals `w`.
-#'
 #' @details
 #' This function performs the following steps as described in
 #' [Baldwin et al. 2018](https://doi.org/10.1016/j.ecolmodel.2018.08.006):
@@ -29,6 +24,11 @@
 #'     orientation.
 #'   - Calculate weighted means (by signal strength) for each time interval
 #'     `dtime`.
+#'
+#' @return
+#' Returns a `data.frame` containing estimated coordinates and measurement
+#' errors for each time interval together with the proportions of time
+#' intervals `w`.
 #'
 #' @importFrom dplyr %>% arrange distinct group_by mutate select
 #' @importFrom lubridate round_date is.POSIXct

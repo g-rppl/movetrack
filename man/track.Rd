@@ -38,6 +38,20 @@ likelihood estimate or a maximum a posteriori estimate (if \code{jacobian=TRUE})
 See the \href{https://mc-stan.org/docs/cmdstan-guide}{CmdStan User's Guide} for
 more details.
 }
+\examples{
+\dontrun{
+# Load data
+data(motusData)
+
+# Estimate locations
+loc <- locate(motusData, dtime = 2)
+
+# Model flight paths
+track(loc, parallel_chains = 4)
+track(loc, "optim", refresh = 1e3)
+}
+
+}
 \seealso{
 \code{cmdstanr::sample()} \code{cmdstanr::optimize()}
 }

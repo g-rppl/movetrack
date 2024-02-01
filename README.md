@@ -40,16 +40,16 @@ library(tidyverse)
 library(sfheaders)
 library(leaflet)
 
-# load data
+# Load data
 data(motusData)
 
-# estimate locations based on antenna bearings and signal strength
+# Estimate locations based on antenna bearings and signal strength
 loc <- locate(motusData, dtime = 2)
 
-# model flight paths
+# Model flight paths
 fit <- track(loc, parallel_chains = 4, refresh = 1e3)
 
-# plot flight paths
+# Plot flight paths
 fit %>%
     as.data.frame() %>%
     sf_linestring("lon", "lat", linestring_id = "ID") %>%
@@ -64,14 +64,14 @@ fit %>%
         opacity = 1
     )
 
-# plot flight speed
+# Plot flight speed
 summary(fit, "speed") %>%
     filter(ID == 49237) %>%
     ggplot() +
     geom_segment(aes(
-        x = time, y = lower, xend = time, yend = upper
+        x = time, y = distance.lower, xend = time, yend = distance.upper
     ), alpha = 0.2) +
-    geom_point(aes(x = time, y = mean))
+    geom_point(aes(x = time, y = distance.mean))
 ```
 
 ## References
