@@ -9,11 +9,6 @@
 #' @param ... Additional arguments passed to `cmdstanr::sample()` or
 #'   `cmdstanr::optimize()`, respectively.
 #'
-#' @return
-#' Returns a `data.frame` containing estimates for longitude, latitude, distance
-#' and speed per time interval or a `stantrackr` object including the full
-#' posterior distributions.
-#'
 #' @details
 #' This function calls [Stan](https://mc-stan.org/) via
 #' [cmdstanr](https://mc-stan.org/cmdstanr/index.html) and uses a difference
@@ -29,7 +24,25 @@
 #' See the [CmdStan User's Guide](https://mc-stan.org/docs/cmdstan-guide) for
 #' more details.
 #'
+#' @return
+#' Returns a `data.frame` containing estimates for longitude, latitude, distance
+#' and speed per time interval or a `stantrackr` object including the full
+#' posterior distributions.
+#'
 #' @seealso `cmdstanr::sample()` `cmdstanr::optimize()`
+#'
+#' @examples
+#' \dontrun{
+#' # Load data
+#' data(motusData)
+#'
+#' # Estimate locations
+#' loc <- locate(motusData, dtime = 2)
+#'
+#' # Model flight paths
+#' track(loc, parallel_chains = 4)
+#' track(loc, "optim", refresh = 1e3)
+#' }
 #'
 #' @importFrom dplyr %>% n group_by summarise filter
 #' @importFrom cmdstanr cmdstan_model
@@ -41,10 +54,6 @@ track <- function(data, method = "mcmc", ...) {
   . <- ID <- NULL
 
   # Check data
-  if (is.null(data)) {
-    stop("No data provided.")
-  }
-
   ids <- data %>%
     group_by(ID) %>%
     summarise(n = n()) %>%

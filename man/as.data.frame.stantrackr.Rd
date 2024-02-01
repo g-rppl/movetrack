@@ -4,11 +4,16 @@
 \alias{as.data.frame.stantrackr}
 \title{Coerce a \code{stantrackr} object to a Data Frame}
 \usage{
-\method{as.data.frame}{stantrackr}(x)
+\method{as.data.frame}{stantrackr}(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{stantrackr}.}
+
+\item{...}{Unused; for compatibility with the generic method.}
 }
 \description{
 Coerce a \code{stantrackr} object to a Data Frame
+}
+\seealso{
+\code{summary.stantrackr()}
 }

@@ -4,16 +4,18 @@
 \alias{print.stantrackr}
 \title{Print a summary for a \code{stantrackr} object}
 \usage{
-\method{print}{stantrackr}(x, digits = 3)
+\method{print}{stantrackr}(x, digits = 3, ...)
 }
 \arguments{
 \item{x}{An object of class \code{stantrackr}.}
 
 \item{digits}{The minimal number of \emph{significant} digits; defaults to \code{3}.}
+
+\item{...}{Additional arguments passed to \code{print()}.}
 }
 \description{
 Print a summary for a \code{stantrackr} object
 }
 \seealso{
-\verb{\link{summary.stantrackr}}
+\code{summary.stantrackr()}
 }
