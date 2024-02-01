@@ -65,7 +65,7 @@ fit %>%
     )
 
 # Plot flight speed
-summary(fit, "distance") %>%
+summary(fit, "speed") %>%
     filter(ID == 49237) %>%
     ggplot() +
     geom_segment(aes(
