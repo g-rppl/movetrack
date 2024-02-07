@@ -1,8 +1,17 @@
-data(motusData)
+test_that("locate error", {
+  expect_error(
+    locate(motusData, det_range = "loo"),
+    "'det_range' must be numeric or a named list."
+  )
+  expect_error(
+    locate(motusData, det_range = list("yagi-6" = 12)),
+    "Missing detection range for 'yagi-5'."
+  )
+})
 
-test_that("locate", {
+test_that("locate result", {
   expect_message(
-    loc <- locate(motusData, dtime = 2),
+    loc <- locate(motusData, det_range = list("yagi-5" = 10, "yagi-6" = 12)),
     "Removed 10 detections containing missing values."
   )
   expect_true(is.data.frame(loc))
@@ -10,6 +19,6 @@ test_that("locate", {
   expect_equal(ncol(loc), 7)
   expect_true(is.POSIXct(loc$ts))
 
-  expected <- c(1224.1888, 8657.874, 9.2656, 6.0957, 149.3589)
+  expected <- c(1224.244547, 8657.852526, 9.210950, 6.063194, 149.358945)
   expect_equal(colSums(loc[-c(1:2)]), expected, ignore_attr = TRUE)
 })

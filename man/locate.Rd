@@ -5,12 +5,13 @@
 \title{Estimate location}
 \usage{
 locate(
-  data = NULL,
+  data,
   ID = "tagDeployID",
   ts = "ts",
   sig = "sig",
   aLon = "recvDeployLon",
   aLat = "recvDeployLat",
+  aType = "antType",
   aBearing = "antBearing",
   det_range = 12,
   dtime = 2
@@ -29,9 +30,13 @@ locate(
 
 \item{aLat}{Antenna latitude column.}
 
+\item{aType}{Antenna type column.}
+
 \item{aBearing}{Antenna bearing column.}
 
-\item{det_range}{Assumed maximum detection range of antennas in kilometres.}
+\item{det_range}{Assumed maximum detection range of antennas in kilometres.
+Can be a single value or a named list of values for different antenna
+types.}
 
 \item{dtime}{Time interval in minutes for which point estimates are to be
 calculated.}
@@ -55,4 +60,13 @@ orientation.
 \item Calculate weighted means (by signal strength) for each time interval
 \code{dtime}.
 }
+}
+\examples{
+\dontrun{
+data(motusData)
+locate(motusData)
+locate(motusData, dtime = 1, det_range = 10)
+locate(motusData, det_range = list("yagi-5"=10, "yagi-6"=12))
+}
+
 }
