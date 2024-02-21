@@ -8,13 +8,14 @@
 
 ## Installation
 
-First make sure that `cmdstanr` and `CmdStan` are available on your system. You can find more information [here](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).
+You can install `stantrackr` from GitHub using the `devtools` package:
 
 ```r
-install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+library(devtools)
+install_github("g-rppl/stantrackr")
 ```
 
-Check whether there is a suitable C++ toolchain installed on your system:
+During the initial installation, make sure that the C++ toolchain required for `CmdStan` is set up properly. You can find more information [here](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).
 
 ```r
 library(cmdstanr)
@@ -27,18 +28,11 @@ If not, go to <https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#
 install_cmdstan(cores = 2)
 ```
 
-Now you can install `stantrackr` using:
-
-```r
-library(devtools)
-install_github("g-rppl/stantrackr")
-```
-
 ## Details
 
 This package provides two main functions: `locate()` and `track()`. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using random walk models written in [Stan](https://mc-stan.org/).
 
-## Example workflow
+## Quickstart example
     
 ```r
 library(stantrackr)
@@ -46,21 +40,22 @@ library(tidyverse)
 library(sfheaders)
 library(leaflet)
 
-# load data
+# Load data
 data(motusData)
 
-# estimate locations based on antenna bearings and signal strength
+# Estimate locations based on antenna bearings and signal strength
 loc <- locate(motusData, dtime = 2)
 
-# model flight paths
+# Model flight paths
 fit <- track(loc, parallel_chains = 4, refresh = 1e3)
 
-# plot flight paths
+# Plot flight paths
 fit %>%
-    sf_linestring("mean.lon", "mean.lat", linestring_id = "ID") %>%
+    as.data.frame() %>%
+    sf_linestring("lon", "lat", linestring_id = "ID") %>%
     leaflet() %>%
     addTiles() %>%
-    addPolylines(color = ~c("orange", "blue")) %>%
+    addPolylines(color = ~ c("orange", "blue")) %>%
     addCircles(
         lng = ~recvDeployLon,
         lat = ~recvDeployLat,
@@ -69,13 +64,14 @@ fit %>%
         opacity = 1
     )
 
-# plot flight speed
-ggplot(fit) +
-    geom_path(aes(
-        x = mean.lon, y = mean.lat,
-        group = ID, colour = speed
-    )) +
-    scale_color_viridis_c()
+# Plot flight speed
+summary(fit, "speed") %>%
+    filter(ID == 49237) %>%
+    ggplot() +
+    geom_segment(aes(
+        x = time, y = distance.lower, xend = time, yend = distance.upper
+    ), alpha = 0.2) +
+    geom_point(aes(x = time, y = distance.mean))
 ```
 
 ## References

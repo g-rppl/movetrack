@@ -4,58 +4,56 @@
 #' Model flight path from point estimates using a DCRW model.
 #'
 #' @param data A `data.frame` containing the point estimate data.
-#' @param ci The method used to calculate the credible intervals. Available
-#'   options are `'HDI'` for the highest posterior density interval and `'ETI'`
-#'   for the equal-tailed interval; defaults to `'HDI'`.
-#' @param prob The probability mass of the credible interval; defaults to `0.9`.
-#' @param output_dir The directory to save the `CmdStanMCMC` objects to;
-#'   defaults to the current working directory. If `NULL`, the objects are not
-#'   saved.
-#' @param ... Additional arguments passed to `cmdstanr::sample()`.
-#'
-#' @return
-#' Returns a `data.frame` containing the model summaries.
+#' @param method The estimation method to use. Either `"mcmc"` or `"optim"`;
+#'   defaults to `"mcmc"`.
+#' @param ... Additional arguments passed to `cmdstanr::sample()` or
+#'   `cmdstanr::optimize()`, respectively.
 #'
 #' @details
-#' This function is a wrapper around `cmdstanr::sample()` and uses a difference
-#' correlated random walk model (DCRW) to estimate individual flight paths. The
-#' model is described in more detail in
+#' This function calls [Stan](https://mc-stan.org/) via
+#' [cmdstanr](https://mc-stan.org/cmdstanr/index.html) and uses a difference
+#' correlated random walk model (DCRW) to estimate individual flight paths.
+#' The model is described in more detail in
 #' [Jonsen et al. 2005](https://doi.org/10.1890/04-1852) and
 #' [Baldwin et al. 2018](https://doi.org/10.1016/j.ecolmodel.2018.08.006). To
 #' learn more about state-space models in animal movement in general,
 #' [Auger-Méthé et al. 2021](https://doi.org/10.1002/ecm.1470) is a good
-#' starting point.
+#' starting point. Available estimation methods are Stan's main Markov chain
+#' Monte Carlo algorithm and Stan's optimizer to obtain a (penalized) maximum
+#' likelihood estimate or a maximum a posteriori estimate (if `jacobian=TRUE`).
+#' See the [CmdStan User's Guide](https://mc-stan.org/docs/cmdstan-guide) for
+#' more details.
 #'
-#' @import dplyr
-#' @import lubridate
-#' @import cmdstanr
-#' @importFrom stats median quantile
-#' @importFrom HDInterval hdi
+#' @return
+#' Returns a `data.frame` containing estimates for longitude, latitude, distance
+#' and speed per time interval or a `stantrackr` object including the full
+#' posterior distributions.
+#'
+#' @seealso `cmdstanr::sample()` `cmdstanr::optimize()`
+#'
+#' @examples
+#' \dontrun{
+#' # Load data
+#' data(motusData)
+#'
+#' # Estimate locations
+#' loc <- locate(motusData, dtime = 2)
+#'
+#' # Model flight paths
+#' track(loc, parallel_chains = 4)
+#' track(loc, "optim", refresh = 1e3)
+#' }
+#'
+#' @importFrom dplyr %>% n group_by summarise filter
+#' @importFrom cmdstanr cmdstan_model
 #'
 #' @export
 #'
-track <- function(
-    data = NULL,
-    ci = "HDI",
-    prob = 0.9,
-    output_dir = getwd(),
-    ...) {
+track <- function(data, method = "mcmc", ...) {
   # Bind variables locally so that R CMD check doesn't complain
-  . <- ID <- name <- NULL
+  . <- ID <- NULL
 
   # Check data
-  if (is.null(data)) {
-    stop("No data provided.")
-  }
-  if (!ci %in% c("HDI", "ETI")) {
-    stop(
-      "Invalid credible interval method. Available options are 'HDI' and 'ETI'."
-    )
-  }
-  if (prob < 0 || prob > 1) {
-    stop("Probability mass must be between 0 und 1.")
-  }
-
   ids <- data %>%
     group_by(ID) %>%
     summarise(n = n()) %>%
@@ -89,50 +87,74 @@ track <- function(
       N = nrow(loc), w = d$w
     )
 
-    # Sample
-    fit <- mod$sample(data = stan.data, output_dir = NULL, ...)
+    if (method == "mcmc") {
+      # Sample
+      fit <- mod$sample(data = stan.data, ...)
 
-    # Save CmdStanMCMC object
-    if (!is.null(output_dir)) {
-      fit$save_object(paste0(output_dir, "/model-", i, ".RDS"))
-    }
+      # Summarise draws
+      drws <- fit$draws("y")
+      ids <- 1:(dim(drws)[3] / 2)
+      lon <- drws[, , ids]
+      lat <- drws[, , -c(ids)]
+      distance <- .distanceMCMC(lon, lat)
+      speed <- .speedMCMC(distance, d$ts)
 
-    # Summarise draws
-    drws <- fit$draws("y")
+      # Build output
+      s <- list(list(
+        ID = i,
+        time = unique(d$ts),
+        draws = list(
+          lon = lon,
+          lat = lat,
+          distance = distance,
+          speed = speed
+        )
+      ))
 
-    s <- data.frame(
-      time = unique(d$ts),
-      name = rep(c("lon", "lat"), each = length(d$ts)),
-      mean = c(apply(drws, 3, mean)),
-      median = c(apply(drws, 3, median)),
-      lwr = if (ci == "ETI") {
-        c(apply(drws, 3, quantile, prob = (1 - prob) / 2))
+      # Add to output
+      if (i == unique(data$ID)[1]) {
+        out <- s
       } else {
-        c(apply(drws, 3, hdi, credMass = prob)[1, ])
-      },
-      upr = if (ci == "ETI") {
-        c(apply(drws, 3, quantile, prob = 1 - (1 - prob) / 2))
-      } else {
-        c(apply(drws, 3, hdi, credMass = prob)[2, ])
+        out <- append(out, s)
       }
-    ) %>%
-      group_split(name, .keep = FALSE)
+    } else if (method == "optim") {
+      # Optimise
+      fit <- mod$optimize(data = stan.data, init = list(list(y = loc)), ...)
 
-    # Wide format and additional variables
-    s <- merge(s[[2]], s[[1]], by = "time", suffix = c(".lon", ".lat"))
-    s$ID <- i
-    s$distance <- .distance(s)
-    s$speed <- s$distance / (c(NA, diff(s$time)) * 60)
+      # Summarise result
+      drws <- fit$summary("y")
+      ids <- 1:(nrow(drws) / 2)
+      lon <- drws$estimate[ids]
+      lat <- drws$estimate[-c(ids)]
+      distance <- .distance(lon, lat)
+      speed <- .speed(distance, d$ts)
 
-    # Add to output
-    if (i == unique(data$ID)[1]) {
-      summary <- s
+      # Build output
+      s <- data.frame(
+        ID = i,
+        time = unique(d$ts),
+        lon = lon,
+        lat = lat,
+        distance = distance,
+        speed = speed
+      )
+
+      # Add to output
+      if (i == unique(data$ID)[1]) {
+        out <- s
+      } else {
+        out <- rbind(out, s)
+      }
     } else {
-      summary <- rbind(summary, s)
+      stop("Unknown method '", method, "'.")
     }
 
     # Print progress
-    cat(paste0("Done with ID ", i, ".\n \n"))
+    cat(paste0("\n Done with ID ", i, ".\n \n"))
   }
-  return(summary)
+  if (method == "mcmc") {
+    names(out) <- unique(data$ID)
+    class(out) <- "stantrackr"
+  }
+  return(out)
 }

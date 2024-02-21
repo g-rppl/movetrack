@@ -4,36 +4,54 @@
 \alias{track}
 \title{Model data}
 \usage{
-track(data = NULL, ci = "HDI", prob = 0.9, output_dir = getwd(), ...)
+track(data, method = "mcmc", ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} containing the point estimate data.}
 
-\item{ci}{The method used to calculate the credible intervals. Available
-options are \code{'HDI'} for the highest posterior density interval and \code{'ETI'}
-for the equal-tailed interval; defaults to \code{'HDI'}.}
+\item{method}{The estimation method to use. Either \code{"mcmc"} or \code{"optim"};
+defaults to \code{"mcmc"}.}
 
-\item{prob}{The probability mass of the credible interval; defaults to \code{0.9}.}
-
-\item{output_dir}{The directory to save the \code{CmdStanMCMC} objects to;
-defaults to the current working directory. If \code{NULL}, the objects are not
-saved.}
-
-\item{...}{Additional arguments passed to \code{cmdstanr::sample()}.}
+\item{...}{Additional arguments passed to \code{cmdstanr::sample()} or
+\code{cmdstanr::optimize()}, respectively.}
 }
 \value{
-Returns a \code{data.frame} containing the model summaries.
+Returns a \code{data.frame} containing estimates for longitude, latitude, distance
+and speed per time interval or a \code{stantrackr} object including the full
+posterior distributions.
 }
 \description{
 Model flight path from point estimates using a DCRW model.
 }
 \details{
-This function is a wrapper around \code{cmdstanr::sample()} and uses a difference
-correlated random walk model (DCRW) to estimate individual flight paths. The
-model is described in more detail in
+This function calls \href{https://mc-stan.org/}{Stan} via
+\href{https://mc-stan.org/cmdstanr/index.html}{cmdstanr} and uses a difference
+correlated random walk model (DCRW) to estimate individual flight paths.
+The model is described in more detail in
 \href{https://doi.org/10.1890/04-1852}{Jonsen et al. 2005} and
 \href{https://doi.org/10.1016/j.ecolmodel.2018.08.006}{Baldwin et al. 2018}. To
 learn more about state-space models in animal movement in general,
 \href{https://doi.org/10.1002/ecm.1470}{Auger-Méthé et al. 2021} is a good
-starting point.
+starting point. Available estimation methods are Stan's main Markov chain
+Monte Carlo algorithm and Stan's optimizer to obtain a (penalized) maximum
+likelihood estimate or a maximum a posteriori estimate (if \code{jacobian=TRUE}).
+See the \href{https://mc-stan.org/docs/cmdstan-guide}{CmdStan User's Guide} for
+more details.
+}
+\examples{
+\dontrun{
+# Load data
+data(motusData)
+
+# Estimate locations
+loc <- locate(motusData, dtime = 2)
+
+# Model flight paths
+track(loc, parallel_chains = 4)
+track(loc, "optim", refresh = 1e3)
+}
+
+}
+\seealso{
+\code{cmdstanr::sample()} \code{cmdstanr::optimize()}
 }
