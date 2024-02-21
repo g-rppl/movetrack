@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">stantrackr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -50,7 +50,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">track</span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, ci <span class="op">=</span> <span class="st">"HDI"</span>, prob <span class="op">=</span> <span class="fl">0.9</span>, output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">track</span><span class="op">(</span><span class="va">data</span>, method <span class="op">=</span> <span class="st">"mcmc"</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -59,44 +59,61 @@
 <dd><p>A <code>data.frame</code> containing the point estimate data.</p></dd>
 
 
-<dt>ci</dt>
-<dd><p>The method used to calculate the credible intervals. Available
-options are <code>'HDI'</code> for the highest posterior density interval and <code>'ETI'</code>
-for the equal-tailed interval; defaults to <code>'HDI'</code>.</p></dd>
-
-
-<dt>prob</dt>
-<dd><p>The probability mass of the credible interval; defaults to <code>0.9</code>.</p></dd>
-
-
-<dt>output_dir</dt>
-<dd><p>The directory to save the <code>CmdStanMCMC</code> objects to;
-defaults to the current working directory. If <code>NULL</code>, the objects are not
-saved.</p></dd>
+<dt>method</dt>
+<dd><p>The estimation method to use. Either <code>"mcmc"</code> or <code>"optim"</code>;
+defaults to <code>"mcmc"</code>.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Additional arguments passed to <code><a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link">cmdstanr::sample()</a></code>.</p></dd>
+<dd><p>Additional arguments passed to <code><a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link">cmdstanr::sample()</a></code> or
+<code><a href="https://mc-stan.org/cmdstanr/reference/model-method-optimize.html" class="external-link">cmdstanr::optimize()</a></code>, respectively.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>Returns a <code>data.frame</code> containing the model summaries.</p>
+<p>Returns a <code>data.frame</code> containing estimates for longitude, latitude, distance
+and speed per time interval or a <code>stantrackr</code> object including the full
+posterior distributions.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>This function is a wrapper around <code><a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link">cmdstanr::sample()</a></code> and uses a difference
-correlated random walk model (DCRW) to estimate individual flight paths. The
-model is described in more detail in
+    <p>This function calls <a href="https://mc-stan.org/" class="external-link">Stan</a> via
+<a href="https://mc-stan.org/cmdstanr/index.html" class="external-link">cmdstanr</a> and uses a difference
+correlated random walk model (DCRW) to estimate individual flight paths.
+The model is described in more detail in
 <a href="https://doi.org/10.1890/04-1852" class="external-link">Jonsen et al. 2005</a> and
 <a href="https://doi.org/10.1016/j.ecolmodel.2018.08.006" class="external-link">Baldwin et al. 2018</a>. To
 learn more about state-space models in animal movement in general,
 <a href="https://doi.org/10.1002/ecm.1470" class="external-link">Auger-Méthé et al. 2021</a> is a good
-starting point.</p>
+starting point. Available estimation methods are Stan's main Markov chain
+Monte Carlo algorithm and Stan's optimizer to obtain a (penalized) maximum
+likelihood estimate or a maximum a posteriori estimate (if <code>jacobian=TRUE</code>).
+See the <a href="https://mc-stan.org/docs/cmdstan-guide" class="external-link">CmdStan User's Guide</a> for
+more details.</p>
+    </div>
+    <div id="see-also">
+    <h2>See also</h2>
+    <div class="dont-index"><p><code><a href="https://mc-stan.org/cmdstanr/reference/model-method-sample.html" class="external-link">cmdstanr::sample()</a></code> <code><a href="https://mc-stan.org/cmdstanr/reference/model-method-optimize.html" class="external-link">cmdstanr::optimize()</a></code></p></div>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Load data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">motusData</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Estimate locations</span></span></span>
+<span class="r-in"><span><span class="va">loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="locate.html">locate</a></span><span class="op">(</span><span class="va">motusData</span>, dtime <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Model flight paths</span></span></span>
+<span class="r-in"><span><span class="fu">track</span><span class="op">(</span><span class="va">loc</span>, parallel_chains <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">track</span><span class="op">(</span><span class="va">loc</span>, <span class="st">"optim"</span>, refresh <span class="op">=</span> <span class="fl">1e3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

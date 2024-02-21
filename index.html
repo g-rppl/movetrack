@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">stantrackr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@
 <p>You can install <code>stantrackr</code> from GitHub using the <code>devtools</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"g-rppl/stantrackr"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"g-rppl/stantrackr"</span><span class="op">)</span></span></code></pre></div>
 <p>During the initial installation, make sure that the C++ toolchain required for <code>CmdStan</code> is set up properly. You can find more information <a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html" class="external-link">here</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/cmdstanr/" class="external-link">cmdstanr</a></span><span class="op">)</span></span>
@@ -98,22 +98,23 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dcooley.github.io/sfheaders/" class="external-link">sfheaders</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/leaflet/" class="external-link">leaflet</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># load data</span></span>
+<span><span class="co"># Load data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">motusData</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># estimate locations based on antenna bearings and signal strength</span></span>
+<span><span class="co"># Estimate locations based on antenna bearings and signal strength</span></span>
 <span><span class="va">loc</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/locate.html">locate</a></span><span class="op">(</span><span class="va">motusData</span>, dtime <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># model flight paths</span></span>
+<span><span class="co"># Model flight paths</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/track.html">track</a></span><span class="op">(</span><span class="va">loc</span>, parallel_chains <span class="op">=</span> <span class="fl">4</span>, refresh <span class="op">=</span> <span class="fl">1e3</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># plot flight paths</span></span>
-<span><span class="va">fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dcooley.github.io/sfheaders/reference/sf_linestring.html" class="external-link">sf_linestring</a></span><span class="op">(</span><span class="st">"mean.lon"</span>, <span class="st">"mean.lat"</span>, linestring_id <span class="op">=</span> <span class="st">"ID"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/leaflet.html" class="external-link">leaflet</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">addTiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">addPolylines</a></span><span class="op">(</span>color <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/leaflet/man/map-layers.html" class="external-link">addCircles</a></span><span class="op">(</span></span>
+<span><span class="co"># Plot flight paths</span></span>
+<span><span class="va">fit</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">sf_linestring</span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span>, linestring_id <span class="op">=</span> <span class="st">"ID"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">leaflet</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">addTiles</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">addPolylines</span><span class="op">(</span>color <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"blue"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">addCircles</span><span class="op">(</span></span>
 <span>        lng <span class="op">=</span> <span class="op">~</span><span class="va">recvDeployLon</span>,</span>
 <span>        lat <span class="op">=</span> <span class="op">~</span><span class="va">recvDeployLat</span>,</span>
 <span>        data <span class="op">=</span> <span class="va">motusData</span>,</span>
@@ -121,13 +122,14 @@
 <span>        opacity <span class="op">=</span> <span class="fl">1</span></span>
 <span>    <span class="op">)</span></span>
 <span></span>
-<span><span class="co"># plot flight speed</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_path</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
-<span>        x <span class="op">=</span> <span class="va">mean.lon</span>, y <span class="op">=</span> <span class="va">mean.lat</span>,</span>
-<span>        group <span class="op">=</span> <span class="va">ID</span>, colour <span class="op">=</span> <span class="va">speed</span></span>
-<span>    <span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_color_viridis_c</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Plot flight speed</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span>, <span class="st">"speed"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">==</span> <span class="fl">49237</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">geom_segment</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span></span>
+<span>        x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">distance.lower</span>, xend <span class="op">=</span> <span class="va">time</span>, yend <span class="op">=</span> <span class="va">distance.upper</span></span>
+<span>    <span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">time</span>, y <span class="op">=</span> <span class="va">distance.mean</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
