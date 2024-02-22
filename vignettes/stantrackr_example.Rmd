@@ -1,0 +1,74 @@
+---
+title: "Quickstart example"
+author: "Georg Rüppel"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: yes
+vignette: |
+  %\VignetteIndexEntry{Quickstart example}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, message=FALSE}
+# Load packages
+library(stantrackr)
+library(tidyverse)
+library(sfheaders)
+library(leaflet)
+
+# Load example data
+data(motusData)
+```	
+
+## Estimate locations
+Estimate locations based on antenna bearings and signal strength for time intervals of two minutes.
+
+```{r locate}
+loc <- locate(motusData, dtime = 2)
+```
+
+## Model flight paths
+Model flight paths using MCMC running four chains in parallel and return summary.
+
+```{r model, warning=FALSE, message=FALSE}
+fit <- track(loc, parallel_chains = 4, refresh = 1e3)
+
+fit
+```
+
+## Plot flight paths
+
+```{r map}
+# Extract draws
+draws <- getDraws(fit) %>%
+    sf_linestring("lon", "lat", linestring_id = "tID")
+
+# Leaflet map
+fit %>%
+    as.data.frame() %>%
+    sf_linestring("lon", "lat", linestring_id = "ID") %>%
+    leaflet() %>%
+    addTiles() %>%
+    addPolylines(data = draws, color = "grey", weight = 1, opacity = 0.2) %>%
+    addPolylines(color = ~ c("orange", "blue")) %>%
+    addCircles(
+        lng = ~recvDeployLon,
+        lat = ~recvDeployLat,
+        data = motusData,
+        color = "black",
+        opacity = 1
+    )
+```
+
+## Plot flight speed
+
+```{r plot, warning=FALSE}
+summary(fit, "speed") %>%
+    filter(ID == 49237) %>%
+    ggplot() +
+    geom_segment(aes(
+        x = time, y = speed.lower, xend = time, yend = speed.upper
+    ), alpha = 0.2) +
+    geom_point(aes(x = time, y = speed.mean))
+```

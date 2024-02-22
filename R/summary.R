@@ -144,7 +144,7 @@ as.data.frame.stantrackr <- function(x, ...) {
 #'
 getDraws <- function(fit, nsim = 50) {
   # Bind variables locally so that R CMD check doesn't complain
-  ID <- iter <- NULL
+  ID <- iter <- time <- NULL
 
   # Sample iterations and chains
   it <- sample(dimnames(fit[[1]]$draws$lon)$iteration, nsim)

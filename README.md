@@ -32,47 +32,9 @@ install_cmdstan(cores = 2)
 
 This package provides two main functions: `locate()` and `track()`. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using random walk models written in [Stan](https://mc-stan.org/).
 
-## Quickstart example
+## Getting started
     
-```r
-library(stantrackr)
-library(tidyverse)
-library(sfheaders)
-library(leaflet)
-
-# Load data
-data(motusData)
-
-# Estimate locations based on antenna bearings and signal strength
-loc <- locate(motusData, dtime = 2)
-
-# Model flight paths
-fit <- track(loc, parallel_chains = 4, refresh = 1e3)
-
-# Plot flight paths
-fit %>%
-    as.data.frame() %>%
-    sf_linestring("lon", "lat", linestring_id = "ID") %>%
-    leaflet() %>%
-    addTiles() %>%
-    addPolylines(color = ~ c("orange", "blue")) %>%
-    addCircles(
-        lng = ~recvDeployLon,
-        lat = ~recvDeployLat,
-        data = motusData,
-        color = "black",
-        opacity = 1
-    )
-
-# Plot flight speed
-summary(fit, "speed") %>%
-    filter(ID == 49237) %>%
-    ggplot() +
-    geom_segment(aes(
-        x = time, y = distance.lower, xend = time, yend = distance.upper
-    ), alpha = 0.2) +
-    geom_point(aes(x = time, y = distance.mean))
-```
+You can find a quickstart example in the `vignette("stantrackr_example")`.
 
 ## References
 
