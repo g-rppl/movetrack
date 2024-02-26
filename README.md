@@ -34,7 +34,7 @@ This package provides two main functions: `locate()` and `track()`. The first fu
 
 ## Getting started
     
-You can find a quickstart example in the `vignette("stantrackr_example")`.
+You can find a quickstart example in the vignette [stantrackr_example](https://g-rppl.github.io/stantrackr/articles/stantrackr_example.html).
 
 ## References
 
