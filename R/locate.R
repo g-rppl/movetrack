@@ -1,4 +1,4 @@
-#' Estimate location
+#' Estimate locations
 #'
 #' @description
 #' Calculate point estimates based on antenna bearing and signal strength.

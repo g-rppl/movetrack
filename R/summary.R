@@ -33,7 +33,10 @@
   return(s)
 }
 
-#' Create a summary of a `stantrackr` object
+#' Summary
+#'
+#' @description
+#' Create a summary of a `stantrackr` object.
 #'
 #' @param object An object of class `stantrackr`.
 #' @param var The variable to summarise; defaults to `'lon'`.
@@ -92,7 +95,10 @@ summary.stantrackr <- function(
   return(bind_rows(summary))
 }
 
-#' Print a summary for a `stantrackr` object
+#' Print
+#'
+#' @description
+#' Print a summary for a `stantrackr` object.
 #'
 #' @param x An object of class `stantrackr`.
 #' @param digits The minimal number of *significant* digits; defaults to `3`.
@@ -107,7 +113,10 @@ print.stantrackr <- function(x, digits = 3, ...) {
   print(.getMeans(x), digits = digits, ...)
 }
 
-#' Coerce a `stantrackr` object to a Data Frame
+#' Coerce to a Data Frame
+#'
+#' @description
+#' Coerce a `stantrackr` object to a `data.frame'.
 #'
 #' @param x An object of class `stantrackr`.
 #' @param ... Unused; for compatibility with the generic method.
@@ -119,4 +128,40 @@ print.stantrackr <- function(x, digits = 3, ...) {
 #'
 as.data.frame.stantrackr <- function(x, ...) {
   return(.getMeans(x))
+}
+
+#' Extract draws
+#'
+#' @description
+#' Extract draws from a `stantrackr` object.
+#'
+#' @param fit An object of class `stantrackr`.
+#' @param nsim The number of simulations to extract; defaults to `50`.
+#'
+#' @return A `data.frame` with the draws.
+#'
+#' @export
+#'
+getDraws <- function(fit, nsim = 50) {
+  # Bind variables locally so that R CMD check doesn't complain
+  ID <- iter <- time <- NULL
+
+  # Sample iterations and chains
+  it <- sample(dimnames(fit[[1]]$draws$lon)$iteration, nsim)
+  ch <- sample(dimnames(fit[[1]]$draws$lon)$chain, 1)
+
+  # Build output
+  sim <- lapply(fit, function(x) {
+    data.frame(
+      ID = x$ID,
+      time = rep(x$time, each = nsim),
+      chain = ch,
+      iter = it,
+      lon = c(x$draws$lon[it, ch, ]),
+      lat = c(x$draws$lat[it, ch, ])
+    ) %>%
+      mutate(tID = paste(ID, iter, sep = "_")) %>%
+      arrange(iter, time)
+  })
+  return(bind_rows(sim))
 }

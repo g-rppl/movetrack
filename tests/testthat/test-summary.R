@@ -33,3 +33,9 @@ test_that("summary result", {
     ignore_attr = TRUE, tolerance = 0.01
   )
 })
+
+test_that("getDraws", {
+  drws <- getDraws(fit)
+  expect_true(is.data.frame(drws))
+  expect_equal(dim(drws), c(2100, 7))
+})

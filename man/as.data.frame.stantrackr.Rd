@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{as.data.frame.stantrackr}
 \alias{as.data.frame.stantrackr}
-\title{Coerce a \code{stantrackr} object to a Data Frame}
+\title{Coerce to a Data Frame}
 \usage{
 \method{as.data.frame}{stantrackr}(x, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{Unused; for compatibility with the generic method.}
 }
 \description{
-Coerce a \code{stantrackr} object to a Data Frame
+Coerce a \code{stantrackr} object to a `data.frame'.
 }
 \seealso{
 \code{summary.stantrackr()}

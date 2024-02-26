@@ -3,7 +3,7 @@ Title: Estimate flight tracks from telemetry data
 Description: `stantrackr` is a `R` package that provides simple functionality
   to estimate flight tracks from telemetry data using random walk models written
   in Stan.
-Version: 0.1.1
+Version: 0.1.2
 License: MIT + file LICENSE
 Authors@R: 
   person("Georg", "Rüppel", , "g-rppl@posteo.de", role = c("aut", "cre"),
@@ -21,10 +21,16 @@ Additional_repositories:
   https://mc-stan.org/r-packages/
 SystemRequirements: CmdStan (https://mc-stan.org/users/interfaces/cmdstan)
 Encoding: UTF-8
+VignetteBuilder:
+  knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
   knitr,
   rmarkdown,
+  tidyverse,
+  sf,
+  leaflet,
+  sfheaders,
   testthat (>= 3.0.0)
 Config/testthat/edition: 3

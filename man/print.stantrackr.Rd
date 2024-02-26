@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{print.stantrackr}
 \alias{print.stantrackr}
-\title{Print a summary for a \code{stantrackr} object}
+\title{Print}
 \usage{
 \method{print}{stantrackr}(x, digits = 3, ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{Additional arguments passed to \code{print()}.}
 }
 \description{
-Print a summary for a \code{stantrackr} object
+Print a summary for a \code{stantrackr} object.
 }
 \seealso{
 \code{summary.stantrackr()}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/locate.R
 \name{locate}
 \alias{locate}
-\title{Estimate location}
+\title{Estimate locations}
 \usage{
 locate(
   data,

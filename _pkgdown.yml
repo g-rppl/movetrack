@@ -12,3 +12,4 @@ reference:
       - "`print.stantrackr`"
       - "`summary.stantrackr`"
       - "`as.data.frame.stantrackr`"
+      - "`getDraws`"

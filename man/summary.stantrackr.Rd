@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{summary.stantrackr}
 \alias{summary.stantrackr}
-\title{Create a summary of a \code{stantrackr} object}
+\title{Summary}
 \usage{
 \method{summary}{stantrackr}(object, var = c("lon", "lat"), ci = "HDI", prob = 0.9, ...)
 }
@@ -23,7 +23,7 @@ for the equal-tailed interval; defaults to \code{'HDI'}.}
 A \code{data.frame} with the summary statistics.
 }
 \description{
-Create a summary of a \code{stantrackr} object
+Create a summary of a \code{stantrackr} object.
 }
 \examples{
 \dontrun{
