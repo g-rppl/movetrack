@@ -1,10 +1,11 @@
 data {
-  int<lower=0> T;         // number of occasions
+  int<lower=1> T;         // number of occasions
+  int<lower=1> I;         // number of tracks
   int<lower=1> N;         // number of states
   int nCovs;              // number of covariates
   matrix[T,2] loc;        // observed location
   matrix[T,2] sigma;      // measurement error
-  array[T] int ID;        // track identifier
+  array[I,2] int index;   // track start and end
   matrix[T,nCovs+1] covs; // covariates
   vector[T] w;            // proportions of time intervals
 }
@@ -45,11 +46,11 @@ model {
   tau ~ exponential(20);
 
   // Transition probabilities
-  for(t in 1:T) {
+  for (t in 1:T) {
     int betarow = 1;
-    for(i in 1:N) {
-      for(j in 1:N) {
-        if(i==j) {
+    for (i in 1:N) {
+      for (j in 1:N) {
+        if (i==j) {
           gamma[t,i,j] = 1;
         } else {
           gamma[t,i,j] = exp(beta[betarow] * to_vector(covs[t]));
@@ -58,34 +59,40 @@ model {
       }
     }
     // each row must sum to 1
-    for(i in 1:N)
+    for (i in 1:N)
       log_gamma[t][i] = log(gamma[t][i] / sum(gamma[t][i]));
   }
 
   // Transpose
-  for(t in 1:T)
-    for(i in 1:N)
-      for(j in 1:N)
+  for (t in 1:T)
+    for (i in 1:N)
+      for (j in 1:N)
         log_gamma_tr[t,j,i] = log_gamma[t,i,j];
 
-  // PROCESS MODEL
-  // Estimate first two location
-  y_c[1,] ~ student_t(5, loc_c[1,], sigma[1,]);
-  y_c[2,] ~ multi_normal(y_c[1,], Omega);
+  for (i in 1:I) {
+    int t1 = index[i,1];
+    int t2 = index[i,2];
 
-  // State-based process equation
-  for (t in 2:T-1) {
-    if(t==2 || ID[t]!=ID[t-2])
-      logp = rep_vector(-log(N), N);
+    // estimate first two location
+    y_c[t1,] ~ student_t(5, loc_c[t1,], sigma[t1,]);
+    y_c[t1+1,] ~ multi_normal(y_c[t1,], Omega);
+    for (t in (t1+1):(t2-1)) {
+      // initialise forward variable
+      if (t==t1+1)
+        logp = rep_vector(-log(N), N);
+
+      // State-based process equation
       for (n in 1:N) {
         mu1[t,] = y_c[t,] + (y_c[t,] - y_c[t-1,]) * cor[n];
         logptemp[n] = log_sum_exp(to_vector(log_gamma_tr[t,n]) + logp) + 
           multi_normal_lpdf(y_c[t+1,] | mu1[t,], Omega);
+      }
+      logp = logptemp;
+
+      // add log forward variable to target at the end of each track
+      if (t==t2-1)
+        target += log_sum_exp(logp);
     }
-    logp = logptemp;
-    // add log forward variable to target at the end of each track
-    if(t==T-1 || ID[t+2]!=ID[t])
-      target += log_sum_exp(logp);
   }
 
   // OBSERVATION MODEL
