@@ -71,7 +71,7 @@ track <- function(data, method = "mcmc", ...) {
   }
 
   # Compile model
-  mod <- cmdstan_model(system.file("Stan", "DCRW.stan", package = "stantrackr"))
+  mod <- cmdstan_model(system.file("Stan", "dist.stan", package = "stantrackr"))
 
   for (i in unique(data$ID)) {
     # Subset data
@@ -84,7 +84,7 @@ track <- function(data, method = "mcmc", ...) {
     # Bundle data
     stan.data <- list(
       loc = loc, sigma = sigma,
-      N = nrow(loc), w = d$w
+      N = nrow(loc), w = d$w, max_dist = 50 * 2/60 * d$d[-c(1)]
     )
 
     if (method == "mcmc") {
