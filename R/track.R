@@ -4,6 +4,7 @@
 #' Model flight path from point estimates using a DCRW model.
 #'
 #' @param data A `data.frame` containing the point estimate data.
+#' @param states The number of states to use in the model; defaults to `1`.
 #' @param method The estimation method to use. Either `"mcmc"` or `"optim"`;
 #'   defaults to `"mcmc"`.
 #' @param ... Additional arguments passed to `cmdstanr::sample()` or
@@ -40,7 +41,7 @@
 #' loc <- locate(motusData, dtime = 2)
 #'
 #' # Model flight paths
-#' track(loc, parallel_chains = 4)
+#' track(loc, states = 2, parallel_chains = 4)
 #' track(loc, "optim", refresh = 1e3)
 #' }
 #'
@@ -49,7 +50,7 @@
 #'
 #' @export
 #'
-track <- function(data, method = "mcmc", ...) {
+track <- function(data, states = 1, method = "mcmc", ...) {
   # Bind variables locally so that R CMD check doesn't complain
   . <- ID <- NULL
 
@@ -69,92 +70,71 @@ track <- function(data, method = "mcmc", ...) {
     ))
     data <- data[!data$ID %in% ids, ]
   }
+  d <- data
 
   # Compile model
-  mod <- cmdstan_model(system.file("Stan", "dist.stan", package = "stantrackr"))
+  mod <- cmdstan_model(system.file("Stan", "HMM.stan", package = "stantrackr"))
 
-  for (i in unique(data$ID)) {
-    # Subset data
-    d <- data[data$ID == i, ]
+  # Prepare data
+  loc <- as.matrix(d[, c("lon", "lat")])
+  sigma <- as.matrix(d[, c("lon_sd", "lat_sd")])
+  index <- c(0, which(diff(as.numeric(as.factor(d$ID))) != 0), nrow(d))
 
-    # Prepare data
-    loc <- as.matrix(d[, c("lon", "lat")])
-    sigma <- as.matrix(d[, c("lon_sd", "lat_sd")])
+  # Bundle data
+  stan.data <- list(
+    T = nrow(d), I = length(unique(d$ID)), N = states, nCovs = 0,
+    loc = loc, sigma = sigma, w = d$w,
+    index = index,
+    covs = matrix(rep(1, nrow(loc)), ncol = 1)
+  )
 
-    # Bundle data
-    stan.data <- list(
-      loc = loc, sigma = sigma,
-      N = nrow(loc), w = d$w, max_dist = 50 * 2/60 * d$d[-c(1)]
-    )
-
-    if (method == "mcmc") {
-      # Sample
-      fit <- mod$sample(data = stan.data, ...)
-
-      # Summarise draws
-      drws <- fit$draws("y")
-      ids <- 1:(dim(drws)[3] / 2)
-      lon <- drws[, , ids]
-      lat <- drws[, , -c(ids)]
-      distance <- .distanceMCMC(lon, lat)
-      speed <- .speedMCMC(distance, d$ts)
-
-      # Build output
-      s <- list(list(
-        ID = i,
-        time = unique(d$ts),
-        draws = list(
-          lon = lon,
-          lat = lat,
-          distance = distance,
-          speed = speed
-        )
-      ))
-
-      # Add to output
-      if (i == unique(data$ID)[1]) {
-        out <- s
-      } else {
-        out <- append(out, s)
-      }
-    } else if (method == "optim") {
-      # Optimise
-      fit <- mod$optimize(data = stan.data, init = list(list(y = loc)), ...)
-
-      # Summarise result
-      drws <- fit$summary("y")
-      ids <- 1:(nrow(drws) / 2)
-      lon <- drws$estimate[ids]
-      lat <- drws$estimate[-c(ids)]
-      distance <- .distance(lon, lat)
-      speed <- .speed(distance, d$ts)
-
-      # Build output
-      s <- data.frame(
-        ID = i,
-        time = unique(d$ts),
-        lon = lon,
-        lat = lat,
-        distance = distance,
-        speed = speed
-      )
-
-      # Add to output
-      if (i == unique(data$ID)[1]) {
-        out <- s
-      } else {
-        out <- rbind(out, s)
-      }
-    } else {
-      stop("Unknown method '", method, "'.")
-    }
-
-    # Print progress
-    cat(paste0("\n Done with ID ", i, ".\n \n"))
-  }
   if (method == "mcmc") {
-    names(out) <- unique(data$ID)
+    # Sample
+    fit <- mod$sample(data = stan.data, ...)
+
+    # Summarise draws
+    drws <- fit$draws("y")
+    idx <- 1:(dim(drws)[3] / 2)
+    lon <- drws[, , idx]
+    lat <- drws[, , -c(idx)]
+    # distance <- .distanceMCMC(lon, lat)
+    # speed <- .speedMCMC(distance, d$ts)
+
+    # Build output
+    out <- list(
+      ID = d$ID,
+      time = d$ts,
+      draws = list(
+        lon = lon,
+        lat = lat
+        # distance = distance,
+        # speed = speed
+      )
+    )
     class(out) <- "stantrackr"
+  } else if (method == "optim") {
+    # Optimise
+    fit <- mod$optimize(data = stan.data, init = list(list(y = loc)), ...)
+
+    # Summarise result
+    drws <- fit$summary("y")
+    idx <- 1:(nrow(drws) / 2)
+    lon <- drws$estimate[idx]
+    lat <- drws$estimate[-c(idx)]
+    # distance <- .distance(lon, lat)
+    # speed <- .speed(distance, d$ts)
+
+    # Build output
+    out <- data.frame(
+      ID = d$ID,
+      time = d$ts,
+      lon = lon,
+      lat = lat
+      # distance = distance,
+      # speed = speed
+    )
+  } else {
+    stop("Unknown method '", method, "'.")
   }
   return(out)
 }

@@ -4,10 +4,12 @@
 \alias{track}
 \title{Model data}
 \usage{
-track(data, method = "mcmc", ...)
+track(data, states = 1, method = "mcmc", ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} containing the point estimate data.}
+
+\item{states}{The number of states to use in the model; defaults to \code{1}.}
 
 \item{method}{The estimation method to use. Either \code{"mcmc"} or \code{"optim"};
 defaults to \code{"mcmc"}.}
@@ -47,7 +49,7 @@ data(motusData)
 loc <- locate(motusData, dtime = 2)
 
 # Model flight paths
-track(loc, parallel_chains = 4)
+track(loc, states = 2, parallel_chains = 4)
 track(loc, "optim", refresh = 1e3)
 }
 
