@@ -98,8 +98,7 @@ locate <- function(
   # Proportions of time intervals
   d <- d %>%
     group_by(ID) %>%
-    mutate(d = c(NA, diff(as.numeric(ts))),
-    w = dtime / c(dtime, diff(as.numeric(ts) / 60)))
+    mutate(w = dtime / c(dtime, diff(as.numeric(ts) / 60)))
 
   return(as.data.frame(d))
 }

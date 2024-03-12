@@ -4,7 +4,7 @@
 \alias{track}
 \title{Model data}
 \usage{
-track(data, states = 1, method = "mcmc", ...)
+track(data, states = 1, method = "mcmc", i_theta = TRUE, ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} containing the point estimate data.}
@@ -13,6 +13,9 @@ track(data, states = 1, method = "mcmc", ...)
 
 \item{method}{The estimation method to use. Either \code{"mcmc"} or \code{"optim"};
 defaults to \code{"mcmc"}.}
+
+\item{i_theta}{Logical indicating whether to estimate individual correlation
+parameters; defaults to \code{TRUE}.}
 
 \item{...}{Additional arguments passed to \code{cmdstanr::sample()} or
 \code{cmdstanr::optimize()}, respectively.}

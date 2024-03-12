@@ -1,0 +1,87 @@
+---
+title: "Model formulation"
+author: "Georg Rüppel"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: yes
+vignette: |
+  %\VignetteIndexEntry{Model formulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Hidden Markov Model
+
+```{r, echo=FALSE}
+DiagrammeR::grViz(" digraph {
+	node [fontname='Helvetica,Arial,sans-serif']
+    {rank=same 'sex' 'age' 'lifestyle'}
+    Weight [fillcolor='#5983b0', style=filled]
+    sex -> Weight
+    sex -> height
+    age -> Weight
+    age -> height -> Weight
+    age -> lifestyle
+    sport -> Weight
+    food -> Weight
+    lifestyle -> sport
+    lifestyle -> food
+}")
+```
+
+The Hidden Markov Model (HMM) is a statistical model that describes the evolution of a sequence of random variables, $\{S_t\}$, which are not directly observable, but can be inferred from another sequence of random variables, $\{Y_t\}$, that are observable. The sequence of observable variables, $\{Y_t\}$, is assumed to be conditionally independent given the sequence of hidden states, $\{S_t\}$, and the state process is assumed to be a Markov chain. The HMM is characterised by the following components:
+
+### State process
+
+The state process $\{S_t\}$ of the $N$-state HMM is characterised by its state transition probability matrix $\Gamma^{(t)} = (\gamma^{(t)}_{i,j})$, where $i,j = 1, \dots, N$ and $\gamma^{(t)}_{i,j} = \text{Pr}(S_{t+1} = j|S_t = i)$.
+The transition probabilities at time $t$, $\gamma^{(t)}_{i,j}$, can then be related to $p$ environmental (or other) covariates, $(\omega^{(t)}_1, \dots, \omega^{(t)}_p)$, via the multinomial logit link:
+
+$$
+\gamma^{(t)}_{i,j} = \frac{\exp(\eta_{i,j})}{\sum_{k=1}^N \exp(\eta_{i,k})}, 
+    \quad \text{where} \quad \eta_{i,j} = 
+    \begin{cases}
+        \beta^{(i,j)}_0 + \sum_{l=1}^p \beta^{(i,j)}_l \omega^{(t)}_l & \text{if} \quad i \neq j, \\
+        0 & \text{otherwise}.
+    \end{cases}
+$$
+
+### Process model
+
+The process equation for the true locations of the animal at regular time intervals $t$, $z_t = \begin{bmatrix} z_{t, \text{lon}} \\ z_{t, \text{lat}} \end{bmatrix}$, for $T$ time steps assumes that the animal's location at time $t$ is not only dependent on the previous location, $z_{t-1}$, but also on the animal's previous displacement in each coordinate, $z_{t-1} - z_{t-2}$:
+
+$$
+z_t = z_{t-1} + \lambda_n (z_{t-1} - z_{t-2}) + \epsilon_t, 
+    \quad \epsilon_t \sim \text{N}(0, \Omega), 
+    \quad 1 \leq t \leq T,
+    \quad 1 \leq n \leq N,
+$$
+
+where
+
+$$
+\Omega = 
+    \begin{bmatrix} 
+        \tau^2_{\epsilon, \text{lon}} & 0 \\ 
+        0 & \tau^2_{\epsilon, \text{lat}} 
+    \end{bmatrix}.
+$$
+
+The state-depended parameter $\lambda_n$ can take values between 0 and 1 (i.e., $0 \leq \lambda \leq 1$), and controls the degree of correlation between steps.
+By default, `stantrackr` estimates track-specific $\lambda_n$ values, but it is also possible to use the same $\lambda_n$ for all tracks by setting `i_lambda = FALSE`.
+
+
+### Observation model
+
+Often, the locations of an animal, $y_j = \begin{bmatrix} y_{j, \text{lon}} \\ y_{j, \text{lat}} \end{bmatrix}$, are observed at irregular time intervals $j$, with $J$ representing the total number of observed locations.
+Therefore, the true location of the animal is linearly interpolated to the time of the observation, with $w_j$ representing the proportion of the regular time interval between $t-1$ and $t$ when the observation $y_j$ was made:
+
+$$
+y_j = w_j z_t + (1 - w_j) z_{t-1} + \theta_j, 
+    \quad \theta_j \sim \text{T}(0, \sigma), 
+    \quad 1 \leq j \leq J
+$$
+
+## References
+
+Auger-Méthé, M., Newman, K., Cole, D., Empacher, F., Gryba, R., King, A. A., ... & Thomas, L. (2021). A guide to state–space modeling of ecological time series. *Ecological Monographs*, 91(4), e01470. doi: [10.1002/ecm.1470](https://doi.org/10.1002/ecm.1470)

@@ -46,7 +46,7 @@
 
 
 # Calculate lagged distances in metres
-.distance <- function(lon, lat) {
+.distance <- function(lon, lat, index) {
   dist <- rep(NA, length(lon))
   for (i in 2:length(lon)) {
     dist[i] <- .distGeo(
@@ -54,11 +54,12 @@
       lon[i - 1], lat[i - 1]
     )
   }
+  dist[index[-c(length(index))] + 1] <- NA
   return(dist * 1e3)
 }
 
 # Calculate lagged distances in metres from posterior draws
-.distanceMCMC <- function(lon, lat) {
+.distanceMCMC <- function(lon, lat, index) {
   dist <- array(NA, dim(lon), dimnames(lon))
   for (i in 2:dim(lon)[3]) {
     dist[, , i] <- .distGeo(
@@ -66,6 +67,7 @@
       lon[, , i - 1], lat[, , i - 1]
     )
   }
+  dist[, , index[-c(length(index))] + 1] <- NA
   dimnames(dist)$variable <- paste0("distance[", seq_len(dim(lon)[3]), "]")
   class(dist) <- c("draws_array", "draws", "array")
   return(dist * 1e3)
