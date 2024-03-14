@@ -5,10 +5,12 @@
 #'
 #' @param data A `data.frame` containing the point estimate data.
 #' @param states The number of states to use in the model; defaults to `1`.
-#' @param method The estimation method to use. Either `"mcmc"` or `"optim"`;
-#'   defaults to `"mcmc"`.
 #' @param i_lambda Logical indicating whether to estimate individual correlation
 #'   parameters; defaults to `TRUE`.
+#' @param vars A `matrix` or `data.frame` containing covariates to include in
+#'   the state process model; should have the same number of rows as `data`.
+#' @param method The estimation method to use. Either `"mcmc"` or `"optim"`;
+#'   defaults to `"mcmc"`.
 #' @param ... Additional arguments passed to `cmdstanr::sample()` or
 #'   `cmdstanr::optimize()`, respectively.
 #'
@@ -52,7 +54,9 @@
 #'
 #' @export
 #'
-track <- function(data, states = 1, method = "mcmc", i_lambda = TRUE, ...) {
+track <- function(
+    data,
+    states = 1, i_lambda = TRUE, vars = NULL, method = "mcmc", ...) {
   # Bind variables locally so that R CMD check doesn't complain
   . <- ID <- NULL
 
@@ -81,13 +85,14 @@ track <- function(data, states = 1, method = "mcmc", i_lambda = TRUE, ...) {
   y <- as.matrix(d[, c("lon", "lat")])
   sigma <- as.matrix(d[, c("lon_sd", "lat_sd")])
   index <- c(0, which(diff(as.numeric(as.factor(d$ID))) != 0), nrow(d))
+  covs <- as.matrix(cbind(matrix(1, nrow = nrow(y)), vars))
 
   # Bundle data
   stan.data <- list(
-    T = nrow(d), I = length(unique(d$ID)), N = states, nCovs = 0,
+    T = nrow(d), I = length(unique(d$ID)), N = states, nCovs = ncol(covs) - 1,
     y = y, sigma = sigma, w = d$w,
     index = index,
-    covs = matrix(rep(1, nrow(y)), ncol = 1),
+    covs = covs,
     i_lambda = as.numeric(i_lambda)
   )
 
@@ -112,7 +117,8 @@ track <- function(data, states = 1, method = "mcmc", i_lambda = TRUE, ...) {
         lat = lat,
         distance = distance,
         speed = speed
-      )
+      ),
+      beta = fit$draws("beta")
     )
     class(out) <- "stantrackr"
   } else if (method == "optim") {

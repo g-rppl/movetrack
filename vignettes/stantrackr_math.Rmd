@@ -13,21 +13,40 @@ vignette: |
 
 ## Hidden Markov Model
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.align='center'}
 DiagrammeR::grViz(" digraph {
+	fontname='Helvetica,Arial,sans-serif'
 	node [fontname='Helvetica,Arial,sans-serif']
-    {rank=same 'sex' 'age' 'lifestyle'}
-    Weight [fillcolor='#5983b0', style=filled]
-    sex -> Weight
-    sex -> height
-    age -> Weight
-    age -> height -> Weight
-    age -> lifestyle
-    sport -> Weight
-    food -> Weight
-    lifestyle -> sport
-    lifestyle -> food
-}")
+	edge [fontname='Helvetica,Arial,sans-serif']
+    
+    # Weight [fillcolor='#5983b0', style=filled]
+    
+    z0 [label='z&#x209C;&#x208B;&#x2082;']
+    y0 [label='y&#x2C7C;&#x208B;&#x2082;']
+    z1 [label='z&#x209C;&#x208B;&#x2081;']
+    y1 [label='y&#x2C7C;&#x208B;&#x2081;']
+    z2 [label='z&#x209C;']
+    y2 [label='y&#x2C7C;']
+    z3 [label='z&#x209C;&#x208A;&#x2081;']
+    y3 [label='y&#x2C7C;&#x208A;&#x2081;']
+    S0 -> z0 -> y0
+    S1 -> z1 -> y1
+    S2 -> z2 -> y2
+    S3 -> z3 -> y3
+    
+    subgraph cluster_0 {
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+        {rank=same; S0 S1 S2 S3}
+		S0 [label='S&#x209C;&#x208B;&#x2082;']
+        S1 [label='S&#x209C;&#x208B;&#x2081;']
+        S2 [label='S&#x209C;']
+        S3 [label='S&#x209C;&#x208A;&#x2081;']
+        S0 -> S1 -> S2 -> S3
+		label='State process';
+	}
+}", width = 500, height = 300)
 ```
 
 The Hidden Markov Model (HMM) is a statistical model that describes the evolution of a sequence of random variables, $\{S_t\}$, which are not directly observable, but can be inferred from another sequence of random variables, $\{Y_t\}$, that are observable. The sequence of observable variables, $\{Y_t\}$, is assumed to be conditionally independent given the sequence of hidden states, $\{S_t\}$, and the state process is assumed to be a Markov chain. The HMM is characterised by the following components:
@@ -79,8 +98,10 @@ Therefore, the true location of the animal is linearly interpolated to the time 
 $$
 y_j = w_j z_t + (1 - w_j) z_{t-1} + \theta_j, 
     \quad \theta_j \sim \text{T}(0, \sigma), 
-    \quad 1 \leq j \leq J
+    \quad 1 \leq j \leq J,
 $$
+
+where $\text{T}(0, \sigma)$ denotes a bivariate Student's $t$-distribution with measurement error $\sigma = \begin{bmatrix} \sigma_{\text{lon}} \\ \sigma_{\text{lat}} \end{bmatrix}$.
 
 ## References
 
