@@ -1,5 +1,4 @@
-// Generates state probabilities using the forward-backward algorithm
-
+// Generate state probabilities using the forward-backward algorithm
 generated quantities {
   matrix[T,N] stateProbs;
   vector[N] lp;
@@ -23,8 +22,8 @@ generated quantities {
             lp[n] = -log(N);
         }
         for (n in 1:N) {
-          mu[t,] = y_c[t,] + (y_c[t,] - y_c[t-1,]) * cor[i][n];
-          lp_p1[n] = log_sum_exp(to_vector(log_gamma_tr[t,n]) + lp) + 
+          mu[t,] = y_c[t,] + (y_c[t,] - y_c[t-1,]) * lambda[i][n];
+          lp_p1[n] = log_sum_exp(gamma[t,n] + lp) + 
             multi_normal_lpdf(y_c[t+1,] | mu[t,], Omega[i]);
           logalpha[t,n] = lp_p1[n];
         }
@@ -40,9 +39,9 @@ generated quantities {
             lp_p1[n] = 0;
         } else {
           for (n in 1:N) {
-            mu[t,] = y_c[t,] + (y_c[t,] - y_c[t+1,]) * cor[i][n];
-            lp_p1[n] = log_sum_exp(to_vector(log_gamma_tr[t+1,n]) + lp) + 
-              multi_normal_lpdf(y_c[t-1,] | mu[t,], Omega[i]);
+            mu[t,] = y_c[t,] + (y_c[t,] - y_c[t-1,]) * lambda[i][n];
+            lp_p1[n] = log_sum_exp(gamma[t+1,n] + lp) + 
+              multi_normal_lpdf(y_c[t+2,] | mu[t,], Omega[i]);
           }
         }
         lp = lp_p1;
