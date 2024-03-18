@@ -1,4 +1,9 @@
 data(motusData)
-suppressMessages(loc <- loc2 <- locate(motusData, dtime = 10))
-suppressMessages(loc2$ID[1] <- 1)
-suppressMessages(fit <- track(loc, seed = 42, parallel_chains = 4, refresh = 0))
+suppressMessages(loc <- locate(motusData, dtime = 10))
+suppressMessages(loc$ID[1] <- 1)
+
+test_that("track warnings", {
+  expect_warning(
+    fit <<- track(loc, seed = 42, parallel_chains = 4, refresh = 0)
+  )
+})

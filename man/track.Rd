@@ -4,39 +4,29 @@
 \alias{track}
 \title{Model data}
 \usage{
-track(data, method = "mcmc", ...)
+track(data, states = 1, i_lambda = TRUE, ...)
 }
 \arguments{
 \item{data}{A \code{data.frame} containing the point estimate data.}
 
-\item{method}{The estimation method to use. Either \code{"mcmc"} or \code{"optim"};
-defaults to \code{"mcmc"}.}
+\item{states}{The number of states to use in the model; defaults to \code{1}.}
 
-\item{...}{Additional arguments passed to \code{cmdstanr::sample()} or
-\code{cmdstanr::optimize()}, respectively.}
+\item{i_lambda}{Logical indicating whether to estimate individual correlation
+parameters; defaults to \code{TRUE}.}
+
+\item{...}{Additional arguments passed to \code{cmdstanr::sample()}.}
 }
 \value{
-Returns a \code{data.frame} containing estimates for longitude, latitude, distance
-and speed per time interval or a \code{stantrackr} object including the full
-posterior distributions.
+Returns a \code{stantrackr} object including the posterior distributions for
+longitude, latitude, distance, and speed per time interval.
 }
 \description{
 Model flight path from point estimates using a DCRW model.
 }
 \details{
 This function calls \href{https://mc-stan.org/}{Stan} via
-\href{https://mc-stan.org/cmdstanr/index.html}{cmdstanr} and uses a difference
-correlated random walk model (DCRW) to estimate individual flight paths.
-The model is described in more detail in
-\href{https://doi.org/10.1890/04-1852}{Jonsen et al. 2005} and
-\href{https://doi.org/10.1016/j.ecolmodel.2018.08.006}{Baldwin et al. 2018}. To
-learn more about state-space models in animal movement in general,
-\href{https://doi.org/10.1002/ecm.1470}{Auger-Méthé et al. 2021} is a good
-starting point. Available estimation methods are Stan's main Markov chain
-Monte Carlo algorithm and Stan's optimizer to obtain a (penalized) maximum
-likelihood estimate or a maximum a posteriori estimate (if \code{jacobian=TRUE}).
-See the \href{https://mc-stan.org/docs/cmdstan-guide}{CmdStan User's Guide} for
-more details.
+\href{https://mc-stan.org/cmdstanr/index.html}{cmdstanr} and uses a Hidden Markov
+Model (HMM) to estimate individual flight paths.
 }
 \examples{
 \dontrun{
@@ -47,11 +37,26 @@ data(motusData)
 loc <- locate(motusData, dtime = 2)
 
 # Model flight paths
-track(loc, parallel_chains = 4)
-track(loc, "optim", refresh = 1e3)
+track(loc, states = 2, parallel_chains = 4)
+track(loc, i_lambda = FALSE, parallel_chains = 4)
 }
 
 }
+\references{
+Auger‐Méthé, M., Newman, K., Cole, D., Empacher, F., Gryba, R., King, A. A.,
+... & Thomas, L. (2021). A guide to state–space modeling of ecological time
+series. \emph{Ecological Monographs}, 91(4), e01470.
+doi:\href{https://doi.org/10.1002/ecm.1470}{10.1002/ecm.1470}
+
+Baldwin, J. W., Leap, K., Finn, J. T., & Smetzer, J. R. (2018). Bayesian
+state-space models reveal unobserved off-shore nocturnal migration from Motus
+data. \emph{Ecological Modelling}, 386, 38-46.
+doi:\href{https://doi.org/10.1016/j.ecolmodel.2018.08.006}{10.1016/j.ecolmodel.2018.08.006}
+
+Jonsen, I. D., Flemming, J. M., & Myers, R. A. (2005). Robust state–space
+modeling of animal movement data. \emph{Ecology}, 86(11), 2874-2880.
+doi:\href{https://doi.org/10.1890/04-1852}{10.1890/04-1852}
+}
 \seealso{
-\code{cmdstanr::sample()} \code{cmdstanr::optimize()}
+\code{cmdstanr::sample()}
 }

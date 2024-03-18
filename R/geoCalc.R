@@ -44,21 +44,8 @@
   ))
 }
 
-
-# Calculate lagged distances in metres
-.distance <- function(lon, lat) {
-  dist <- rep(NA, length(lon))
-  for (i in 2:length(lon)) {
-    dist[i] <- .distGeo(
-      lon[i], lat[i],
-      lon[i - 1], lat[i - 1]
-    )
-  }
-  return(dist * 1e3)
-}
-
 # Calculate lagged distances in metres from posterior draws
-.distanceMCMC <- function(lon, lat) {
+.distance <- function(lon, lat, index) {
   dist <- array(NA, dim(lon), dimnames(lon))
   for (i in 2:dim(lon)[3]) {
     dist[, , i] <- .distGeo(
@@ -66,19 +53,14 @@
       lon[, , i - 1], lat[, , i - 1]
     )
   }
+  dist[, , index[-c(length(index))] + 1] <- NA
   dimnames(dist)$variable <- paste0("distance[", seq_len(dim(lon)[3]), "]")
   class(dist) <- c("draws_array", "draws", "array")
   return(dist * 1e3)
 }
 
-# Calculate lagged speeds in metres per second
-.speed <- function(distance, time) {
-  speed <- distance / c(NA, diff(time) * 60)
-  return(speed)
-}
-
 # Calculate lagged speeds in metres per second from posterior draws
-.speedMCMC <- function(distance, time) {
+.speed <- function(distance, time) {
   speed <- sweep(distance, 3, (c(NA, diff(time)) * 60), "/")
   dimnames(speed)$variable <- paste0("speed[", seq_len(dim(distance)[3]), "]")
   return(speed)

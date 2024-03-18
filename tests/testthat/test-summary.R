@@ -24,12 +24,12 @@ test_that("summary types", {
 test_that("summary result", {
   expect_equal(
     colSums(summary(fit)[-c(1:2)]),
-    c(319.08, 319.15, 314.53, 323.64, 2255.98, 2256.07, 2252.69, 2259.25),
+    c(310, 310, 306, 315, 2201, 2201, 2198, 2204),
     ignore_attr = TRUE, tolerance = 0.01
   )
   expect_equal(
     colSums(summary(fit, var = "distance", ci = "ETI")[-c(1:2)], na.rm = TRUE),
-    c(677802.0, 658509.7, 327016.2, 1099289.4),
+    c(669233, 650429, 323813, 1078023),
     ignore_attr = TRUE, tolerance = 0.01
   )
 })
@@ -37,5 +37,5 @@ test_that("summary result", {
 test_that("getDraws", {
   drws <- getDraws(fit)
   expect_true(is.data.frame(drws))
-  expect_equal(dim(drws), c(2100, 7))
+  expect_equal(dim(drws), c(2050, 7))
 })
