@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">stantrackr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
       </span>
     </div>
 
@@ -53,6 +53,9 @@
   <ul class="dropdown-menu" role="menu">
 <li>
       <a href="articles/stantrackr_example.html">Quickstart example</a>
+    </li>
+    <li>
+      <a href="articles/stantrackr_math.html">Model formulation</a>
     </li>
   </ul>
 </li>
@@ -99,19 +102,19 @@
 <div class="section level2">
 <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a>
 </h2>
-<p>This package provides two main functions: <code><a href="reference/locate.html">locate()</a></code> and <code><a href="reference/track.html">track()</a></code>. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using random walk models written in <a href="https://mc-stan.org/" class="external-link">Stan</a>.</p>
+<p>This package provides two main functions: <code><a href="reference/locate.html">locate()</a></code> and <code><a href="reference/track.html">track()</a></code>. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using a Hidden Markov Model written in <a href="https://mc-stan.org/" class="external-link">Stan</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>You can find a quickstart example in the <code><a href="articles/stantrackr_example.html">vignette("stantrackr_example")</a></code>.</p>
+<p>You can find a quickstart example in the vignette <a href="https://g-rppl.github.io/stantrackr/articles/stantrackr_example.html" class="external-link">stantrackr_example</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Auger‐Méthé, M., Newman, K., Cole, D., Empacher, F., Gryba, R., King, A. A., … &amp; Thomas, L. (2021). A guide to state–space modeling of ecological time series. <em>Ecological Monographs</em>, 91(4), e01470. doi: <a href="https://doi.org/10.1002/ecm.1470" class="external-link">10.1002/ecm.1470</a></p>
-<p>Baldwin, J. W., Leap, K., Finn, J. T., &amp; Smetzer, J. R. (2018). Bayesian state-space models reveal unobserved off-shore nocturnal migration from Motus data. <em>Ecological Modelling</em>, 386, 38-46. doi: <a href="https://doi.org/10.1016/j.ecolmodel.2018.08.006" class="external-link">10.1016/j.ecolmodel.2018.08.006</a></p>
-<p>Jonsen, I. D., Flemming, J. M., &amp; Myers, R. A. (2005). Robust state–space modeling of animal movement data. <em>Ecology</em>, 86(11), 2874-2880. doi: <a href="https://doi.org/10.1890/04-1852" class="external-link">10.1890/04-1852</a></p>
+<p>Auger‐Méthé, M., Newman, K., Cole, D., Empacher, F., Gryba, R., King, A. A., … &amp; Thomas, L. (2021). A guide to state–space modeling of ecological time series. <em>Ecological Monographs</em>, 91(4), e01470. <a href="doi:%5B10.1002/ecm.1470" class="uri">doi:[10.1002/ecm.1470</a>](<a href="https://doi.org/10.1002/ecm.1470" class="external-link uri">https://doi.org/10.1002/ecm.1470</a>)</p>
+<p>Baldwin, J. W., Leap, K., Finn, J. T., &amp; Smetzer, J. R. (2018). Bayesian state-space models reveal unobserved off-shore nocturnal migration from Motus data. <em>Ecological Modelling</em>, 386, 38-46. <a href="doi:%5B10.1016/j.ecolmodel.2018.08.006" class="uri">doi:[10.1016/j.ecolmodel.2018.08.006</a>](<a href="https://doi.org/10.1016/j.ecolmodel.2018.08.006" class="external-link uri">https://doi.org/10.1016/j.ecolmodel.2018.08.006</a>)</p>
+<p>Jonsen, I. D., Flemming, J. M., &amp; Myers, R. A. (2005). Robust state–space modeling of animal movement data. <em>Ecology</em>, 86(11), 2874-2880. <a href="doi:%5B10.1890/04-1852" class="uri">doi:[10.1890/04-1852</a>](<a href="https://doi.org/10.1890/04-1852" class="external-link uri">https://doi.org/10.1890/04-1852</a>)</p>
 </div>
 </div>
   </div>
