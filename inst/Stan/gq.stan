@@ -61,3 +61,39 @@ generated quantities {
     }
   }
 }
+
+
+generated quantities {
+  array[T] int<lower=1,upper=N> viterbi;
+
+  { // Viterbi algorithm
+    real max_logp;
+    array[T,N] int back_ptr;
+    matrix[T,N] best_logp;
+    for (i in 1:I) {
+      int t1 = index[i]+1;
+      int t2 = index[i+1];
+      for (t in (t1+1):t2) {
+        for (n in 1:N) {
+          best_logp[t,n] = negative_infinity();
+          for (j in 1:N) {
+            real logp;
+            logp = best_logp[t-1,j] + gamma[t,j];
+            if (logp > best_logp[t,n]) {
+              back_ptr[t,n] = j;
+              best_logp[t,n] = logp;
+            }
+          }
+        }
+      }
+      max_logp = max(best_logp[t2]);
+      for (n in 1:N) {
+        if (best_logp[t2,n] == max_logp)
+          viterbi[t2] = n;
+      }
+      for (t in t1:(t2-1)) {
+        viterbi[t2-t] = back_ptr[t2-t+1,viterbi[t2-t+1]];
+      }
+    }
+  }
+}
