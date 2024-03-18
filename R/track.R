@@ -34,7 +34,7 @@
 #' modeling of animal movement data. *Ecology*, 86(11), 2874-2880.
 #' doi:[10.1890/04-1852](https://doi.org/10.1890/04-1852)
 #'
-#' @seealso `cmdstanr::sample()` `cmdstanr::optimize()`
+#' @seealso `cmdstanr::sample()`
 #'
 #' @examples
 #' \dontrun{

@@ -58,5 +58,5 @@ modeling of animal movement data. \emph{Ecology}, 86(11), 2874-2880.
 doi:\href{https://doi.org/10.1890/04-1852}{10.1890/04-1852}
 }
 \seealso{
-\code{cmdstanr::sample()} \code{cmdstanr::optimize()}
+\code{cmdstanr::sample()}
 }

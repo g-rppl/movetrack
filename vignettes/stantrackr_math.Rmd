@@ -58,7 +58,7 @@ The state process $\{S_t\}$ of a $N$-state HMM for $T$ time steps is characteris
 The probability of transitioning to state $s_t$ from state $s_{t-1}$ is
 
 $$
-s_t \sim \text{categorical}(\Gamma^{(t-1)}),
+s_t \sim \text{Categorical}(\Gamma^{(t-1)}),
     \quad 1 \leq t \leq T.
 $$
 
