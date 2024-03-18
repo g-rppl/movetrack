@@ -8,7 +8,10 @@ output:
 vignette: |
   %\VignetteIndexEntry{Quickstart example}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
+This is a quickstart guide to model and visualize animal movements from radio-telemetry data using the `stantrackr` package.
 
 ```{r, message=FALSE}
 # Load packages
@@ -22,14 +25,14 @@ data(motusData)
 ```	
 
 ## Estimate locations
-Estimate locations based on antenna bearings and signal strength for time intervals of two minutes.
+The first step involves estimating animal locations based on antenna bearings and signal strength at two-minute intervals using the `locate` function.
 
 ```{r locate}
 loc <- locate(motusData, dtime = 2)
 ```
 
 ## Model flight paths
-Model flight paths using MCMC running four chains in parallel and return summary.
+Next, we model the animal's flight paths using Markov Chain Monte Carlo (MCMC) with four parallel chains utilising the `track` function and return a summary of the results.
 
 ```{r model, warning=FALSE, message=FALSE}
 fit <- track(loc, parallel_chains = 4, refresh = 1e3)
@@ -38,6 +41,8 @@ fit
 ```
 
 ## Plot flight paths
+
+We create visualizations of the estimated flight paths using Leaflet maps. The map displays the movement trajectories per individual with polylines (posterior means together with 50 posterior draws). Circles on the map indicate receiver locations with detections of the animals.
 
 ```{r map}
 # Extract draws
@@ -62,6 +67,8 @@ fit %>%
 ```
 
 ## Plot flight speed
+
+We extract speed information from the fitted model and create a plot displaying speed data for a specific animal ID.
 
 ```{r plot, warning=FALSE}
 summary(fit, "speed") %>%

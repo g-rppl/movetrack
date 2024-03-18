@@ -1,16 +1,12 @@
 # Get means per variable
 .getMeans <- function(x) {
-  summary <- lapply(x, function(obj) {
-    drws <- obj$draws
-    smry <- lapply(drws, function(d) apply(d, 3, mean))
-    data.frame(
-      ID = obj$ID,
-      time = obj$time,
-      do.call(cbind, smry)
-    )
-  })
-  summary <- do.call(rbind, summary)
-  return(data.frame(summary, row.names = NULL))
+  smry <- lapply(x$draws, function(d) apply(d, 3, mean))
+  out <- bind_cols(
+    ID = x$ID,
+    time = x$time,
+    do.call(cbind, smry)
+  )
+  return(as.data.frame(out))
 }
 
 # Summarise draws
@@ -56,7 +52,7 @@
 #' }
 #'
 #' @importFrom stats median quantile
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_cols
 #' @importFrom HDInterval hdi
 #'
 #' @method summary stantrackr
@@ -83,16 +79,13 @@ summary.stantrackr <- function(
   if (prob < 0 || prob > 1) {
     stop("Probability mass must be between 0 und 1.")
   }
-  summary <- lapply(object, function(obj) {
-    drws <- obj$draws
-    smry <- lapply(drws, .summary, ci = ci, prob = prob)
-    cbind(
-      ID = obj$ID,
-      time = obj$time,
-      do.call(cbind, smry[var])
-    )
-  })
-  return(bind_rows(summary))
+  smry <- lapply(object$draws, .summary, ci = ci, prob = prob)
+  out <- bind_cols(
+    ID = object$ID,
+    time = object$time,
+    do.call(cbind, smry[var])
+  )
+  return(as.data.frame(out))
 }
 
 #' Print
@@ -105,6 +98,8 @@ summary.stantrackr <- function(
 #' @param ... Additional arguments passed to `print()`.
 #'
 #' @seealso `summary.stantrackr()`
+#' 
+#' @importFrom dplyr bind_cols
 #'
 #' @method print stantrackr
 #' @export
@@ -122,6 +117,8 @@ print.stantrackr <- function(x, digits = 3, ...) {
 #' @param ... Unused; for compatibility with the generic method.
 #'
 #' @seealso `summary.stantrackr()`
+#' 
+#' @importFrom dplyr bind_cols
 #'
 #' @method as.data.frame stantrackr
 #' @export
@@ -144,24 +141,22 @@ as.data.frame.stantrackr <- function(x, ...) {
 #'
 getDraws <- function(fit, nsim = 50) {
   # Bind variables locally so that R CMD check doesn't complain
-  ID <- iter <- time <- NULL
+  ID <- tID <- iter <- time <- NULL
 
   # Sample iterations and chains
-  it <- sample(dimnames(fit[[1]]$draws$lon)$iteration, nsim)
-  ch <- sample(dimnames(fit[[1]]$draws$lon)$chain, 1)
+  it <- sample(dimnames(fit$draws$lon)$iteration, nsim)
+  ch <- sample(dimnames(fit$draws$lon)$chain, 1)
 
   # Build output
-  sim <- lapply(fit, function(x) {
-    data.frame(
-      ID = x$ID,
-      time = rep(x$time, each = nsim),
-      chain = ch,
-      iter = it,
-      lon = c(x$draws$lon[it, ch, ]),
-      lat = c(x$draws$lat[it, ch, ])
-    ) %>%
-      mutate(tID = paste(ID, iter, sep = "_")) %>%
-      arrange(iter, time)
-  })
-  return(bind_rows(sim))
+  sim <- data.frame(
+    ID = rep(fit$ID, each = nsim),
+    time = rep(fit$time, each = nsim),
+    chain = ch,
+    iter = it,
+    lon = c(fit$draws$lon[it, ch, ]),
+    lat = c(fit$draws$lat[it, ch, ])
+  ) %>%
+    mutate(tID = paste(ID, iter, sep = "_")) %>%
+    arrange(tID, time)
+  return(sim)
 }

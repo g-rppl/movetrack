@@ -30,16 +30,16 @@ install_cmdstan(cores = 2)
 
 ## Details
 
-This package provides two main functions: `locate()` and `track()`. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using random walk models written in [Stan](https://mc-stan.org/).
+This package provides two main functions: `locate()` and `track()`. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using a Hidden Markov Model written in [Stan](https://mc-stan.org/).
 
 ## Getting started
     
-You can find a quickstart example in the `vignette("stantrackr_example")`.
+You can find a quickstart example in the vignette [stantrackr_example](https://g-rppl.github.io/stantrackr/articles/stantrackr_example.html).
 
 ## References
 
-Auger‐Méthé, M., Newman, K., Cole, D., Empacher, F., Gryba, R., King, A. A., ... & Thomas, L. (2021). A guide to state–space modeling of ecological time series. *Ecological Monographs*, 91(4), e01470. doi: [10.1002/ecm.1470](https://doi.org/10.1002/ecm.1470)
+Auger‐Méthé, M., Newman, K., Cole, D., Empacher, F., Gryba, R., King, A. A., ... & Thomas, L. (2021). A guide to state–space modeling of ecological time series. *Ecological Monographs*, 91(4), e01470. doi:[10.1002/ecm.1470](https://doi.org/10.1002/ecm.1470)
 
-Baldwin, J. W., Leap, K., Finn, J. T., & Smetzer, J. R. (2018). Bayesian state-space models reveal unobserved off-shore nocturnal migration from Motus data. *Ecological Modelling*, 386, 38-46. doi: [10.1016/j.ecolmodel.2018.08.006](https://doi.org/10.1016/j.ecolmodel.2018.08.006)
+Baldwin, J. W., Leap, K., Finn, J. T., & Smetzer, J. R. (2018). Bayesian state-space models reveal unobserved off-shore nocturnal migration from Motus data. *Ecological Modelling*, 386, 38-46. doi:[10.1016/j.ecolmodel.2018.08.006](https://doi.org/10.1016/j.ecolmodel.2018.08.006)
 
-Jonsen, I. D., Flemming, J. M., & Myers, R. A. (2005). Robust state–space modeling of animal movement data. *Ecology*, 86(11), 2874-2880. doi: [10.1890/04-1852](https://doi.org/10.1890/04-1852)
+Jonsen, I. D., Flemming, J. M., & Myers, R. A. (2005). Robust state–space modeling of animal movement data. *Ecology*, 86(11), 2874-2880. doi:[10.1890/04-1852](https://doi.org/10.1890/04-1852)

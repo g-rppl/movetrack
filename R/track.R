@@ -4,32 +4,37 @@
 #' Model flight path from point estimates using a DCRW model.
 #'
 #' @param data A `data.frame` containing the point estimate data.
-#' @param method The estimation method to use. Either `"mcmc"` or `"optim"`;
-#'   defaults to `"mcmc"`.
-#' @param ... Additional arguments passed to `cmdstanr::sample()` or
-#'   `cmdstanr::optimize()`, respectively.
+#' @param states The number of states to use in the model; defaults to `1`.
+#' @param i_lambda Logical indicating whether to estimate individual correlation
+#'   parameters; defaults to `TRUE`.
+#' @param ... Additional arguments passed to `cmdstanr::sample()`.
 #'
 #' @details
 #' This function calls [Stan](https://mc-stan.org/) via
-#' [cmdstanr](https://mc-stan.org/cmdstanr/index.html) and uses a difference
-#' correlated random walk model (DCRW) to estimate individual flight paths.
-#' The model is described in more detail in
-#' [Jonsen et al. 2005](https://doi.org/10.1890/04-1852) and
-#' [Baldwin et al. 2018](https://doi.org/10.1016/j.ecolmodel.2018.08.006). To
-#' learn more about state-space models in animal movement in general,
-#' [Auger-Méthé et al. 2021](https://doi.org/10.1002/ecm.1470) is a good
-#' starting point. Available estimation methods are Stan's main Markov chain
-#' Monte Carlo algorithm and Stan's optimizer to obtain a (penalized) maximum
-#' likelihood estimate or a maximum a posteriori estimate (if `jacobian=TRUE`).
-#' See the [CmdStan User's Guide](https://mc-stan.org/docs/cmdstan-guide) for
-#' more details.
+#' [cmdstanr](https://mc-stan.org/cmdstanr/index.html) and uses a Hidden Markov
+#' Model (HMM) to estimate individual flight paths.
 #'
 #' @return
-#' Returns a `data.frame` containing estimates for longitude, latitude, distance
-#' and speed per time interval or a `stantrackr` object including the full
-#' posterior distributions.
+#' Returns a `stantrackr` object including the posterior distributions for
+#' longitude, latitude, distance, and speed per time interval.
 #'
-#' @seealso `cmdstanr::sample()` `cmdstanr::optimize()`
+#' @references
+#' Auger‐Méthé, M., Newman, K., Cole, D., Empacher, F., Gryba, R., King, A. A.,
+#' ... & Thomas, L. (2021). A guide to state–space modeling of ecological time
+#' series. *Ecological Monographs*, 91(4), e01470.
+#' doi:[10.1002/ecm.1470](https://doi.org/10.1002/ecm.1470)
+#'
+#' Baldwin, J. W., Leap, K., Finn, J. T., & Smetzer, J. R. (2018). Bayesian
+#' state-space models reveal unobserved off-shore nocturnal migration from Motus
+#'  data. *Ecological Modelling*, 386, 38-46.
+#' doi:[10.1016/j.ecolmodel.2018.08.006](
+#' https://doi.org/10.1016/j.ecolmodel.2018.08.006)
+#'
+#' Jonsen, I. D., Flemming, J. M., & Myers, R. A. (2005). Robust state–space
+#' modeling of animal movement data. *Ecology*, 86(11), 2874-2880.
+#' doi:[10.1890/04-1852](https://doi.org/10.1890/04-1852)
+#'
+#' @seealso `cmdstanr::sample()`
 #'
 #' @examples
 #' \dontrun{
@@ -40,8 +45,8 @@
 #' loc <- locate(motusData, dtime = 2)
 #'
 #' # Model flight paths
-#' track(loc, parallel_chains = 4)
-#' track(loc, "optim", refresh = 1e3)
+#' track(loc, states = 2, parallel_chains = 4)
+#' track(loc, i_lambda = FALSE, parallel_chains = 4)
 #' }
 #'
 #' @importFrom dplyr %>% n group_by summarise filter
@@ -49,7 +54,7 @@
 #'
 #' @export
 #'
-track <- function(data, method = "mcmc", ...) {
+track <- function(data, states = 1, i_lambda = TRUE, ...) {
   # Bind variables locally so that R CMD check doesn't complain
   . <- ID <- NULL
 
@@ -69,92 +74,46 @@ track <- function(data, method = "mcmc", ...) {
     ))
     data <- data[!data$ID %in% ids, ]
   }
+  d <- data
 
   # Compile model
-  mod <- cmdstan_model(system.file("Stan", "DCRW.stan", package = "stantrackr"))
+  mod <- cmdstan_model(system.file("Stan", "HMM.stan", package = "stantrackr"))
 
-  for (i in unique(data$ID)) {
-    # Subset data
-    d <- data[data$ID == i, ]
+  # Prepare data
+  y <- as.matrix(d[, c("lon", "lat")])
+  sigma <- as.matrix(d[, c("lon_sd", "lat_sd")])
+  index <- c(0, which(diff(as.numeric(as.factor(d$ID))) != 0), nrow(d))
 
-    # Prepare data
-    loc <- as.matrix(d[, c("lon", "lat")])
-    sigma <- as.matrix(d[, c("lon_sd", "lat_sd")])
+  # Bundle data
+  stan.data <- list(
+    T = nrow(d), I = length(unique(d$ID)), N = states,
+    y = y, sigma = sigma, w = d$w,
+    index = index,
+    i_lambda = as.numeric(i_lambda)
+  )
 
-    # Bundle data
-    stan.data <- list(
-      loc = loc, sigma = sigma,
-      N = nrow(loc), w = d$w
+  # Sample
+  fit <- mod$sample(data = stan.data, ...)
+
+  # Summarise draws
+  drws <- fit$draws("z")
+  idx <- 1:(dim(drws)[3] / 2)
+  lon <- drws[, , idx]
+  lat <- drws[, , -c(idx)]
+  distance <- .distance(lon, lat, index)
+  speed <- .speed(distance, d$ts)
+
+  # Build output
+  out <- list(
+    ID = d$ID,
+    time = d$ts,
+    draws = list(
+      lon = lon,
+      lat = lat,
+      distance = distance,
+      speed = speed
     )
-
-    if (method == "mcmc") {
-      # Sample
-      fit <- mod$sample(data = stan.data, ...)
-
-      # Summarise draws
-      drws <- fit$draws("y")
-      ids <- 1:(dim(drws)[3] / 2)
-      lon <- drws[, , ids]
-      lat <- drws[, , -c(ids)]
-      distance <- .distanceMCMC(lon, lat)
-      speed <- .speedMCMC(distance, d$ts)
-
-      # Build output
-      s <- list(list(
-        ID = i,
-        time = unique(d$ts),
-        draws = list(
-          lon = lon,
-          lat = lat,
-          distance = distance,
-          speed = speed
-        )
-      ))
-
-      # Add to output
-      if (i == unique(data$ID)[1]) {
-        out <- s
-      } else {
-        out <- append(out, s)
-      }
-    } else if (method == "optim") {
-      # Optimise
-      fit <- mod$optimize(data = stan.data, init = list(list(y = loc)), ...)
-
-      # Summarise result
-      drws <- fit$summary("y")
-      ids <- 1:(nrow(drws) / 2)
-      lon <- drws$estimate[ids]
-      lat <- drws$estimate[-c(ids)]
-      distance <- .distance(lon, lat)
-      speed <- .speed(distance, d$ts)
-
-      # Build output
-      s <- data.frame(
-        ID = i,
-        time = unique(d$ts),
-        lon = lon,
-        lat = lat,
-        distance = distance,
-        speed = speed
-      )
-
-      # Add to output
-      if (i == unique(data$ID)[1]) {
-        out <- s
-      } else {
-        out <- rbind(out, s)
-      }
-    } else {
-      stop("Unknown method '", method, "'.")
-    }
-
-    # Print progress
-    cat(paste0("\n Done with ID ", i, ".\n \n"))
-  }
-  if (method == "mcmc") {
-    names(out) <- unique(data$ID)
-    class(out) <- "stantrackr"
-  }
+  )
+  class(out) <- "stantrackr"
   return(out)
 }
