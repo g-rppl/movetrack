@@ -1,7 +1,7 @@
 #' Model data
 #'
 #' @description
-#' Model flight path from point estimates using a DCRW model.
+#' Model flight path from point estimates using a Hidden Markov Model.
 #'
 #' @param data A `data.frame` containing the point estimate data.
 #' @param states The number of states to use in the model; defaults to `1`.

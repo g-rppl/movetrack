@@ -71,11 +71,5 @@ fit %>%
 We extract speed information from the fitted model and create a plot displaying speed data for a specific animal ID.
 
 ```{r plot, warning=FALSE}
-summary(fit, "speed") %>%
-    filter(ID == 49237) %>%
-    ggplot() +
-    geom_segment(aes(
-        x = time, y = speed.lower, xend = time, yend = speed.upper
-    ), alpha = 0.2) +
-    geom_point(aes(x = time, y = speed.mean))
+plot(fit, id = 49237)
 ```

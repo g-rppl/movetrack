@@ -21,7 +21,7 @@ Returns a \code{stantrackr} object including the posterior distributions for
 longitude, latitude, distance, and speed per time interval.
 }
 \description{
-Model flight path from point estimates using a DCRW model.
+Model flight path from point estimates using a Hidden Markov Model.
 }
 \details{
 This function calls \href{https://mc-stan.org/}{Stan} via
