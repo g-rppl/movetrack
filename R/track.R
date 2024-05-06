@@ -49,21 +49,19 @@
 #' track(loc, i_lambda = FALSE, parallel_chains = 4)
 #' }
 #'
-#' @importFrom dplyr %>% n group_by summarise filter
+#' @importFrom dplyr n group_by summarise filter
+#' @importFrom ggplot2 .data
 #' @importFrom cmdstanr cmdstan_model
 #'
 #' @export
 #'
 track <- function(data, states = 1, i_lambda = TRUE, ...) {
-  # Bind variables locally so that R CMD check doesn't complain
-  . <- ID <- NULL
-
   # Check data
-  ids <- data %>%
-    group_by(ID) %>%
-    summarise(n = n()) %>%
-    filter(n < 3) %>%
-    .$ID
+  ids <- data |>
+    group_by(.data$ID) |>
+    summarise(n = n()) |>
+    filter(n < 3) |>
+    _$ID
   if (length(ids) > 0) {
     warning(paste0(
       ifelse(length(ids) < 2, "ID ", "IDs "), paste(ids, collapse = ", "),

@@ -4,10 +4,10 @@
 \alias{plot.stantrackr}
 \title{Plot model results}
 \usage{
-\method{plot}{stantrackr}(fit, vars = c("lon", "lat"), id = NULL, ...)
+\method{plot}{stantrackr}(x, vars = c("lon", "lat"), id = NULL, ...)
 }
 \arguments{
-\item{fit}{An object of class \code{stantrackr}.}
+\item{x}{An object of class \code{stantrackr}.}
 
 \item{vars}{The variables to plot. Defaults to \code{c("lon", "lat")}.}
 

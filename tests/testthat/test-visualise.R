@@ -1,3 +1,7 @@
 test_that("plot", {
-  plot(fit)
+  expect_error(plot(fit), NA)
+})
+
+test_that("map", {
+  expect_true("ggplot" %in% class(mapTrack(fit)))
 })

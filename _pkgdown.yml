@@ -2,7 +2,6 @@ reference:
   - title: Data
     contents:
       - "`motusData`"
-
   - title: Model
     contents:
       - "`locate`"
@@ -13,3 +12,7 @@ reference:
       - "`summary.stantrackr`"
       - "`as.data.frame.stantrackr`"
       - "`getDraws`"
+  - title: Visualise
+    contents:
+      - "`plot.stantrackr`"
+      - "`mapTrack`"

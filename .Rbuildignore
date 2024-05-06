@@ -7,3 +7,5 @@
 ^inst/Stan/.*\.exe$
 ^test\.R$
 ^TODO\.md$
+^doc$
+^Meta$
