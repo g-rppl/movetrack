@@ -34,7 +34,13 @@
     <loc>/reference/locate.html</loc>
   </url>
   <url>
+    <loc>/reference/mapTrack.html</loc>
+  </url>
+  <url>
     <loc>/reference/motusData.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot.stantrackr.html</loc>
   </url>
   <url>
     <loc>/reference/print.stantrackr.html</loc>
