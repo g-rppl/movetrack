@@ -98,7 +98,7 @@ summary.stantrackr <- function(
 #' @param ... Additional arguments passed to `print()`.
 #'
 #' @seealso `summary.stantrackr()`
-#' 
+#'
 #' @importFrom dplyr bind_cols
 #'
 #' @method print stantrackr
@@ -117,7 +117,7 @@ print.stantrackr <- function(x, digits = 3, ...) {
 #' @param ... Unused; for compatibility with the generic method.
 #'
 #' @seealso `summary.stantrackr()`
-#' 
+#'
 #' @importFrom dplyr bind_cols
 #'
 #' @method as.data.frame stantrackr
@@ -137,12 +137,11 @@ as.data.frame.stantrackr <- function(x, ...) {
 #'
 #' @return A `data.frame` with the draws.
 #'
+#' @importFrom ggplot2 .data
+#'
 #' @export
 #'
 getDraws <- function(fit, nsim = 50) {
-  # Bind variables locally so that R CMD check doesn't complain
-  ID <- tID <- iter <- time <- NULL
-
   # Sample iterations and chains
   it <- sample(dimnames(fit$draws$lon)$iteration, nsim)
   ch <- sample(dimnames(fit$draws$lon)$chain, 1)
@@ -155,8 +154,8 @@ getDraws <- function(fit, nsim = 50) {
     iter = it,
     lon = c(fit$draws$lon[it, ch, ]),
     lat = c(fit$draws$lat[it, ch, ])
-  ) %>%
-    mutate(tID = paste(ID, iter, sep = "_")) %>%
-    arrange(tID, time)
+  ) |>
+    mutate(tID = paste(.data$ID, .data$iter, sep = "_")) |>
+    arrange(.data$tID, .data$time)
   return(sim)
 }

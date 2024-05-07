@@ -41,9 +41,10 @@
 #' locate(motusData, det_range = list("yagi-5"=10, "yagi-6"=12))
 #' }
 #'
-#' @importFrom dplyr %>% arrange distinct group_by mutate select
+#' @importFrom dplyr arrange distinct group_by mutate select
 #' @importFrom lubridate round_date is.POSIXct
 #' @importFrom stats complete.cases weighted.mean
+#' @importFrom ggplot2 .data
 #'
 #' @export
 #'
@@ -58,9 +59,6 @@ locate <- function(
     aBearing = "antBearing",
     det_range = 12,
     dtime = 2) {
-  # Bind variables locally so that R CMD check doesn't complain
-  lon <- lat <- NULL
-
   # Build data
   d <- .buildData(data, ID, ts, sig, aLon, aLat, aType, aBearing, det_range)
 
@@ -69,7 +67,7 @@ locate <- function(
     d$aLon, d$aLat, d$aBearing, d$det_range / 2
   ))
 
-  d <- cbind(d, tmp) %>% arrange(ID, ts)
+  d <- cbind(d, tmp) |> arrange(ID, ts)
 
   # Estimate oscillating error based on antenna bearing
   lon_sd <- (d$det_range / 6) * sin(1 / 90 * pi * d$aBearing - pi / 2) +
@@ -84,20 +82,20 @@ locate <- function(
   # Weighted means per minute interval
   d$ts <- round_date(d$ts, unit = paste(dtime, "min"))
 
-  d <- d %>%
-    group_by(ID, ts) %>%
+  d <- d |>
+    group_by(ID, ts) |>
     mutate(
-      lon = weighted.mean(lon, sig),
-      lat = weighted.mean(lat, sig),
+      lon = weighted.mean(.data$lon, sig),
+      lat = weighted.mean(.data$lat, sig),
       lon_sd = weighted.mean(lon_sd, sig),
       lat_sd = weighted.mean(lat_sd, sig)
-    ) %>%
-    distinct(ts, .keep_all = TRUE) %>%
+    ) |>
+    distinct(ts, .keep_all = TRUE) |>
     select(-c(sig, aLon, aLat, aType, aBearing, det_range))
 
   # Proportions of time intervals
-  d <- d %>%
-    group_by(ID) %>%
+  d <- d |>
+    group_by(ID) |>
     mutate(w = dtime / c(dtime, diff(as.numeric(ts) / 60)))
 
   return(as.data.frame(d))

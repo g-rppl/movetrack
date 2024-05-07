@@ -14,11 +14,9 @@ vignette: |
 This is a quickstart guide to model and visualize animal movements from radio-telemetry data using the `stantrackr` package.
 
 ```{r, message=FALSE}
-# Load packages
 library(stantrackr)
-library(tidyverse)
-library(sfheaders)
-library(leaflet)
+library(ggplot2)
+theme_set(theme_bw(base_size = 15))
 
 # Load example data
 data(motusData)
@@ -37,45 +35,52 @@ Next, we model the animal's flight paths using Markov Chain Monte Carlo (MCMC) w
 ```{r model, warning=FALSE, message=FALSE}
 fit <- track(loc, parallel_chains = 4, refresh = 1e3)
 
+```
+
+```{r, eval=FALSE}
 fit
+```
+
+<details>
+<summary>Click to expand</summary>
+```{r, echo=FALSE}
+fit
+```
+</details> 
+
+## Plot flight speed
+
+We can plot the results per individual and output variable using the `plot` function:
+
+```{r plot, warning=FALSE}
+plot(fit, id = 49237)
 ```
 
 ## Plot flight paths
 
-We create visualizations of the estimated flight paths using Leaflet maps. The map displays the movement trajectories per individual with polylines (posterior means together with 50 posterior draws). Circles on the map indicate receiver locations with detections of the animals.
+We can visualise the results on a map using the `mapTrack` function:
 
-```{r map}
+```{r map, fig.cap="Modelled movement trajectories per individual. Posterior means are shown together with 50 posterior draws, circles on the map indicate receiver locations with detections of the animals."}
+mapTrack(fit) +
+    geom_point(aes(recvDeployLon, recvDeployLat), data = motusData)
+```
+
+We could also create a Leaflet map using the following code:
+
+```{r leaflet}
+library(sfheaders)
+library(leaflet)
+
 # Extract draws
-draws <- getDraws(fit) %>%
+draws <- getDraws(fit) |>
     sf_linestring("lon", "lat", linestring_id = "tID")
 
 # Leaflet map
-fit %>%
-    as.data.frame() %>%
-    sf_linestring("lon", "lat", linestring_id = "ID") %>%
-    leaflet() %>%
-    addTiles() %>%
-    addPolylines(data = draws, color = "grey", weight = 1, opacity = 0.2) %>%
-    addPolylines(color = ~ c("orange", "blue")) %>%
-    addCircles(
-        lng = ~recvDeployLon,
-        lat = ~recvDeployLat,
-        data = motusData,
-        color = "black",
-        opacity = 1
-    )
-```
-
-## Plot flight speed
-
-We extract speed information from the fitted model and create a plot displaying speed data for a specific animal ID.
-
-```{r plot, warning=FALSE}
-summary(fit, "speed") %>%
-    filter(ID == 49237) %>%
-    ggplot() +
-    geom_segment(aes(
-        x = time, y = speed.lower, xend = time, yend = speed.upper
-    ), alpha = 0.2) +
-    geom_point(aes(x = time, y = speed.mean))
+fit |>
+    as.data.frame() |>
+    sf_linestring("lon", "lat", linestring_id = "ID") |>
+    leaflet() |>
+    addTiles() |>
+    addPolylines(data = draws, color = "grey", weight = 1, opacity = 0.2) |>
+    addPolylines(color = ~ c("orange", "blue"))
 ```
