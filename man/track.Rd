@@ -17,7 +17,7 @@ parameters; defaults to \code{TRUE}.}
 \item{...}{Additional arguments passed to \code{cmdstanr::sample()}.}
 }
 \value{
-Returns a \code{stantrackr} object including the posterior distributions for
+Returns a \code{movetrack} object including the posterior distributions for
 longitude, latitude, distance, and speed per time interval.
 }
 \description{

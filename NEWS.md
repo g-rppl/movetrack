@@ -1,11 +1,11 @@
-# stantrackr 0.3.0
+# movetrack 0.3.0
 
 ### New features
 
 - New S3method for `plot()`
 - New function `mapTrack()`
 
-# stantrackr 0.2.0
+# movetrack 0.2.0
 
 ### New features
 
@@ -20,7 +20,7 @@
 
 - Using Stan's optimisation method is deprecated.
 
-# stantarckr 0.1.2
+# movetrack 0.1.2
 
 ### New features
 
@@ -28,9 +28,9 @@
 
 ### Documentation
 
-- New vignette `stantrackr_example`
+- New vignette `movetrack_example`
 
-# stantarckr 0.1.1
+# movetrack 0.1.1
 
 ### New features
 

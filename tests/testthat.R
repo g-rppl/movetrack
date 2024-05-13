@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(stantrackr)
+library(movetrack)
 
-test_check("stantrackr")
+test_check("movetrack")

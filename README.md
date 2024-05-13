@@ -1,18 +1,18 @@
-# stantrackr
+# movetrack
 
-[![R-CMD-check](https://github.com/g-rppl/stantrackr/workflows/R-CMD-check/badge.svg)](https://github.com/g-rppl/stantrackr/actions)
-[![codecov](https://codecov.io/gh/g-rppl/stantrackr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/g-rppl/stantrackr)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/stantrackr/blob/main/LICENSE)
+[![R-CMD-check](https://github.com/g-rppl/movetrack/workflows/R-CMD-check/badge.svg)](https://github.com/g-rppl/movetrack/actions)
+[![codecov](https://codecov.io/gh/g-rppl/movetrack/branch/main/graph/badge.svg)](https://app.codecov.io/gh/g-rppl/movetrack)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/movetrack/blob/main/LICENSE)
 
-`stantrackr` is a `R` package that provides simple functionality to estimate individual flight tracks from radio-telemetry data such as [Motus](https://motus.org/) using random walk models written in [Stan](https://mc-stan.org/).
+`movetrack` is a `R` package that provides simple functionality to estimate individual flight tracks from radio-telemetry data such as [Motus](https://motus.org/) using random walk models written in [Stan](https://mc-stan.org/).
 
 ## Installation
 
-You can install `stantrackr` from GitHub using the `devtools` package:
+You can install `movetrack` from GitHub using the `devtools` package:
 
 ```r
 library(devtools)
-install_github("g-rppl/stantrackr")
+install_github("g-rppl/movetrack")
 ```
 
 During the initial installation, make sure that the C++ toolchain required for `CmdStan` is set up properly. You can find more information [here](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).
@@ -34,7 +34,7 @@ This package provides two main functions: `locate()` and `track()`. The first fu
 
 ## Getting started
     
-You can find a quickstart example in the vignette [stantrackr_example](https://g-rppl.github.io/stantrackr/articles/stantrackr_example.html).
+You can find a quickstart example in the vignette [movetrack_example](https://g-rppl.github.io/movetrack/articles/movetrack_example.html).
 
 ## References
 
