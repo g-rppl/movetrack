@@ -1,10 +1,12 @@
 # movetrack
 
+<!-- badges: start -->
 [![R-CMD-check](https://github.com/g-rppl/movetrack/workflows/R-CMD-check/badge.svg)](https://github.com/g-rppl/movetrack/actions)
 [![codecov](https://codecov.io/gh/g-rppl/movetrack/branch/main/graph/badge.svg)](https://app.codecov.io/gh/g-rppl/movetrack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/movetrack/blob/main/LICENSE)
+<!-- badges: end -->
 
-`movetrack` is a `R` package that provides simple functionality to estimate individual flight tracks from radio-telemetry data such as [Motus](https://motus.org/) using random walk models written in [Stan](https://mc-stan.org/).
+`movetrack` is an `R` package that provides simple functionality to estimate individual flight tracks from radio-telemetry data such as [Motus](https://motus.org/) using random walk models written in [Stan](https://mc-stan.org/).
 
 ## Installation
 
