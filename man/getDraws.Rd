@@ -7,7 +7,7 @@
 getDraws(fit, nsim = 50)
 }
 \arguments{
-\item{fit}{An object of class \code{stantrackr}.}
+\item{fit}{An object of class \code{movetrack}.}
 
 \item{nsim}{The number of simulations to extract; defaults to \code{50}.}
 }
@@ -15,5 +15,5 @@ getDraws(fit, nsim = 50)
 A \code{data.frame} with the draws.
 }
 \description{
-Extract draws from a \code{stantrackr} object.
+Extract draws from a \code{movetrack} object.
 }

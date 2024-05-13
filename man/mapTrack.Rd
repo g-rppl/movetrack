@@ -7,7 +7,7 @@
 mapTrack(fit, id = NULL, nsim = 50, lwd = 2, alpha = 0.1)
 }
 \arguments{
-\item{fit}{An object of class \code{stantrackr}.}
+\item{fit}{An object of class \code{movetrack}.}
 
 \item{id}{The individuals to plot. Defaults to \code{NULL} which plots all
 individuals.}

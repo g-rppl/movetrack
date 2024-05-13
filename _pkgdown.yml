@@ -8,11 +8,11 @@ reference:
       - "`track`"
   - title: Analyse
     contents:
-      - "`print.stantrackr`"
-      - "`summary.stantrackr`"
-      - "`as.data.frame.stantrackr`"
+      - "`print.movetrack`"
+      - "`summary.movetrack`"
+      - "`as.data.frame.movetrack`"
       - "`getDraws`"
   - title: Visualise
     contents:
-      - "`plot.stantrackr`"
+      - "`plot.movetrack`"
       - "`mapTrack`"
