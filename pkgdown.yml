@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
-  stantrackr_example: stantrackr_example.html
-  stantrackr_math: stantrackr_math.html
-last_built: 2024-05-13T07:43Z
+  movetrack_example: movetrack_example.html
+  movetrack_math: movetrack_math.html
+last_built: 2024-05-21T09:10Z
 
