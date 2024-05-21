@@ -83,15 +83,16 @@ locate <- function(
   d$ts <- round_date(d$ts, unit = paste(dtime, "min"))
 
   d <- d |>
+    mutate(sig_n = exp(sig) / sum(exp(sig))) |>
     group_by(ID, ts) |>
     mutate(
-      lon = weighted.mean(.data$lon, sig),
-      lat = weighted.mean(.data$lat, sig),
-      lon_sd = weighted.mean(lon_sd, sig),
-      lat_sd = weighted.mean(lat_sd, sig)
+      lon = weighted.mean(.data$lon, sig_n),
+      lat = weighted.mean(.data$lat, sig_n),
+      lon_sd = weighted.mean(lon_sd, sig_n),
+      lat_sd = weighted.mean(lat_sd, sig_n)
     ) |>
     distinct(ts, .keep_all = TRUE) |>
-    select(-c(sig, aLon, aLat, aType, aBearing, det_range))
+    select(-c(sig, sig_n, aLon, aLat, aType, aBearing, det_range))
 
   # Proportions of time intervals
   d <- d |>

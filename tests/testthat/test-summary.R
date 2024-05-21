@@ -29,7 +29,7 @@ test_that("summary result", {
   )
   expect_equal(
     colSums(summary(fit, var = "distance", ci = "ETI")[-c(1:2)], na.rm = TRUE),
-    c(669233, 650429, 323813, 1078023),
+    c(696493, 676289, 327763, 1137128),
     ignore_attr = TRUE, tolerance = 0.01
   )
 })

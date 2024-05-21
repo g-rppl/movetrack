@@ -34,7 +34,6 @@ Next, we model the animal's flight paths using Markov Chain Monte Carlo (MCMC) w
 
 ```{r model, warning=FALSE, message=FALSE}
 fit <- track(loc, parallel_chains = 4, refresh = 1e3)
-
 ```
 
 ```{r, eval=FALSE}

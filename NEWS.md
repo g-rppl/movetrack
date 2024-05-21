@@ -1,3 +1,9 @@
+# movetrack 0.3.1
+
+### Bug fixes
+
+- Rescale signal strengths to avoid negative weights in `locate()`.
+
 # movetrack 0.3.0
 
 ### New features
