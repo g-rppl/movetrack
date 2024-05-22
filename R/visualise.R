@@ -3,16 +3,16 @@
 #' @description
 #' Plot model results per individual and variable.
 #'
-#' @param x An object of class `stantrackr`.
+#' @param x An object of class `movetrack`.
 #' @param vars The variables to plot. Defaults to `c("lon", "lat")`.
 #' @param id The individuals to plot. Defaults to `NULL` which plots all
 #'   individuals.
-#' @param ... Additional arguments passed to `stantrckr::summary()`.
+#' @param ... Additional arguments passed to `movetrack::summary()`.
 #'
 #' @return
 #' Returns one or multiple `ggplot` plots.
 #'
-#' @seealso `stantrackr::summary()`
+#' @seealso `movetrack::summary()`
 #'
 #' @examples
 #' \dontrun{
@@ -27,10 +27,10 @@
 #' @importFrom dplyr filter
 #' @importFrom ggplot2 ggplot aes .data geom_segment geom_point ggtitle ylab
 #'
-#' @method plot stantrackr
+#' @method plot movetrack
 #' @export
 #'
-plot.stantrackr <- function(x, vars = c("lon", "lat"), id = NULL, ...) {
+plot.movetrack <- function(x, vars = c("lon", "lat"), id = NULL, ...) {
   if (is.null(id)) {
     id <- unique(x$ID)
   }
@@ -56,7 +56,7 @@ plot.stantrackr <- function(x, vars = c("lon", "lat"), id = NULL, ...) {
 #' @description
 #' Map individual flight trajectories and model uncertainty.
 #'
-#' @param fit An object of class `stantrackr`.
+#' @param fit An object of class `movetrack`.
 #' @param id The individuals to plot. Defaults to `NULL` which plots all
 #'   individuals.
 #' @param nsim The number of posterior draws to plot. Defaults to `50`.

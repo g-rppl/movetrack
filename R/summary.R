@@ -32,9 +32,9 @@
 #' Summary
 #'
 #' @description
-#' Create a summary of a `stantrackr` object.
+#' Create a summary of a `movetrack` object.
 #'
-#' @param object An object of class `stantrackr`.
+#' @param object An object of class `movetrack`.
 #' @param var The variable to summarise; defaults to `'lon'`.
 #' @param ci The method used to calculate the credible intervals. Available
 #'   options are `'HDI'` for the highest posterior density interval and `'ETI'`
@@ -55,10 +55,10 @@
 #' @importFrom dplyr bind_cols
 #' @importFrom HDInterval hdi
 #'
-#' @method summary stantrackr
+#' @method summary movetrack
 #' @export
 #'
-summary.stantrackr <- function(
+summary.movetrack <- function(
     object,
     var = c("lon", "lat"),
     ci = "HDI",
@@ -91,48 +91,48 @@ summary.stantrackr <- function(
 #' Print
 #'
 #' @description
-#' Print a summary for a `stantrackr` object.
+#' Print a summary for a `movetrack` object.
 #'
-#' @param x An object of class `stantrackr`.
+#' @param x An object of class `movetrack`.
 #' @param digits The minimal number of *significant* digits; defaults to `3`.
 #' @param ... Additional arguments passed to `print()`.
 #'
-#' @seealso `summary.stantrackr()`
+#' @seealso `summary.movetrack()`
 #'
 #' @importFrom dplyr bind_cols
 #'
-#' @method print stantrackr
+#' @method print movetrack
 #' @export
 #'
-print.stantrackr <- function(x, digits = 3, ...) {
+print.movetrack <- function(x, digits = 3, ...) {
   print(.getMeans(x), digits = digits, ...)
 }
 
 #' Coerce to a Data Frame
 #'
 #' @description
-#' Coerce a `stantrackr` object to a `data.frame'.
+#' Coerce a `movetrack` object to a `data.frame'.
 #'
-#' @param x An object of class `stantrackr`.
+#' @param x An object of class `movetrack`.
 #' @param ... Unused; for compatibility with the generic method.
 #'
-#' @seealso `summary.stantrackr()`
+#' @seealso `summary.movetrack()`
 #'
 #' @importFrom dplyr bind_cols
 #'
-#' @method as.data.frame stantrackr
+#' @method as.data.frame movetrack
 #' @export
 #'
-as.data.frame.stantrackr <- function(x, ...) {
+as.data.frame.movetrack <- function(x, ...) {
   return(.getMeans(x))
 }
 
 #' Extract draws
 #'
 #' @description
-#' Extract draws from a `stantrackr` object.
+#' Extract draws from a `movetrack` object.
 #'
-#' @param fit An object of class `stantrackr`.
+#' @param fit An object of class `movetrack`.
 #' @param nsim The number of simulations to extract; defaults to `50`.
 #'
 #' @return A `data.frame` with the draws.

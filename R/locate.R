@@ -83,6 +83,7 @@ locate <- function(
   d$ts <- round_date(d$ts, unit = paste(dtime, "min"))
 
   d <- d |>
+    mutate(sig = sig - min(sig)) |>
     group_by(ID, ts) |>
     mutate(
       lon = weighted.mean(.data$lon, sig),

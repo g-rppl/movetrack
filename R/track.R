@@ -15,7 +15,7 @@
 #' Model (HMM) to estimate individual flight paths.
 #'
 #' @return
-#' Returns a `stantrackr` object including the posterior distributions for
+#' Returns a `movetrack` object including the posterior distributions for
 #' longitude, latitude, distance, and speed per time interval.
 #'
 #' @references
@@ -75,7 +75,7 @@ track <- function(data, states = 1, i_lambda = TRUE, ...) {
   d <- data
 
   # Compile model
-  mod <- cmdstan_model(system.file("Stan", "HMM.stan", package = "stantrackr"))
+  mod <- cmdstan_model(system.file("Stan", "HMM.stan", package = "movetrack"))
 
   # Prepare data
   y <- as.matrix(d[, c("lon", "lat")])
@@ -112,6 +112,6 @@ track <- function(data, states = 1, i_lambda = TRUE, ...) {
       speed = speed
     )
   )
-  class(out) <- "stantrackr"
+  class(out) <- "movetrack"
   return(out)
 }

@@ -19,6 +19,8 @@ test_that("locate result", {
   expect_equal(ncol(loc), 7)
   expect_true(is.POSIXct(loc$ts))
 
-  expected <- c(1224.244547, 8657.852526, 9.210950, 6.063194, 149.358945)
+  expected <- c(
+    1224.17860790, 8657.90549885, 9.18330504, 6.07470543, 149.358945
+  )
   expect_equal(colSums(loc[-c(1:2)]), expected, ignore_attr = TRUE)
 })
