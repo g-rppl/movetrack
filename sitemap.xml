@@ -10,10 +10,10 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/stantrackr_example.html</loc>
+    <loc>/articles/movetrack_example.html</loc>
   </url>
   <url>
-    <loc>/articles/stantrackr_math.html</loc>
+    <loc>/articles/movetrack_math.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -22,7 +22,10 @@
     <loc>/index.html</loc>
   </url>
   <url>
-    <loc>/reference/as.data.frame.stantrackr.html</loc>
+    <loc>/news/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/as.data.frame.movetrack.html</loc>
   </url>
   <url>
     <loc>/reference/getDraws.html</loc>
@@ -40,13 +43,13 @@
     <loc>/reference/motusData.html</loc>
   </url>
   <url>
-    <loc>/reference/plot.stantrackr.html</loc>
+    <loc>/reference/plot.movetrack.html</loc>
   </url>
   <url>
-    <loc>/reference/print.stantrackr.html</loc>
+    <loc>/reference/print.movetrack.html</loc>
   </url>
   <url>
-    <loc>/reference/summary.stantrackr.html</loc>
+    <loc>/reference/summary.movetrack.html</loc>
   </url>
   <url>
     <loc>/reference/track.html</loc>

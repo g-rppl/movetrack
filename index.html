@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Estimate flight tracks from telemetry data • stantrackr</title>
+<title>Estimate flight tracks from telemetry data • movetrack</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Estimate flight tracks from telemetry data">
-<meta property="og:description" content="`stantrackr` is a `R` package that provides simple functionality to estimate flight tracks from telemetry data using random walk models written in Stan.">
+<meta property="og:description" content="`movetrack` is a `R` package that provides simple functionality to estimate flight tracks from telemetry data using random walk models written in Stan.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -32,8 +32,8 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">stantrackr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
+        <a class="navbar-link" href="index.html">movetrack</a>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
       </span>
     </div>
 
@@ -50,17 +50,20 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/stantrackr_example.html">Quickstart example</a>
+      <a href="articles/movetrack_example.html">Quickstart example</a>
     </li>
     <li>
-      <a href="articles/stantrackr_math.html">Model formulation</a>
+      <a href="articles/movetrack_math.html">Model formulation</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/g-rppl/stantrackr/" class="external-link">
+  <a href="https://github.com/g-rppl/movetrack/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -78,17 +81,18 @@
       </header><div class="row">
   <div class="contents col-md-9">
 <div class="section level1">
-<div class="page-header"><h1 id="stantrackr">stantrackr<a class="anchor" aria-label="anchor" href="#stantrackr"></a>
+<div class="page-header"><h1 id="movetrack">movetrack<a class="anchor" aria-label="anchor" href="#movetrack"></a>
 </h1></div>
-<p><a href="https://github.com/g-rppl/stantrackr/actions" class="external-link"><img src="https://github.com/g-rppl/stantrackr/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/g-rppl/stantrackr" class="external-link"><img src="https://codecov.io/gh/g-rppl/stantrackr/branch/main/graph/badge.svg" alt="codecov"></a> <a href="https://github.com/g-rppl/stantrackr/blob/main/LICENSE" class="external-link"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT"></a></p>
-<p><code>stantrackr</code> is a <code>R</code> package that provides simple functionality to estimate individual flight tracks from radio-telemetry data such as <a href="https://motus.org/" class="external-link">Motus</a> using random walk models written in <a href="https://mc-stan.org/" class="external-link">Stan</a>.</p>
+<!-- badges: start -->
+
+<p><code>movetrack</code> is an <code>R</code> package that provides simple functionality to estimate individual flight tracks from radio-telemetry data such as <a href="https://motus.org/" class="external-link">Motus</a> using random walk models written in <a href="https://mc-stan.org/" class="external-link">Stan</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install <code>stantrackr</code> from GitHub using the <code>devtools</code> package:</p>
+<p>You can install <code>movetrack</code> from GitHub using the <code>devtools</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"g-rppl/stantrackr"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"g-rppl/movetrack"</span><span class="op">)</span></span></code></pre></div>
 <p>During the initial installation, make sure that the C++ toolchain required for <code>CmdStan</code> is set up properly. You can find more information <a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html" class="external-link">here</a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/cmdstanr/" class="external-link">cmdstanr</a></span><span class="op">)</span></span>
@@ -105,7 +109,7 @@
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>You can find a quickstart example in the vignette <a href="https://g-rppl.github.io/stantrackr/articles/stantrackr_example.html" class="external-link">stantrackr_example</a>.</p>
+<p>You can find a quickstart example in the vignette <a href="https://g-rppl.github.io/movetrack/articles/movetrack_example.html" class="external-link">movetrack_example</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -121,8 +125,8 @@
     <div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/g-rppl/stantrackr/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/g-rppl/stantrackr/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/g-rppl/movetrack/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/g-rppl/movetrack/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -139,7 +143,7 @@
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html#citation">Citing stantrackr</a></li>
+<li><a href="authors.html#citation">Citing movetrack</a></li>
 </ul>
 </div>
 
@@ -150,7 +154,14 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/g-rppl/movetrack/actions" class="external-link"><img src="https://github.com/g-rppl/movetrack/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/g-rppl/movetrack" class="external-link"><img src="https://codecov.io/gh/g-rppl/movetrack/branch/main/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="https://github.com/g-rppl/movetrack/blob/main/LICENSE" class="external-link"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT"></a></li>
+</ul>
+</div>
 
   </div>
 </div>
