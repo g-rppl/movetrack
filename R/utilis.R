@@ -4,7 +4,7 @@
 #' @docType data
 #' @references \url{https://motus.org/}
 #' @keywords data
-NULL
+"motusData"
 
 # Build data
 .buildData <- function(
