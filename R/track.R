@@ -42,7 +42,7 @@
 #' data(motusData)
 #'
 #' # Estimate locations
-#' loc <- locate(motusData, dtime = 2)
+#' loc <- locate(motusData, dTime = 2)
 #'
 #' # Model flight paths
 #' track(loc, states = 2, parallel_chains = 4)
@@ -67,7 +67,7 @@ track <- function(data, states = 1, i_lambda = TRUE, ...) {
       ifelse(length(ids) < 2, "ID ", "IDs "), paste(ids, collapse = ", "),
       " had less than 3 observations and ",
       ifelse(length(ids) < 2, "was", "were"),
-      " not modelled. You may want to decrease the `dtime` argument in",
+      " not modelled. You may want to decrease the `dTime` argument in",
       " `locate()` to increase the number of observations."
     ))
     data <- data[!data$ID %in% ids, ]

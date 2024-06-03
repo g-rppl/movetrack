@@ -11,10 +11,10 @@ locate(
   sig = "sig",
   aLon = "recvDeployLon",
   aLat = "recvDeployLat",
-  aType = "antType",
+  aType = NULL,
   aBearing = "antBearing",
-  det_range = 12,
-  dtime = 2
+  aRange = 12,
+  dTime = 2
 )
 }
 \arguments{
@@ -30,15 +30,16 @@ locate(
 
 \item{aLat}{Antenna latitude column.}
 
-\item{aType}{Antenna type column.}
+\item{aType}{Antenna type column, only required for antenna-specific
+detection ranges.}
 
 \item{aBearing}{Antenna bearing column.}
 
-\item{det_range}{Assumed maximum detection range of antennas in kilometres.
+\item{aRange}{Assumed maximum detection range of antennas in kilometres.
 Can be a single value or a named list of values for different antenna
 types.}
 
-\item{dtime}{Time interval in minutes for which point estimates are to be
+\item{dTime}{Time interval in minutes for which point estimates are to be
 calculated.}
 }
 \value{
@@ -54,19 +55,19 @@ This function performs the following steps as described in
 \href{https://doi.org/10.1016/j.ecolmodel.2018.08.006}{Baldwin et al. 2018}:
 \itemize{
 \item Estimate locations for each detection: half of the maximum detection
-range \code{det_range} along the directional beam.
+range \code{aRange} along the directional beam.
 \item Derive oscillating measurement error arising from antenna geometry and
 orientation.
 \item Calculate weighted means (by signal strength) for each time interval
-\code{dtime}.
+\code{dTime}.
 }
 }
 \examples{
 \dontrun{
 data(motusData)
 locate(motusData)
-locate(motusData, dtime = 1, det_range = 10)
-locate(motusData, det_range = list("yagi-5"=10, "yagi-6"=12))
+locate(motusData, dTime = 1, aRange = 10)
+locate(motusData, aType = "antType", aRange = list("yagi-5"=10, "yagi-6"=12))
 }
 
 }

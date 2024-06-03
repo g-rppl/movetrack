@@ -26,7 +26,7 @@ data(motusData)
 The first step involves estimating animal locations based on antenna bearings and signal strength at two-minute intervals using the `locate` function.
 
 ```{r locate}
-loc <- locate(motusData, dtime = 2)
+loc <- locate(motusData, dTime = 2)
 ```
 
 ## Model flight paths

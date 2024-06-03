@@ -1,3 +1,7 @@
+# movetrack 0.3.2
+
+- `aType` in `locate()` now optional.
+
 # movetrack 0.3.1
 
 ### Bug fixes
@@ -40,6 +44,6 @@
 
 ### New features
 
-- Support antenna-specific `det_range`
+- Support antenna-specific `aRange`
 - Utilisation of Stan's optimisation algorithms
 - Support multiple-variable summaries

@@ -34,7 +34,7 @@ Model (HMM) to estimate individual flight paths.
 data(motusData)
 
 # Estimate locations
-loc <- locate(motusData, dtime = 2)
+loc <- locate(motusData, dTime = 2)
 
 # Model flight paths
 track(loc, states = 2, parallel_chains = 4)
