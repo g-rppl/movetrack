@@ -12,7 +12,7 @@
 \item{...}{Unused; for compatibility with the generic method.}
 }
 \description{
-Coerce a \code{movetrack} object to a `data.frame'.
+Coerce a \code{movetrack} object to a \code{data.frame}.
 }
 \seealso{
 \code{summary.movetrack()}

@@ -3,6 +3,7 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/g-rppl/movetrack/workflows/R-CMD-check/badge.svg)](https://github.com/g-rppl/movetrack/actions)
 [![codecov](https://codecov.io/gh/g-rppl/movetrack/branch/main/graph/badge.svg)](https://app.codecov.io/gh/g-rppl/movetrack)
+[![Universe](https://g-rppl.r-universe.dev/badges/movetrack)](https://g-rppl.r-universe.dev/movetrack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/movetrack/blob/main/LICENSE)
 <!-- badges: end -->
 
@@ -10,11 +11,14 @@
 
 ## Installation
 
-You can install `movetrack` from GitHub using the `devtools` package:
+```r
+install.packages("movetrack", repos = "https://g-rppl.r-universe.dev")
+```
+
+You can install the development version from GitHub using the `devtools` package:
 
 ```r
-library(devtools)
-install_github("g-rppl/movetrack")
+devtools::install_github("g-rppl/movetrack")
 ```
 
 During the initial installation, make sure that the C++ toolchain required for `CmdStan` is set up properly. You can find more information [here](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).

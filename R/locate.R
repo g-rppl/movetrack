@@ -9,12 +9,13 @@
 #' @param sig Signal strength column.
 #' @param aLon Antenna longitude column.
 #' @param aLat Antenna latitude column.
-#' @param aType Antenna type column.
+#' @param aType Antenna type column, only required for antenna-specific
+#'   detection ranges.
 #' @param aBearing Antenna bearing column.
-#' @param det_range Assumed maximum detection range of antennas in kilometres.
+#' @param aRange Assumed maximum detection range of antennas in kilometres.
 #'   Can be a single value or a named list of values for different antenna
 #'   types.
-#' @param dtime Time interval in minutes for which point estimates are to be
+#' @param dTime Time interval in minutes for which point estimates are to be
 #'   calculated.
 #'
 #' @details
@@ -22,11 +23,11 @@
 #' [Baldwin et al. 2018](https://doi.org/10.1016/j.ecolmodel.2018.08.006):
 #'
 #'   - Estimate locations for each detection: half of the maximum detection
-#'     range `det_range` along the directional beam.
+#'     range `aRange` along the directional beam.
 #'   - Derive oscillating measurement error arising from antenna geometry and
 #'     orientation.
 #'   - Calculate weighted means (by signal strength) for each time interval
-#'     `dtime`.
+#'     `dTime`.
 #'
 #' @return
 #' Returns a `data.frame` containing estimated coordinates and measurement
@@ -37,11 +38,11 @@
 #' \dontrun{
 #' data(motusData)
 #' locate(motusData)
-#' locate(motusData, dtime = 1, det_range = 10)
-#' locate(motusData, det_range = list("yagi-5"=10, "yagi-6"=12))
+#' locate(motusData, dTime = 1, aRange = 10)
+#' locate(motusData, aType = "antType", aRange = list("yagi-5"=10, "yagi-6"=12))
 #' }
 #'
-#' @importFrom dplyr arrange distinct group_by mutate select
+#' @importFrom dplyr arrange distinct group_by mutate select any_of
 #' @importFrom lubridate round_date is.POSIXct
 #' @importFrom stats complete.cases weighted.mean
 #' @importFrom ggplot2 .data
@@ -55,32 +56,32 @@ locate <- function(
     sig = "sig",
     aLon = "recvDeployLon",
     aLat = "recvDeployLat",
-    aType = "antType",
+    aType = NULL,
     aBearing = "antBearing",
-    det_range = 12,
-    dtime = 2) {
+    aRange = 12,
+    dTime = 2) {
   # Build data
-  d <- .buildData(data, ID, ts, sig, aLon, aLat, aType, aBearing, det_range)
+  d <- .buildData(data, ID, ts, sig, aLon, aLat, aType, aBearing, aRange)
 
   # Estimate location based on antenna bearing
   tmp <- as.data.frame(.destPoint(
-    d$aLon, d$aLat, d$aBearing, d$det_range / 2
+    d$aLon, d$aLat, d$aBearing, d$aRange / 2
   ))
 
   d <- cbind(d, tmp) |> arrange(ID, ts)
 
   # Estimate oscillating error based on antenna bearing
-  lon_sd <- (d$det_range / 6) * sin(1 / 90 * pi * d$aBearing - pi / 2) +
-    d$det_range / 3
-  lat_sd <- (d$det_range / 6) * cos(1 / 90 * pi * d$aBearing) +
-    d$det_range / 3
+  lon_sd <- (d$aRange / 6) * sin(1 / 90 * pi * d$aBearing - pi / 2) +
+    d$aRange / 3
+  lat_sd <- (d$aRange / 6) * cos(1 / 90 * pi * d$aBearing) +
+    d$aRange / 3
 
   # Transform to degrees
   d$lon_sd <- .circDiff(.destPoint(d$lon, d$lat, 90, lon_sd)[, 1], d$lon)
   d$lat_sd <- abs(.destPoint(d$lon, d$lat, 0, lat_sd)[, 2] - d$lat)
 
   # Weighted means per minute interval
-  d$ts <- round_date(d$ts, unit = paste(dtime, "min"))
+  d$ts <- round_date(d$ts, unit = paste(dTime, "min"))
 
   d <- d |>
     mutate(sig = sig - min(sig)) |>
@@ -92,12 +93,13 @@ locate <- function(
       lat_sd = weighted.mean(lat_sd, sig)
     ) |>
     distinct(ts, .keep_all = TRUE) |>
-    select(-c(sig, aLon, aLat, aType, aBearing, det_range))
+    select(-c(sig, aLon, aLat, aBearing, aRange)) |>
+    select(-any_of("aType"))
 
   # Proportions of time intervals
   d <- d |>
     group_by(ID) |>
-    mutate(w = dtime / c(dtime, diff(as.numeric(ts) / 60)))
+    mutate(w = dTime / c(dTime, diff(as.numeric(ts) / 60)))
 
   return(as.data.frame(d))
 }

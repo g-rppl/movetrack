@@ -111,7 +111,7 @@ print.movetrack <- function(x, digits = 3, ...) {
 #' Coerce to a Data Frame
 #'
 #' @description
-#' Coerce a `movetrack` object to a `data.frame'.
+#' Coerce a `movetrack` object to a `data.frame`.
 #'
 #' @param x An object of class `movetrack`.
 #' @param ... Unused; for compatibility with the generic method.

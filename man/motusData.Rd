@@ -4,6 +4,12 @@
 \name{motusData}
 \alias{motusData}
 \title{Motus test data}
+\format{
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 4464 rows and 7 columns.
+}
+\usage{
+motusData
+}
 \description{
 Motus test data
 }
