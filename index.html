@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">movetrack</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.2</span>
       </span>
     </div>
 
@@ -89,16 +89,17 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install <code>movetrack</code> from GitHub using the <code>devtools</code> package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"g-rppl/movetrack"</span><span class="op">)</span></span></code></pre></div>
-<p>During the initial installation, make sure that the C++ toolchain required for <code>CmdStan</code> is set up properly. You can find more information <a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html" class="external-link">here</a>.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"movetrack"</span>, repos <span class="op">=</span> <span class="st">"https://g-rppl.r-universe.dev"</span><span class="op">)</span></span></code></pre></div>
+<p>You can install the development version from GitHub using the <code>devtools</code> package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"g-rppl/movetrack"</span><span class="op">)</span></span></code></pre></div>
+<p>During the initial installation, make sure that the C++ toolchain required for <code>CmdStan</code> is set up properly. You can find more information <a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html" class="external-link">here</a>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/cmdstanr/" class="external-link">cmdstanr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://mc-stan.org/cmdstanr/reference/install_cmdstan.html" class="external-link">check_cmdstan_toolchain</a></span><span class="op">(</span>fix <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>If not, go to <a href="https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#cpp-toolchain" class="external-link uri">https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#cpp-toolchain</a> and follow the instructions for your platform. Once your toolchain is configured correctly <code>CmdStan</code> can be installed:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://mc-stan.org/cmdstanr/reference/install_cmdstan.html" class="external-link">install_cmdstan</a></span><span class="op">(</span>cores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -133,9 +134,8 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 
@@ -159,6 +159,7 @@
 <ul class="list-unstyled">
 <li><a href="https://github.com/g-rppl/movetrack/actions" class="external-link"><img src="https://github.com/g-rppl/movetrack/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://app.codecov.io/gh/g-rppl/movetrack" class="external-link"><img src="https://codecov.io/gh/g-rppl/movetrack/branch/main/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="https://g-rppl.r-universe.dev/movetrack" class="external-link"><img src="https://g-rppl.r-universe.dev/badges/movetrack" alt="Universe"></a></li>
 <li><a href="https://github.com/g-rppl/movetrack/blob/main/LICENSE" class="external-link"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT"></a></li>
 </ul>
 </div>
