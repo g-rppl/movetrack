@@ -11,14 +11,16 @@
 
 ## Installation
 
+You can install `movetrack` from the R Universe with
+
 ```r
-install.packages("movetrack", repos = "https://g-rppl.r-universe.dev")
+install.packages("movetrack", repos = c("https://g-rppl.r-universe.dev", getOption("repos")))
 ```
 
-You can install the development version from GitHub using the `devtools` package:
+To instead install the latest development version of the package from GitHub use
 
 ```r
-devtools::install_github("g-rppl/movetrack")
+devtools::install_github("g-rppl/movetrack@dev")
 ```
 
 During the initial installation, make sure that the C++ toolchain required for `CmdStan` is set up properly. You can find more information [here](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).
