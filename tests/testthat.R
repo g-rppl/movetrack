@@ -7,6 +7,7 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
+library(cmdstanr)
 library(movetrack)
 
 test_check("movetrack")
