@@ -1,6 +1,6 @@
 Package: movetrack
 Title: Estimate flight tracks from telemetry data
-Description: `movetrack` is a `R` package that provides simple functionality
+Description: `movetrack` is an `R` package that provides simple functionality
   to estimate flight tracks from telemetry data using random walk models written
   in Stan.
 Version: 0.3.2.9000
