@@ -98,6 +98,17 @@ $$
 
 where $\text{T}(0, \sigma)$ denotes a bivariate Student's $t$-distribution with measurement error $\sigma = \begin{bmatrix} \sigma_{\text{lon}} \\ \sigma_{\text{lat}} \end{bmatrix}$.
 
+# Validation study
+
+## Procedure
+
+- On 9 and 11 of July 2024 we conducted test flights with a Robin DR 400.
+- six uniquely coded NTQB2 tags (Lotek Wireless Inc.) with burst intervals 7.1, 7.3, 19.1, 29.3 attached to the undercarriage.
+- Altitude ranged from to and flight speed ranged from to.
+- We obtained data from a regional automated radio-telemetry receiver network along the German North Sea coast, which is part of the global collaborative Motus Wildlife Tracking System [@Taylor2017, [https://motus.org](https://motus.org)], and compared it with reference tracking data downloaded from [https://flightradar24.com](https://flightradar24.com).
+
+## Results
+
 # Acknowledgements
 
 # References
