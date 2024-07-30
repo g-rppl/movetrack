@@ -109,6 +109,12 @@ where $\text{T}(0, \sigma)$ denotes a bivariate Student's $t$-distribution with 
 
 ## Results
 
+# Discussion
+
+Pull requests, bug reports, and all other forms of contributions to this project are welcomed and highly encouraged!
+
 # Acknowledgements
+
+We thank Renke Schütte for making the test flight possible. Funding was granted from German Federal Agency for Nature Conservation (BfN) with funds from the Federal Ministry for the Environment, Nature Conservation and Nuclear Safety (BMU), grants number 352315100B, to HS employing TK and GR.
 
 # References
