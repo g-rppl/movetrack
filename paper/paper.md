@@ -92,11 +92,11 @@ The observed locations of an animal, $y_j = \begin{bmatrix} y_{j, \text{lon}} \\
 
 $$
 y_j = w_j z_t + (1 - w_j) z_{t-1} + \theta_j, 
-    \quad \theta_j \sim \text{T}(0, \sigma), 
+    \quad \theta_j \sim \text{T}(0, \sigma_j), 
     \quad 1 \leq j \leq J,
 $$
 
-where $\text{T}(0, \sigma)$ denotes a bivariate Student's $t$-distribution with measurement error $\sigma = \begin{bmatrix} \sigma_{\text{lon}} \\ \sigma_{\text{lat}} \end{bmatrix}$.
+where $\text{T}(0, \sigma_j)$ denotes a bivariate Student's $t$-distribution with measurement error $\sigma_j = \begin{bmatrix} \sigma_{j, \text{lon}} \\ \sigma_{j, \text{lat}} \end{bmatrix}$.
 
 # Validation study
 
