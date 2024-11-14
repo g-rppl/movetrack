@@ -26,26 +26,30 @@ bibliography: paper.bib
 
 # Statement of need
 
-1. Intro
-- individual animal movements are highly complex and influence important large-scale ecological processes
-- many species can be tracked with high accuracy using GPS
-- but for small animals (i.e. songbirds, bats, or even insects) only automated radio-telemetry, e.g. the global collaborative Motus Wildlife Tracking System [@Taylor2017]
-- challenging to extract locations. Currently, only coarse, tower-scale localisations are used
+1.  Intro
 
-2. Current state
-- directional antennas (e.g. Yagi antennas)
-- triangulation based on angle [@Gottwald2019] or angle and distance [@Fisher2020]
-- needs calibration to each new study site
-- `aniMotum` [@Jonsen2023] for Argos data
+-   individual animal movements are highly complex and influence important large-scale ecological processes
+-   many species can be tracked with high accuracy using GPS
+-   but for small animals (i.e. songbirds, bats, or even insects) only automated radio-telemetry, e.g. the global collaborative Motus Wildlife Tracking System [@Taylor2017]
+-   challenging to extract locations. Currently, only coarse, tower-scale localisations are used
 
-3. Proposed solution
-- Hidden Markov models (HMM) can leverage temporally irregular data with large and variable spatial errors to predict location and behavioural states [@Jonsen2005; @Jonsen2013; @Baldwin2018]
-- flight paths
+2.  Current state
+
+-   directional antennas (e.g. Yagi antennas)
+-   triangulation based on angle [@Gottwald2019] or angle and distance [@Fisher2020]
+-   needs calibration to each new study site
+-   `aniMotum` [@Jonsen2023] for Argos data
+
+3.  Proposed solution
+
+-   Hidden Markov models (HMM) can leverage temporally irregular data with large and variable spatial errors to predict location and behavioural states [@Jonsen2005; @Jonsen2013; @Baldwin2018]
+-   flight paths
 
 # Methodology
+
 ## Data structure and localisation
 
-Unlike with data from GPS devices, geographic positions can not directly be inferred from radio-telemetry data. Instead, it is necessary to estimate the geographic positions of an animal from available information about the receiver location, antenna bearing and the strength of the detected radio signal. For this purpose, `movetrack` uses a geometric approach described in @Baldwin2018 that is implemented in the `locate()` function. This is a three-step process that utilizes basic principles of antenna geometry: 1) For each detection, a coarse location is estimated along the directional beam of the receiving antenna. The distance to the receiver is assumed to be half of the maximum detection range, which can be set antenna-type specific using the `aRange` argument. 2) All locations are provided with oscillating longitudinal and latitudinal measurement errors that arise from antenna geometry and orientation. 3) Locations and measurement errors from all antennas are aggregated over a desired time interval that can be set using the `dTime` argument. Finally, weighted means (by signal strength) of locations and measurement errors are calculated for each time interval. This data forms the basis of the observational part in the hidden Markov model.
+Unlike with data from GPS devices, geographic positions can not directly be inferred from radio-telemetry data. Instead, it is necessary to estimate the geographic positions of an animal from available information about the receiver location, antenna bearing and the strength of the detected radio signal. For this purpose, `movetrack` uses a geometric approach described in @Baldwin2018 that is implemented in the `locate()` function. This is a three-step process that utilises basic principles of antenna geometry: 1) For each detection, a coarse location is estimated along the directional beam of the receiving antenna. The distance to the receiver is assumed to be half of the maximum detection range, which can be set antenna-type specific using the `aRange` argument. 2) All locations are provided with oscillating longitudinal and latitudinal measurement errors that arise from antenna geometry and orientation. 3) Locations and measurement errors from all antennas are aggregated over a desired time interval that can be set using the `dTime` argument. Finally, weighted means (by signal strength) of locations and measurement errors are calculated for each time interval. This data forms the basis of the observational part in the hidden Markov model.
 
 ## Hidden Markov model
 
@@ -102,10 +106,7 @@ where $\text{T}(0, \sigma_j)$ denotes a bivariate Student's $t$-distribution wit
 
 ## Procedure
 
-- On 9 and 11 of July 2024 we conducted test flights with a Robin DR 400.
-- six uniquely coded NTQB2 tags (Lotek Wireless Inc.) with burst intervals 7.1, 7.3, 19.1, 29.3 attached to the undercarriage.
-- Altitude ranged from to and flight speed ranged from to.
-- We obtained data from a regional automated radio-telemetry receiver network along the German North Sea coast, which is part of the global collaborative Motus Wildlife Tracking System [@Taylor2017, [https://motus.org](https://motus.org)], and compared it with reference tracking data downloaded from [https://flightradar24.com](https://flightradar24.com).
+On July 9 and 11, 2024, we conducted test flights using a Robin DR 400 aircraft to simulate bird movement along a predefined flight path over a total distance of 1,554 km. The aircraft was flown at low altitudes, predominantly below 250 meters above sea level, and at minimal airspeed ranging between 30–65 m/s, reflecting the slow and low-altitude flight patterns typical of many migratory bird species as closely as possible [@Bruderer2001; @Bruderer2018]. We attached six uniquely coded NTQB2 radio tags (Lotek Wireless Inc.) with varying burst intervals (7.1, 7.3, 19.1 \[two tags\], and 29.3 s \[two tags\]) to the aircraft's undercarriage. The signals from the tags were recorded through a regional automated radio-telemetry receiver network positioned along the German North Sea coast. This network forms part of the Motus Wildlife Tracking System, a global collaborative network for tracking wildlife movements [@Taylor2017; <https://motus.org>]. Radio-telemetry data collected via Motus was then compared with positional data obtained from FlightRadar24 (<https://flightradar24.com>), a commercial flight-tracking service. Data and code to reproduce the validation study are available from the GitLab repository <https://gitlab.com/agmigecol/motus_localisation>.
 
 ## Results
 
