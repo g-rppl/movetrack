@@ -67,7 +67,9 @@ orientation.
 data(motusData)
 locate(motusData)
 locate(motusData, dTime = 1, aRange = 10)
-locate(motusData, aType = "antType", aRange = list("yagi-5"=10, "yagi-6"=12))
+locate(motusData,
+  aType = "antType", aRange = list("yagi-5" = 10, "yagi-6" = 12)
+)
 }
 
 }
