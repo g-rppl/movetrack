@@ -26,24 +26,11 @@ bibliography: paper.bib
 
 # Statement of need
 
-1.  Intro
+Understanding the intricate movements of individual animals is critical to uncovering their roles in broader ecological processes. While GPS technology has revolutionised our ability to track larger species with remarkable precision, the same level of detail remains elusive for smaller animals such as songbirds, bats, and insects [@Bridge2011]. Automated radio telemetry, which utilises lightweight equipment suitable for these species, offers a promising alternative [@Taylor2017]. However, current analytical methods are limited to coarse, station-scale positions derived from triangulation approaches [@Gottwald2019; @Fisher2020] or signal strength alone [@Rueda2024]. These methods require site-specific calibrations and fail to capture large scale movement patterns essential for ecological insight.
 
--   individual animal movements are highly complex and influence important large-scale ecological processes
--   many species can be tracked with high accuracy using GPS
--   but for small animals (i.e. songbirds, bats, or even insects) only automated radio-telemetry, e.g. the global collaborative Motus Wildlife Tracking System [@Taylor2017]
--   challenging to extract locations. Currently, only coarse, station-scale localisations are used
+To overcome these limitations, integrating Hidden Markov Models (HMM) into automated telemetry analysis offers a powerful solution. HMMs are uniquely suited to handle temporally irregular data with varying spatial errors, making them ideal for reconstructing positions as well as behavioural states from telemetry data [@Jonsen2005; @Jonsen2013; @Baldwin2018]. By applying this approach, it is possible to derive detailed flight paths and gain deeper insights into the behaviours of small species, bridging the gap between technological capability and ecological understanding.
 
-2.  Current state
-
--   directional antennas (e.g. Yagi antennas)
--   triangulation based on angle [@Gottwald2019] or angle and distance [@Fisher2020]
--   needs calibration to each new study site
--   `aniMotum` [@Jonsen2023] for Argos data
-
-3.  Proposed solution
-
--   Hidden Markov models (HMM) can leverage temporally irregular data with large and variable spatial errors to predict location and behavioural states [@Jonsen2005; @Jonsen2013; @Baldwin2018]
--   flight paths
+Similar package: `aniMotum` [@Jonsen2023] for Argos data
 
 # Methodology
 
