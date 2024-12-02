@@ -24,76 +24,31 @@ bibliography: paper.bib
 
 # Summary
 
+Tracking small animals like songbirds and bats is vital for ecology but limited by current methods. Automated radio telemetry, combined with hidden Markov models (HMMs), offers a solution for more precise movement and behaviour analysis. The `movetrack` package estimates positions from telemetry data using HMMs to infer behavioural states, improving movement reconstruction. A validation study simulating bird movement with an aircraft was conducted to evaluate model fit.
+
 # Statement of need
 
 Understanding the intricate movements of individual animals is critical to uncovering their roles in broader ecological processes. While GPS technology has revolutionised our ability to track larger species with remarkable precision, the same level of detail remains elusive for smaller animals such as songbirds, bats, and insects [@Bridge2011]. Automated radio telemetry, which utilises lightweight equipment suitable for these species, offers a promising alternative [@Taylor2017]. However, current analytical methods are limited to coarse, station-scale positions derived from triangulation approaches [@Gottwald2019; @Fisher2020] or signal strength alone [@Rueda2024]. These methods require site-specific calibrations and fail to capture large scale movement patterns essential for ecological insight.
 
-To overcome these limitations, integrating Hidden Markov Models (HMM) into automated telemetry analysis offers a powerful solution. HMMs are uniquely suited to handle temporally irregular data with varying spatial errors, making them ideal for reconstructing positions as well as behavioural states from telemetry data [@Jonsen2005; @Jonsen2013; @Baldwin2018]. By applying this approach, it is possible to derive detailed flight paths and gain deeper insights into the behaviours of small species, bridging the gap between technological capability and ecological understanding.
-
-Similar package: `aniMotum` [@Jonsen2023] for Argos data
+To overcome these limitations, integrating HMMs into automated telemetry analysis offers a powerful solution. HMMs are uniquely suited to handle temporally irregular data with varying spatial errors, making them ideal for reconstructing positions as well as behavioural states from telemetry data [@Jonsen2005; @Jonsen2013; @Baldwin2018]. By applying this approach, it is possible to derive detailed flight paths and gain deeper insights into the behaviours of small species, bridging the gap between technological capability and ecological understanding.
 
 # Methodology
 
 ## Data structure and localisation
 
-Unlike with data from GPS devices, geographic positions can not directly be inferred from radio-telemetry data. Instead, it is necessary to estimate the geographic positions of an animal from available information about the receiver location, antenna bearing and the strength of the detected radio signal. For this purpose, `movetrack` uses a geometric approach described in @Baldwin2018 that is implemented in the `locate()` function. This is a three-step process that utilises basic principles of antenna geometry: 1) For each detection, a coarse location is estimated along the directional beam of the receiving antenna. The distance to the receiver is assumed to be half of the maximum detection range, which can be set antenna-type specific using the `aRange` argument. 2) All locations are provided with oscillating longitudinal and latitudinal measurement errors that arise from antenna geometry and orientation. 3) Locations and measurement errors from all antennas are aggregated over a desired time interval that can be set using the `dTime` argument. Finally, weighted means (by signal strength) of locations and measurement errors are calculated for each time interval. This data forms the basis of the observational part in the hidden Markov model.
+Unlike with data from GPS devices, geographic positions can not directly be inferred from radio-telemetry data. Instead, it is necessary to estimate the geographic positions of an animal from available information about the receiver location, antenna bearing and the strength of the detected radio signal. For this purpose, `movetrack` uses a geometric approach described in @Baldwin2018 that is implemented in the `locate()` function. This is a three-step process that utilises basic principles of antenna geometry: 1) For each detection, a coarse location is estimated along the directional beam of the receiving antenna. The distance to the receiver is assumed to be half of the maximum detection range, which can be set antenna-type specific using the `aRange` argument. 2) All locations are provided with oscillating longitudinal and latitudinal measurement errors that arise from antenna geometry and orientation. 3) Locations and measurement errors from all antennas are aggregated over a desired time interval that can be set using the `dTime` argument. Finally, weighted means (by signal strength) of locations and measurement errors are calculated for each time interval. This data forms the basis of the observational part in the HMM.
 
 ## Hidden Markov model
 
-HMM describe the evolution of a sequence of random variables, $\{S_t\}$ (i.e. behavioural states), which are not directly observable, but can be inferred from another sequence of random variables, $\{Y_t\}$, that are observable (i.e. locations) [@AugerMethe2021, Figure \ref{fig:hmm}]. In the use case of `movetrack`, the hidden state sequence may alter between 'directed flight' or 'local movement', but the number of states affecting flight directionality can easily be set appropriately using the `states` argument. It is also possible to run a simple correlated random walk with only one state.
+HMMs describe the evolution of a sequence of random variables (i.e. behavioural states) which are not directly observable, but can be inferred from another sequence of random variables that are observable (i.e. locations) [@AugerMethe2021]. In the use case of `movetrack`, the hidden state sequence may alter between 'directed flight' or 'local movement', but the number of states affecting flight directionality can easily be set appropriately using the `states` argument. It is also possible to run a simple correlated random walk with only one state.
 
-![Basic model structure showing the hidden state process $\{S_t\}$ governing the real locations $z$ and the observed locations $y$ at time $t$. \label{fig:hmm}](files/hmm.pdf)
-
-Each true location $z$ is assumed to be generated by one of $N$ distributions, where $N$ is the number of states. The hidden state sequence that determines which of the distributions is chosen at time $t$ is modelled as a Markov chain, where the probability of being in each state at time $t$ depends only on the state value at the previous time step [@AugerMethe2021]. Finally, an observation model relates the true locations to the estimated locations and their measurement errors obtained from `locate()`. The HMM therefore consists of three components and is implemented in the `track()` function.
-
-### State process
-
-The state process $\{S_t\}$ of a $N$-state HMM for $T$ time steps is characterised by its state transition probability matrix $\Gamma^{(t)} = (\gamma^{(t)}_{i,j})$, where $i,j = 1, \dots, N$ and $\gamma^{(t)}_{i,j} = \text{Pr}(s_{t+1} = j|s_t = i)$. The probability of transitioning to state $s_t$ from state $s_{t-1}$ is
-
-$$
-s_t \sim \text{Categorical}(\Gamma^{(t-1)}),
-    \quad 1 \leq t \leq T.
-$$
-
-### Process model
-
-The process equation for the true locations of the animal at regular time intervals $t$, $z_t = \begin{bmatrix} z_{t, \text{lon}} \\ z_{t, \text{lat}} \end{bmatrix}$, assumes that the animal's location at time $t$ is not only dependent on the previous location, $z_{t-1}$, but also on the animal's previous displacement in each coordinate, $z_{t-1} - z_{t-2}$:
-
-$$
-z_t = z_{t-1} + \lambda_n (z_{t-1} - z_{t-2}) + \epsilon_t, 
-    \quad \epsilon_t \sim \text{N}(0, \Omega),
-    \quad 1 \leq n \leq N,
-$$
-
-where
-
-$$
-\Omega = 
-    \begin{bmatrix} 
-        \tau^2_{\epsilon, \text{lon}} & 0 \\ 
-        0 & \tau^2_{\epsilon, \text{lat}} 
-    \end{bmatrix}.
-$$
-
-The state-depended parameter, $\lambda_n$, can take values between 0 and 1 (i.e., $0 \leq \lambda \leq 1$), and controls the degree of correlation between steps. By default, `movetrack` estimates track-specific $\lambda_n$ values, but it is also possible to use the same $\lambda_n$ for all tracks by setting `i_lambda = FALSE`.
-
-### Observation model
-
-The observed locations of an animal, $y_j = \begin{bmatrix} y_{j, \text{lon}} \\ y_{j, \text{lat}} \end{bmatrix}$, often have irregular time intervals $j$, with $J$ representing the total number of observed locations. Therefore, the true location of the animal is linearly interpolated to the time of the observation, with $w_j$ representing the proportion of the regular time interval between $t-1$ and $t$ when the observation $y_j$ was made:
-
-$$
-y_j = w_j z_t + (1 - w_j) z_{t-1} + \theta_j, 
-    \quad \theta_j \sim \text{T}(0, \sigma_j), 
-    \quad 1 \leq j \leq J,
-$$
-
-where $\text{T}(0, \sigma_j)$ denotes a bivariate Student's $t$-distribution with measurement error $\sigma_j = \begin{bmatrix} \sigma_{j, \text{lon}} \\ \sigma_{j, \text{lat}} \end{bmatrix}$.
+Each true location is assumed to be generated by one of $N$ distributions, where $N$ is the number of states. The hidden state sequence that determines which of the distributions is chosen at time $t$ is modelled as a Markov chain, where the probability of being in each state at time $t$ depends only on the state value at the previous time step [@AugerMethe2021]. Finally, an observation model relates the true locations to the estimated locations and their measurement errors obtained from `locate()`. The HMM therefore consists of three components and is implemented in the `track()` function, for more details see the package documentation.
 
 # Validation study
 
 ## Procedure
 
-On July 9 and 11, 2024, we conducted test flights using a Robin DR 400 aircraft to simulate bird movement along a predefined flight path over a total distance of 1,554 km. The aircraft was flown at low altitudes, predominantly below 250 meters above sea level, and at minimal airspeed ranging between 30–65 m/s, reflecting the slow and low-altitude flight patterns typical of migratory animals as closely as possible [@Bruderer2001; @Bruderer2018]. We attached six uniquely coded NTQB2 radio tags (Lotek Wireless Inc.) with varying burst intervals (7.1, 7.3, 19.1 \[two tags\], and 29.3 s \[two tags\]) to the aircraft's undercarriage. The signals from the tags were recorded through a regional automated radio-telemetry receiver network positioned along the German North Sea coast. This network forms part of the Motus Wildlife Tracking System, a global collaborative network for tracking wildlife movements [@Taylor2017, <https://motus.org>]. Radio-telemetry data collected via Motus was then compared with positional data obtained from FlightRadar24 (<https://flightradar24.com>), a commercial flight-tracking service. Data and code to reproduce the validation study are available from the GitLab repository <https://gitlab.com/agmigecol/motus_localisation>.
+We conducted test flights using a Robin DR 400 aircraft to simulate bird movement along a predefined flight path over a total distance of 1,554 km. The aircraft was flown at low altitudes, predominantly below 250 meters above sea level, and at minimal airspeed ranging between 30–65 m/s, reflecting the slow and low-altitude flight patterns typical of migratory animals as closely as possible [@Bruderer2001; @Bruderer2018]. We attached six uniquely coded NTQB2 radio tags (Lotek Wireless Inc.) with varying burst intervals (7.1, 7.3, 19.1 \[two tags\], and 29.3 s \[two tags\]) to the aircraft's undercarriage. The signals from the tags were recorded through a regional automated radio-telemetry receiver network positioned along the German North Sea coast. This network forms part of the Motus Wildlife Tracking System, a global collaborative network for tracking wildlife movements [@Taylor2017, <https://motus.org>]. Radio-telemetry data collected via Motus was then compared with positional data obtained from FlightRadar24 (<https://flightradar24.com>), a commercial flight-tracking service. Data and code to reproduce the validation study are available from the GitLab repository <https://gitlab.com/agmigecol/motus_localisation>.
 
 ## Results
 
