@@ -12,14 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Model formulation">
-<meta property="og:description" content="movetrack">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -33,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">movetrack</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.0</span>
       </span>
     </div>
 
@@ -45,7 +44,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -65,7 +64,7 @@
 <li>
   <a href="https://github.com/g-rppl/movetrack/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -76,7 +75,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><script src="movetrack_math_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="movetrack_math_files/viz-1.8.2/viz.js"></script><link href="movetrack_math_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
 <script src="movetrack_math_files/grViz-binding-1.0.11/grViz.js"></script><div class="row">
@@ -86,9 +85,9 @@
                         <h4 data-toc-skip class="author">Georg
 Rüppel</h4>
             
-            <h4 data-toc-skip class="date">2024-06-05</h4>
+            <h4 data-toc-skip class="date">2024-12-04</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/g-rppl/movetrack/blob/HEAD/vignettes/movetrack_math.Rmd" class="external-link"><code>vignettes/movetrack_math.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/g-rppl/movetrack/blob/main/vignettes/movetrack_math.Rmd" class="external-link"><code>vignettes/movetrack_math.Rmd</code></a></small>
       <div class="hidden name"><code>movetrack_math.Rmd</code></div>
 
     </div>
@@ -96,79 +95,120 @@ Rüppel</h4>
     
     
 <div class="section level2">
-<h2 id="hidden-markov-model">Hidden Markov Model<a class="anchor" aria-label="anchor" href="#hidden-markov-model"></a>
+<h2 id="hidden-markov-model">Hidden Markov model<a class="anchor" aria-label="anchor" href="#hidden-markov-model"></a>
 </h2>
 <div id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:500px;height:300px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":" digraph {\n\tfontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    # Weight [fillcolor=\"#5983b0\", style=filled]\n    \n    z0 [label=\"z&#x209C;&#x208B;&#x2082;\"]\n    y0 [label=\"y&#x2C7C;&#x208B;&#x2082;\"]\n    z1 [label=\"z&#x209C;&#x208B;&#x2081;\"]\n    y1 [label=\"y&#x2C7C;&#x208B;&#x2081;\"]\n    z2 [label=\"z&#x209C;\"]\n    y2 [label=\"y&#x2C7C;\"]\n    z3 [label=\"z&#x209C;&#x208A;&#x2081;\"]\n    y3 [label=\"y&#x2C7C;&#x208A;&#x2081;\"]\n    s0 -> z0 -> y0\n    s1 -> z1 -> y1\n    s2 -> z2 -> y2\n    s3 -> z3 -> y3\n    \n    subgraph cluster_0 {\n\t\tstyle=filled;\n\t\tcolor=lightgrey;\n\t\tnode [style=filled,color=white];\n        {rank=same; s0 s1 s2 s3}\n\t\ts0 [label=\"s&#x209C;&#x208B;&#x2082;\"]\n        s1 [label=\"s&#x209C;&#x208B;&#x2081;\"]\n        s2 [label=\"s&#x209C;\"]\n        s3 [label=\"s&#x209C;&#x208A;&#x2081;\"]\n        s0 -> s1 -> s2 -> s3\n\t\tlabel=\"State process\";\n\t}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>Hidden Markov Models (HMM) describe the evolution of a sequence of
-random variables, <span class="math inline">\(\{S_t\}\)</span>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"diagram":" digraph {\n\tfontname=\"Helvetica,Arial,sans-serif\"\n\tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n\tedge [fontname=\"Helvetica,Arial,sans-serif\"]\n    \n    # Weight [fillcolor=\"#5983b0\", style=filled]\n    \n    z0 [label=\"z&#x209C;&#x208B;&#x2082;\"]\n    y0 [label=\"y&#x2C7C;&#x208B;&#x2082;\"]\n    z1 [label=\"z&#x209C;&#x208B;&#x2081;\"]\n    y1 [label=\"y&#x2C7C;&#x208B;&#x2081;\"]\n    z2 [label=\"z&#x209C;\"]\n    y2 [label=\"y&#x2C7C;\"]\n    z3 [label=\"z&#x209C;&#x208A;&#x2081;\"]\n    y3 [label=\"y&#x2C7C;&#x208A;&#x2081;\"]\n    s0 -> z0 -> y0\n    s1 -> z1 -> y1\n    s2 -> z2 -> y2\n    s3 -> z3 -> y3\n    \n    subgraph cluster_0 {\n\t\tstyle=filled;\n\t\tcolor=lightgrey;\n\t\tnode [style=filled,color=white];\n        {rank=same; s0 s1 s2 s3}\n\t\ts0 [label=\"s&#x209C;&#x208B;&#x2082;\"]\n        s1 [label=\"s&#x209C;&#x208B;&#x2081;\"]\n        s2 [label=\"s&#x209C;\"]\n        s3 [label=\"s&#x209C;&#x208A;&#x2081;\"]\n        s0 -> s1 -> s2 -> s3\n\t\tlabel=\"State process\";\n\t}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>Hidden Markov models (HMM) describe the evolution of a sequence of
+random variables,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>S</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{S_t\}</annotation></semantics></math>
 (i.e. behavioural states), which are not directly observable, but can be
-inferred from another sequence of random variables, <span class="math inline">\(\{Y_t\}\)</span>, that are observable
-(i.e. locations). The two main characteristics of HMMs are (1) each
-observation is assumed to be generated by one of <span class="math inline">\(N\)</span> distributions, and (2) the hidden state
-sequence that determines which of the <span class="math inline">\(N\)</span> distributions is chosen at time <span class="math inline">\(t\)</span> is modelled as a Markov chain, where
-the probability of being in each state at time <span class="math inline">\(t\)</span> depends only on the state value at the
-previous time step.</p>
+inferred from another sequence of random variables,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>Y</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{Y_t\}</annotation></semantics></math>,
+that are observable (i.e. locations). The two main characteristics of
+HMMs are (1) each observation is assumed to be generated by one of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+distributions, and (2) the hidden state sequence that determines which
+of the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+distributions is chosen at time
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+is modelled as a Markov chain, where the probability of being in each
+state at time
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+depends only on the state value at the previous time step.</p>
 <div class="section level3">
 <h3 id="state-process">State process<a class="anchor" aria-label="anchor" href="#state-process"></a>
 </h3>
-<p>The state process <span class="math inline">\(\{S_t\}\)</span> of a
-<span class="math inline">\(N\)</span>-state HMM for <span class="math inline">\(T\)</span> time steps is characterised by its
-state transition probability matrix <span class="math inline">\(\Gamma^{(t)} = (\gamma^{(t)}_{i,j})\)</span>,
-where <span class="math inline">\(i,j = 1, \dots, N\)</span> and <span class="math inline">\(\gamma^{(t)}_{i,j} = \text{Pr}(s_{t+1} = j|s_t =
-i)\)</span>. The probability of transitioning to state <span class="math inline">\(s_t\)</span> from state <span class="math inline">\(s_{t-1}\)</span> is</p>
-<p><span class="math display">\[
+<p>The state process
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>S</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">\{S_t\}</annotation></semantics></math>
+of a
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>-state
+HMM for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
+time steps is characterised by its state transition probability matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msup><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>γ</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Gamma^{(t)} = (\gamma^{(t)}_{i,j})</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>,</mo><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">i,j = 1, \dots, N</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>γ</mi><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></msubsup><mo>=</mo><mtext mathvariant="normal">Pr</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>s</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>j</mi><mo stretchy="false" form="prefix">|</mo><msub><mi>s</mi><mi>t</mi></msub><mo>=</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\gamma^{(t)}_{i,j} = \text{Pr}(s_{t+1} = j|s_t = i)</annotation></semantics></math>.
+The probability of transitioning to state
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mi>t</mi></msub><annotation encoding="application/x-tex">s_t</annotation></semantics></math>
+from state
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>s</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">s_{t-1}</annotation></semantics></math>
+is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>s</mi><mi>t</mi></msub><mo>∼</mo><mtext mathvariant="normal">Categorical</mtext><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mn>1</mn><mo>≤</mo><mi>t</mi><mo>≤</mo><mi>T</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
 s_t \sim \text{Categorical}(\Gamma^{(t-1)}),
     \quad 1 \leq t \leq T.
-\]</span></p>
+</annotation></semantics></math></p>
 </div>
 <div class="section level3">
 <h3 id="process-model">Process model<a class="anchor" aria-label="anchor" href="#process-model"></a>
 </h3>
 <p>The process equation for the true locations of the animal at regular
-time intervals <span class="math inline">\(t\)</span>, <span class="math inline">\(z_t = \begin{bmatrix} z_{t, \text{lon}} \\ z_{t,
-\text{lat}} \end{bmatrix}\)</span>, assumes that the animal’s location
-at time <span class="math inline">\(t\)</span> is not only dependent on
-the previous location, <span class="math inline">\(z_{t-1}\)</span>, but
-also on the animal’s previous displacement in each coordinate, <span class="math inline">\(z_{t-1} - z_{t-2}\)</span>:</p>
-<p><span class="math display">\[
-z_t = z_{t-1} + \lambda_n (z_{t-1} - z_{t-2}) + \epsilon_t,
+time intervals
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>t</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>z</mi><mrow><mi>t</mi><mo>,</mo><mtext mathvariant="normal">lon</mtext></mrow></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>z</mi><mrow><mi>t</mi><mo>,</mo><mtext mathvariant="normal">lat</mtext></mrow></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">z_t = \begin{bmatrix} z_{t, \text{lon}} \\ z_{t, \text{lat}} \end{bmatrix}</annotation></semantics></math>,
+assumes that the animal’s location at time
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+is not only dependent on the previous location,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">z_{t-1}</annotation></semantics></math>,
+but also on the animal’s previous displacement in each coordinate,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>2</mn></mrow></msub></mrow><annotation encoding="application/x-tex">z_{t-1} - z_{t-2}</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>t</mi></msub><mo>=</mo><msub><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>λ</mi><mi>n</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>2</mn></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><msub><mi>ϵ</mi><mi>t</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>ϵ</mi><mi>t</mi></msub><mo>∼</mo><mtext mathvariant="normal">N</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi>Ω</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mn>1</mn><mo>≤</mo><mi>n</mi><mo>≤</mo><mi>N</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+z_t = z_{t-1} + \lambda_n (z_{t-1} - z_{t-2}) + \epsilon_t, 
     \quad \epsilon_t \sim \text{N}(0, \Omega),
     \quad 1 \leq n \leq N,
-\]</span></p>
+</annotation></semantics></math></p>
 <p>where</p>
-<p><span class="math display">\[
-\Omega =
-    \begin{bmatrix}
-        \tau^2_{\epsilon, \text{lon}} &amp; 0 \\
-        0 &amp; \tau^2_{\epsilon, \text{lat}}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Ω</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msubsup><mi>τ</mi><mrow><mi>ϵ</mi><mo>,</mo><mtext mathvariant="normal">lon</mtext></mrow><mn>2</mn></msubsup></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msubsup><mi>τ</mi><mrow><mi>ϵ</mi><mo>,</mo><mtext mathvariant="normal">lat</mtext></mrow><mn>2</mn></msubsup></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Omega = 
+    \begin{bmatrix} 
+        \tau^2_{\epsilon, \text{lon}} &amp; 0 \\ 
+        0 &amp; \tau^2_{\epsilon, \text{lat}} 
     \end{bmatrix}.
-\]</span></p>
-<p>The state-depended parameter, <span class="math inline">\(\lambda_n\)</span>, can take values between 0 and
-1 (i.e., <span class="math inline">\(0 \leq \lambda \leq 1\)</span>),
+</annotation></semantics></math></p>
+<p>The state-depended parameter,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>λ</mi><mi>n</mi></msub><annotation encoding="application/x-tex">\lambda_n</annotation></semantics></math>,
+can take values between 0 and 1 (i.e.,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≤</mo><mi>λ</mi><mo>≤</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">0 \leq \lambda \leq 1</annotation></semantics></math>),
 and controls the degree of correlation between steps. By default,
-<code>movetrack</code> estimates track-specific <span class="math inline">\(\lambda_n\)</span> values, but it is also possible
-to use the same <span class="math inline">\(\lambda_n\)</span> for all
-tracks by setting <code>i_lambda = FALSE</code>.</p>
+<code>movetrack</code> estimates track-specific
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>λ</mi><mi>n</mi></msub><annotation encoding="application/x-tex">\lambda_n</annotation></semantics></math>
+values, but it is also possible to use the same
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>λ</mi><mi>n</mi></msub><annotation encoding="application/x-tex">\lambda_n</annotation></semantics></math>
+for all tracks by setting <code>i_lambda = FALSE</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="observation-model">Observation model<a class="anchor" aria-label="anchor" href="#observation-model"></a>
 </h3>
-<p>The observed locations of an animal, <span class="math inline">\(y_j
-= \begin{bmatrix} y_{j, \text{lon}} \\ y_{j, \text{lat}}
-\end{bmatrix}\)</span>, often have irregular time intervals <span class="math inline">\(j\)</span>, with <span class="math inline">\(J\)</span> representing the total number of
-observed locations. Therefore, the true location of the animal is
-linearly interpolated to the time of the observation, with <span class="math inline">\(w_j\)</span> representing the proportion of the
-regular time interval between <span class="math inline">\(t-1\)</span>
-and <span class="math inline">\(t\)</span> when the observation <span class="math inline">\(y_j\)</span> was made:</p>
-<p><span class="math display">\[
-y_j = w_j z_t + (1 - w_j) z_{t-1} + \theta_j,
-    \quad \theta_j \sim \text{T}(0, \sigma),
+<p>The observed locations of an animal,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>j</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>y</mi><mrow><mi>j</mi><mo>,</mo><mtext mathvariant="normal">lon</mtext></mrow></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>y</mi><mrow><mi>j</mi><mo>,</mo><mtext mathvariant="normal">lat</mtext></mrow></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">y_j = \begin{bmatrix} y_{j, \text{lon}} \\ y_{j, \text{lat}} \end{bmatrix}</annotation></semantics></math>,
+often have irregular time intervals
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>,
+with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>J</mi><annotation encoding="application/x-tex">J</annotation></semantics></math>
+representing the total number of observed locations. Therefore, the true
+location of the animal is linearly interpolated to the time of the
+observation, with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>w</mi><mi>j</mi></msub><annotation encoding="application/x-tex">w_j</annotation></semantics></math>
+representing the proportion of the regular time interval between
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">t-1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+when the observation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>y</mi><mi>j</mi></msub><annotation encoding="application/x-tex">y_j</annotation></semantics></math>
+was made:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>j</mi></msub><mo>=</mo><msub><mi>w</mi><mi>j</mi></msub><msub><mi>z</mi><mi>t</mi></msub><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>w</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>z</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>θ</mi><mi>j</mi></msub><mo>,</mo><mspace width="1.0em"></mspace><msub><mi>θ</mi><mi>j</mi></msub><mo>∼</mo><mtext mathvariant="normal">T</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mi>σ</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="1.0em"></mspace><mn>1</mn><mo>≤</mo><mi>j</mi><mo>≤</mo><mi>J</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+y_j = w_j z_t + (1 - w_j) z_{t-1} + \theta_j, 
+    \quad \theta_j \sim \text{T}(0, \sigma_j), 
     \quad 1 \leq j \leq J,
-\]</span></p>
-<p>where <span class="math inline">\(\text{T}(0, \sigma)\)</span>
-denotes a bivariate Student’s <span class="math inline">\(t\)</span>-distribution with measurement error
-<span class="math inline">\(\sigma = \begin{bmatrix} \sigma_{\text{lon}}
-\\ \sigma_{\text{lat}} \end{bmatrix}\)</span>.</p>
+</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">T</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><msub><mi>σ</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{T}(0, \sigma_j)</annotation></semantics></math>
+denotes a bivariate Student’s
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>-distribution
+with measurement error
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>σ</mi><mi>j</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>σ</mi><mrow><mi>j</mi><mo>,</mo><mtext mathvariant="normal">lon</mtext></mrow></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>σ</mi><mrow><mi>j</mi><mo>,</mo><mtext mathvariant="normal">lat</mtext></mrow></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\sigma_j = \begin{bmatrix} \sigma_{j, \text{lon}} \\ \sigma_{j, \text{lat}} \end{bmatrix}</annotation></semantics></math>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -183,9 +223,7 @@ doi: <a href="https://doi.org/10.1002/ecm.1470" class="external-link">10.1002/ec
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 
@@ -198,16 +236,16 @@ doi: <a href="https://doi.org/10.1002/ecm.1470" class="external-link">10.1002/ec
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>

@@ -1,8 +1,7 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   movetrack_example: movetrack_example.html
   movetrack_math: movetrack_math.html
-last_built: 2024-06-05T06:34Z
-
+last_built: 2024-12-04T13:51Z
