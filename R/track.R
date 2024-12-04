@@ -51,7 +51,7 @@
 #'
 #' @importFrom dplyr n group_by summarise filter
 #' @importFrom ggplot2 .data
-#' @importFrom cmdstanr cmdstan_model
+#' @importFrom cmdstanr check_cmdstan_toolchain cmdstan_model
 #'
 #' @export
 #'

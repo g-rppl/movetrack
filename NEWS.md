@@ -1,3 +1,9 @@
+# movetrack 0.4.0
+
+- Ensure `min(sig)` > 0 if only one unique value per `dTime`
+- Check C++ toolchain on attach
+- Minor fixes in documentation
+
 # movetrack 0.3.2
 
 - `aType` in `locate()` now optional.
