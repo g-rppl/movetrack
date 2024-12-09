@@ -43,7 +43,7 @@ plot.movetrack <- function(x, vars = c("lon", "lat"), id = NULL, ...) {
           x = .data$time, y = .data[[paste0(var, ".lower")]],
           xend = .data$time, yend = .data[[paste0(var, ".upper")]]
         ), alpha = 0.2) +
-        geom_point(aes(x = .data$time, y = .data[[paste0(var, ".mean")]])) +
+        geom_point(aes(x = .data$time, y = .data[[paste0(var, ".median")]])) +
         ggtitle(paste("ID:", i)) +
         ylab(var)
       plot(g)
@@ -60,12 +60,12 @@ plot.movetrack <- function(x, vars = c("lon", "lat"), id = NULL, ...) {
 #' @param id The individuals to plot. Defaults to `NULL` which plots all
 #'   individuals.
 #' @param nsim The number of posterior draws to plot. Defaults to `50`.
-#' @param lwd The line width for the mean trajectory. Defaults to `2`.
+#' @param lwd The line width for the median trajectory. Defaults to `2`.
 #' @param alpha The alpha value for the posterior draws. Defaults to `0.1`.
 #'
 #' @return
-#' Returns an overview map with the mean trajectories and `nsim` posterior draws
-#'   per individual.
+#' Returns an overview map with the median trajectories and `nsim` posterior
+#'   draws per individual.
 #'
 #' @examples
 #' \dontrun{

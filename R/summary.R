@@ -1,12 +1,12 @@
 # Get means per variable
-.getMeans <- function(x) {
-  smry <- lapply(x$draws, function(d) apply(d, 3, mean))
+.getMedians <- function(x) {
+  smry <- lapply(x$draws, function(d) apply(d, 3, median))
   out <- bind_cols(
     ID = x$ID,
     time = x$time,
     do.call(cbind, smry)
   )
-  return(as.data.frame(out))
+  as.data.frame(out)
 }
 
 # Summarise draws
@@ -26,7 +26,7 @@
     },
     row.names = NULL
   )
-  return(s)
+  s
 }
 
 #' Summary
@@ -85,7 +85,7 @@ summary.movetrack <- function(
     time = object$time,
     do.call(cbind, smry[var])
   )
-  return(as.data.frame(out))
+  as.data.frame(out)
 }
 
 #' Print
@@ -105,7 +105,7 @@ summary.movetrack <- function(
 #' @export
 #'
 print.movetrack <- function(x, digits = 3, ...) {
-  print(.getMeans(x), digits = digits, ...)
+  print(.getMedians(x), digits = digits, ...)
 }
 
 #' Coerce to a Data Frame
@@ -124,7 +124,7 @@ print.movetrack <- function(x, digits = 3, ...) {
 #' @export
 #'
 as.data.frame.movetrack <- function(x, ...) {
-  return(.getMeans(x))
+  .getMedians(x)
 }
 
 #' Extract draws
@@ -157,5 +157,5 @@ getDraws <- function(fit, nsim = 50) {
   ) |>
     mutate(tID = paste(.data$ID, .data$iter, sep = "_")) |>
     arrange(.data$tID, .data$time)
-  return(sim)
+  sim
 }

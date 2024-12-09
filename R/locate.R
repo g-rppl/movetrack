@@ -104,5 +104,5 @@ locate <- function(
     group_by(ID) |>
     mutate(w = dTime / c(dTime, diff(as.numeric(ts) / 60)))
 
-  return(as.data.frame(d))
+  as.data.frame(d)
 }

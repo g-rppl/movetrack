@@ -113,5 +113,5 @@ track <- function(data, states = 1, i_lambda = TRUE, ...) {
     )
   )
   class(out) <- "movetrack"
-  return(out)
+  out
 }

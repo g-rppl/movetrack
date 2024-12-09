@@ -1,11 +1,11 @@
 # Convert degrees to radians
 .toRad <- function(deg) {
-  return(deg * pi / 180)
+  deg * pi / 180
 }
 
 # Convert radians to degrees
 .toDeg <- function(rad) {
-  return(rad * 180 / pi)
+  rad * 180 / pi
 }
 
 # Circular difference
@@ -24,7 +24,7 @@
   a <- sin(dLat / 2) * sin(dLat / 2) +
     sin(dLon / 2) * sin(dLon / 2) * cos(lat1) * cos(lat2)
   c <- 2 * atan2(sqrt(a), sqrt(1 - a))
-  return(r * c)
+  r * c
 }
 
 # Destination given bearing (direction) and distance
@@ -38,10 +38,10 @@
     sin(a) * sin(d / r) * cos(lat1),
     cos(d / r) - sin(lat1) * sin(lat2)
   )
-  return(cbind(
+  cbind(
     lon = .toDeg(lon2),
     lat = .toDeg(lat2)
-  ))
+  )
 }
 
 # Calculate lagged distances in metres from posterior draws
@@ -56,12 +56,12 @@
   dist[, , index[-c(length(index))] + 1] <- NA
   dimnames(dist)$variable <- paste0("distance[", seq_len(dim(lon)[3]), "]")
   class(dist) <- c("draws_array", "draws", "array")
-  return(dist * 1e3)
+  dist * 1e3
 }
 
 # Calculate lagged speeds in metres per second from posterior draws
 .speed <- function(distance, time) {
   speed <- sweep(distance, 3, (c(NA, diff(time)) * 60), "/")
   dimnames(speed)$variable <- paste0("speed[", seq_len(dim(distance)[3]), "]")
-  return(speed)
+  speed
 }

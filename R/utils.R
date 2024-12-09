@@ -60,5 +60,5 @@
     },
     stop("'aRange' must be numeric or a named list.")
   )
-  return(d)
+  d
 }
