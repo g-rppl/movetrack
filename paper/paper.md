@@ -24,7 +24,7 @@ bibliography: paper.bib
 
 # Summary
 
-Tracking small animals like songbirds and bats is vital for ecology but limited by current methods. Automated radio-telemetry, combined with hidden Markov models (HMMs), offers a solution for more precise movement and behaviour analysis. The `movetrack` package estimates positions from telemetry data using HMMs to infer behavioural states, improving movement reconstruction. A validation study simulating bird movement with an aircraft was conducted to evaluate model fit. Spatial analysis revealed reasonable alignment between estimated positions and the GPS track, though precision decreased with greater distances from telemetry stations and sparse signal detections. The analyses underscored the impact of burst intervals, with longer intervals reducing accuracy for the relatively fast-moving aircraft. While the approach showed promise, maximising accuracy requires a dense network of telemetry stations and careful selection of the tags' burst intervals.
+Tracking small animals like songbirds and bats is vital for ecology but limited by current methods. Automated radio-telemetry, combined with hidden Markov models (HMMs), offers a solution for more precise movement and behaviour analysis. The `movetrack` package estimates positions from telemetry data using HMMs to infer behavioural states, improving movement reconstruction. A validation study simulating bird movement with an aircraft was conducted to evaluate model fit. Spatial analysis revealed reasonable alignment between estimated positions and the GPS track, though precision decreased with greater distances from telemetry stations and sparse signal detections. The analyses underscored the impact of burst intervals, with longer intervals reducing accuracy for the relatively fast-moving aircraft. While the approach is promising, maximising accuracy requires a dense network of telemetry stations and careful selection of the tags' burst intervals.
 
 # Introduction
 
@@ -36,7 +36,7 @@ To overcome these limitations, integrating HMMs into movement analysis offers a 
 
 ## Data structure and localisation
 
-Unlike with data from GPS devices, geographic positions can not directly be inferred from radio-telemetry data. Instead, it is necessary to estimate the geographic positions of an animal from available information about the receiver location, antenna bearing and the strength of the detected radio signal. For this purpose, `movetrack` uses a geometric approach described in @Baldwin2018 that is implemented in the `locate()` function. This is a three-step process that utilises basic principles of antenna geometry: 1) For each detection, a coarse location is estimated along the directional beam of the receiving antenna. The distance to the receiver is assumed to be half of the maximum detection range, which can be set antenna-type specific using the `aRange` argument. 2) All locations are provided with oscillating longitudinal and latitudinal measurement errors that arise from antenna geometry and orientation. 3) Locations and measurement errors from all antennas are aggregated over a desired time interval that can be set using the `dTime` argument. Finally, weighted means (by signal strength) of locations and measurement errors are calculated for each time interval. This data forms the basis of the observational part in the HMM.
+Unlike with data from GPS devices, geographic positions can not directly be inferred from radio-telemetry data. Instead, it is necessary to estimate the geographic positions of an animal from available information about the station's location, antenna bearing and the strength of the detected radio signal. For this purpose, `movetrack` uses a geometric approach described in @Baldwin2018 that is implemented in the `locate()` function. This is a three-step process that utilises basic principles of antenna geometry: 1) For each detection, a coarse location is estimated along the directional beam of the receiving antenna. The distance to the station is assumed to be half of the maximum detection range, which can be set antenna-type specific using the `aRange` argument. 2) All locations are provided with oscillating longitudinal and latitudinal measurement errors that arise from antenna geometry and orientation. 3) Locations and measurement errors from all antennas are aggregated over a desired time interval that can be set using the `dTime` argument. Finally, weighted means (by signal strength) of locations and measurement errors are calculated for each time interval. This data forms the basis of the observational part in the HMM.
 
 ## Hidden Markov model
 
@@ -65,7 +65,7 @@ z_t = z_{t-1} + \lambda_n (z_{t-1} - z_{t-2}) + \epsilon_t,
     \quad 1 \leq n \leq N,
 $$
 
-where
+where the covariance matrix for the process variation, $\Omega$, is
 
 $$
 \Omega = 
@@ -75,7 +75,7 @@ $$
     \end{bmatrix}.
 $$
 
-The state-depended parameter, $\lambda_n$, can take values between 0 and 1 (i.e., $0 \leq \lambda \leq 1$), and controls the degree of correlation between steps. By default, `movetrack` estimates track-specific $\lambda_n$ values, but it is also possible to use the same $\lambda_n$ for all tracks by setting `i_lambda = FALSE`.
+The state-depended parameter, $\lambda_n$, can take values between 0 and 1 (i.e., $0 \leq \lambda \leq 1$), and controls the degree of correlation between steps. If an animal tends to move at the same speed and in the same direction as the previous step, $\lambda$ is close to 1. Values close to 0 mean that the movement only depends on the previous location. By default, `movetrack` estimates track-specific $\lambda_n$ values, but it is also possible to use the same $\lambda_n$ for all tracks by setting `i_lambda = FALSE`.
 
 ### Observation model
 
@@ -93,21 +93,21 @@ where $\text{T}(0, \sigma_j)$ denotes a bivariate Student's $t$-distribution wit
 
 ## Procedure
 
-On July 9 and 11, 2024, we conducted test flights using a Robin DR 400 aircraft to simulate bird movement along a predefined flight path over a total distance of 1,554 km. The aircraft was flown at low altitudes, predominantly below 250 meters above sea level, and at minimal airspeed ranging between 30-65 m/s, reflecting the slow and low-altitude flight patterns typical of migratory animals as closely as possible [@Bruderer2001; @Bruderer2018]. We attached six uniquely coded NTQB2 radio tags (Lotek Wireless Inc.) with varying burst intervals `tagBI` (7.1, 7.3, 19.1 \[two tags\], and 29.3 s \[two tags\]) to the aircraft's undercarriage. The signals from the tags were recorded through a regional automated radio-telemetry receiver network positioned along the German North Sea coast. This network forms part of the Motus Wildlife Tracking System, a global collaborative network for tracking wildlife movements [@Taylor2017, <https://motus.org>]. Radio-telemetry data collected via Motus was then compared with positional data obtained from FlightRadar24 (<https://flightradar24.com>). Data and code to reproduce the validation study are available from the GitLab repository <https://gitlab.com/agmigecol/motus_localisation>.
+On July 9 and 11, 2024, we conducted test flights using a Robin DR 400 aircraft to simulate bird movement along a predefined flight path over a total distance of 1,554 km. The aircraft was flown at low altitudes, predominantly below 250 meters above sea level, and at minimal possible airspeed ranging between 30-65 m/s, reflecting the low-altitude flight patterns as closely as possible while being 3 to 5 times faster than typical of migratory songbirds [@Bruderer2001; @Bruderer2018]. We attached six uniquely coded NTQB2 radio tags (Lotek Wireless Inc.) with varying burst intervals `tagBI` (7.1, 7.3, 19.1 \[two tags\], and 29.3 s \[two tags\]) to the aircraft's undercarriage. The signals from the tags were recorded through a regional automated radio-telemetry receiver network positioned along the German North Sea coast. This network forms part of the Motus Wildlife Tracking System, a global collaborative network for tracking wildlife movements [@Taylor2017, <https://motus.org>]. Radio-telemetry data collected via Motus was then compared with positional data obtained from FlightRadar24 (<https://flightradar24.com>). The maximum time difference between a Motus detection and a corresponding GPS fix was 6.3 s. Data and code to reproduce the validation study are available from the GitLab repository <https://gitlab.com/agmigecol/motus_localisation>
 
 ## Results
 
-Due to the limited coverage of the radio-telemetry network, telemetry data was obtained for only a small subset of the entire GPS track (Fig. \ref{fig:map}). The number of detections by Motus receivers ranged from 1,525 (`tagBI = 7.3` s) to 44 (`tagBI = 29.3` s), highlighting the critical role of tag configuration in optimizing radio-telemetry performance. For the relatively fast-moving aircraft, travelling three to five times faster than a typical songbird on average [@Bruderer2001], burst intervals of 19.1 s or longer were insufficient for meaningful position estimates. Consequently, the analysis focuses on data from the tag with a burst interval of 7.3 s.
+Due to the limited coverage of the radio-telemetry network, telemetry data was obtained for only a small subset of the entire GPS track (Fig. \ref{fig:map}). The number of detections by Motus stations ranged from 1,525 (`tagBI = 7.3` s) to 44 (`tagBI = 29.3` s), highlighting the critical role of tag configuration in optimising radio-telemetry performance. For the relatively fast-moving aircraft, burst intervals of 19.1 s or longer were insufficient for meaningful position estimates. Consequently, the analysis focuses on data from the tag with a burst interval of 7.3 s.
 
 An analysis of the input parameters `dTime` and `aRange` showed a moderate effect on positional accuracy (Fig. \ref{fig:deviation}). The optimal combination (`aRange = 10` km, `dTime = 0.5` min, `states = 2`) achieved a median horizontal error of 2,768 m, with deviations ranging from 239 m to 25,882 m, reflecting substantial variability in accuracy across scenarios (Fig. \ref{fig:map}).
 
-Overall, 68% of true locations fell within the 90% Highest Posterior Density Interval (HPDI) of the estimated positions for the corresponding time interval, and 85% were within the 99% HPDI. Positional accuracy varied with the distance between the aircraft and receiver, as well as the number of antennas receiving the signal simultaneously (Fig. \ref{fig:deviation_ant}). Greater distances and fewer receiving antennas correlated with reduced accuracy, underscoring the importance of receiver configuration and network density for effective tracking.
+Overall, 68% of true locations fell within the 90% Highest Posterior Density Interval (HPDI) of the estimated positions for the corresponding time interval, and 85% were within the 99% HPDI. Positional accuracy varied with the distance between the aircraft and radio-telemetry stations, as well as the number of antennas receiving the signal simultaneously (Fig. \ref{fig:deviation_ant}). Greater distances and fewer receiving antennas correlated with reduced accuracy, underscoring the importance of station configuration and network density for effective tracking.
 
 ![Influence of the input arguments `dTime` and `aRange` on the deviation between the estimated positions and the GPS track. \label{fig:deviation}](files/deviation.pdf){width="360pt"}
 
 ![Estimated positions (diamonds) over time together with a part of the test flight's GPS track (line). GPS locations with detections by radio-telemetry stations are indicated by dots, longitudinal and latitudinal model uncertainties (90% HPDI) are indicated by ellipses. \label{fig:map}](files/map.pdf){width="300pt"}
 
-![The deviation between the estimated positions and the GPS track varied based on the aircraft's distance from the receiver and the number of antennas simultaneously receiving the signal. \label{fig:deviation_ant}](files/deviation_ant.pdf){width="330pt"}
+![The deviation between the estimated positions and the GPS track varied based on the aircraft's distance to the nearest Motus station and the number of antennas simultaneously receiving the signal. \label{fig:deviation_ant}](files/deviation_ant.pdf){width="330pt"}
 
 # Acknowledgements
 
