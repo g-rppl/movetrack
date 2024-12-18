@@ -7,11 +7,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/g-rppl/movetrack/blob/main/LICENSE)
 <!-- badges: end -->
 
-`movetrack` is an `R` package that provides simple functionality to estimate individual flight tracks from radio-telemetry data such as [Motus](https://motus.org/) using a hidden Markov model written in [Stan](https://mc-stan.org/).
+**movetrack** is an R package that provides simple functionality to estimate individual flight tracks from radio-telemetry data such as [Motus](https://motus.org/) using a hidden Markov model written in [Stan](https://mc-stan.org/).
 
 ## Installation
 
-You can install `movetrack` from the R Universe with
+You can install movetrack from the R Universe with
 
 ```r
 install.packages("movetrack", repos = c("https://g-rppl.r-universe.dev", getOption("repos")))
@@ -23,14 +23,14 @@ To instead install the latest development version of the package from GitHub use
 devtools::install_github("g-rppl/movetrack@dev")
 ```
 
-During the initial installation, make sure that the C++ toolchain required for `CmdStan` is set up properly. You can find more information [here](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).
+During the initial installation, make sure that the C++ toolchain required for CmdStan is set up properly. You can find more information [here](https://mc-stan.org/cmdstanr/articles/cmdstanr.html).
 
 ```r
 library(cmdstanr)
 check_cmdstan_toolchain(fix = TRUE)
 ```
 
-If not, go to <https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#cpp-toolchain> and follow the instructions for your platform. Once your toolchain is configured correctly `CmdStan` can be installed:
+If not, go to <https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html#cpp-toolchain> and follow the instructions for your platform. Once your toolchain is configured correctly, CmdStan can be installed:
 
 ```r
 install_cmdstan(cores = 2)
@@ -39,10 +39,16 @@ install_cmdstan(cores = 2)
 ## Details
 
 This package provides two main functions: `locate()` and `track()`. The first function calculates location estimates based on antenna bearing and signal strength. The second function estimates individual flight paths based on the estimated locations using a hidden Markov model written in [Stan](https://mc-stan.org/).
-
-## Getting started
     
 You can find a quickstart example in the vignette [movetrack_example](https://g-rppl.github.io/movetrack/articles/movetrack_example.html).
+
+## Citing movetrack and related software
+
+When using movetrack, please cite the following publication:
+
+    Rüppel, G., Karwinkel, T., Schmaljohann, H. (2025). movetrack: An R package to model flight paths from large-scale radio-telemetry data. OSF Preprints. doi: []()
+
+As movetrack is a high-level interface to Stan, please additionally cite Stan (see https://mc-stan.org/users/citations/).
 
 ## References
 

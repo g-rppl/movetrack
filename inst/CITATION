@@ -1,0 +1,23 @@
+citHeader("To cite movetrack in publications use:")
+
+bibentry(
+  bibtype = "Misc",
+  doi = "",
+  url = "",
+  author = c(person("Georg", "Rüppel"), person("Thiemo", "Karwinkel"),
+    person("Heiko", "Schmaljohann")),
+  title = "movetrack: An R package to model flight paths from large-scale
+    radio-telemetry data",
+  publisher = "OSF Preprints",
+  year = "2025"
+)
+
+bibentry(
+  bibtype = "Manual",
+  title = "Model flight paths from radio-telemetry data using a hidden
+    Markov model",
+  author = person("Georg", "Rüppel"),
+  note = "R package version 0.4.0",
+  year = "2025",
+  url = "https://github.com/g-rppl/movetrack"
+)
