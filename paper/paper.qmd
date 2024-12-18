@@ -1,36 +1,37 @@
 ---
 title: 'movetrack: An R package to model flight paths from large-scale radio-telemetry data'
-tags:
-  - R
-  - animal movement
-  - random walk
-  - Hidden Markov model
+running-head: '*R package `movetrack`*'
 authors:
   - name: Georg Rüppel
     orcid: 0000-0001-5459-6717
-    affiliation: 1
+    affiliation:
+      - ref: 1
   - name: Thiemo Karwinkel
     orcid: 0000-0001-6433-3013
-    affiliation: 1
+    affiliation:
+      - ref: 1
   - name: Heiko Schmaljohann
     orcid: 0000-0002-0886-4319
-    affiliation: 1
+    affiliation:
+      - ref: 1
 affiliations:
- - name: Institute for Biology and Environmental Sciences, Carl von Ossietzky University Oldenburg, Oldenburg, Germany
-   index: 1
-date: today
+  - id: 1
+    name: Carl von Ossietzky University Oldenburg
+    department: Institute for Biology and Environmental Sciences
+abstract: |
+  Tracking small animals like songbirds and bats is vital for ecology but limited by current methods. Automated radio-telemetry, combined with hidden Markov models (HMMs), offers a solution for more precise movement and behaviour analysis. The `movetrack` package estimates positions from telemetry data using HMMs to infer behavioural states, improving movement reconstruction. A validation study simulating bird movement with an aircraft was conducted to evaluate model fit. Spatial analysis revealed reasonable alignment between estimated positions and the GPS track, though precision decreased with greater distances from telemetry stations and sparse signal detections. The analyses underscored the impact of burst intervals, with longer intervals reducing accuracy for the relatively fast-moving aircraft. While the approach is promising, maximising accuracy requires a dense network of telemetry stations and careful selection of the tags' burst intervals.
+keywords: [animal movement, hidden Markov model, random walk, R package, telemetry]
 bibliography: paper.bib
+suppress-bibliography: true
+mainfont: Libertinus Serif
+format: preprint-typst
 ---
-
-# Summary
-
-Tracking small animals like songbirds and bats is vital for ecology but limited by current methods. Automated radio-telemetry, combined with hidden Markov models (HMMs), offers a solution for more precise movement and behaviour analysis. The `movetrack` package estimates positions from telemetry data using HMMs to infer behavioural states, improving movement reconstruction. A validation study simulating bird movement with an aircraft was conducted to evaluate model fit. Spatial analysis revealed reasonable alignment between estimated positions and the GPS track, though precision decreased with greater distances from telemetry stations and sparse signal detections. The analyses underscored the impact of burst intervals, with longer intervals reducing accuracy for the relatively fast-moving aircraft. While the approach is promising, maximising accuracy requires a dense network of telemetry stations and careful selection of the tags' burst intervals.
 
 # Introduction
 
 Understanding the intricate movements of individual animals is critical to uncovering their roles in broader ecological processes. While GPS technology has revolutionised our ability to track larger species with remarkable precision, the same level of detail remains elusive for smaller animals such as songbirds, bats, and insects [@Bridge2011]. Automated radio-telemetry, which utilises lightweight equipment suitable for these species, offers a promising alternative [@Taylor2017]. However, current analytical methods are limited to coarse, station-scale positions derived from triangulation approaches [@Gottwald2019; @Fisher2020] or signal strength alone [@Rueda2024]. These methods require site-specific calibrations and fail to capture large scale movement patterns essential for ecological insight.
 
-To overcome these limitations, integrating HMMs into movement analysis offers a powerful solution. HMMs are uniquely suited to handle temporally irregular data with varying spatial errors, making them ideal for reconstructing positions as well as behavioural states from telemetry data [@Jonsen2005; @Jonsen2013; @Baldwin2018]. By applying this approach, it is possible to derive detailed flight paths and gain deeper insights into the behaviours of small species, bridging the gap between technological capability and ecological understanding.
+To overcome these limitations, integrating hidden Markov models (HMMs) into movement analysis offers a powerful solution. HMMs are uniquely suited to handle temporally irregular data with varying spatial errors, making them ideal for reconstructing positions as well as behavioural states from telemetry data [@Jonsen2005; @Jonsen2013; @Baldwin2018]. By applying this approach, it is possible to derive detailed flight paths and gain deeper insights into the behaviours of small species, bridging the gap between technological capability and ecological understanding.
 
 # Methodology
 
@@ -42,9 +43,9 @@ Unlike with data from GPS devices, geographic positions can not directly be infe
 
 HMMs describe the evolution of a sequence of random variables, $\{S_t\}$ (i.e. behavioural states), which are not directly observable, but can be inferred from another sequence of random variables, $\{Y_t\}$, that are observable (i.e. locations) [@AugerMethe2021]. In the use case of `movetrack`, the hidden state sequence may alter between 'directed flight' or 'local movement', but the number of states affecting flight directionality can easily be set appropriately using the `states` argument. It is also possible to run a simple correlated random walk with only one state.
 
-Each true location $z$ is assumed to be generated by one of $N$ distributions, where $N$ is the number of states. The hidden state sequence that determines which of the distributions is chosen at time $t$ is modelled as a Markov chain, where the probability of being in each state at time $t$ depends only on the state value at the previous time step [@AugerMethe2021, Fig. \ref{fig:hmm}]. Finally, an observation model relates the true locations to the estimated locations and their measurement errors obtained from `locate()`. The HMM therefore consists of three components and is implemented in the `track()` function.
+![Basic model structure showing the hidden state process $\{S_t\}$ governing the real locations $z$ and the observed locations $y$ at time $t$. \label{fig:hmm}](files/hmm.svg)
 
-![Basic model structure showing the hidden state process $\{S_t\}$ governing the real locations $z$ and the observed locations $y$ at time $t$. \label{fig:hmm}](files/hmm.pdf)
+Each true location $z$ is assumed to be generated by one of $N$ distributions, where $N$ is the number of states. The hidden state sequence that determines which of the distributions is chosen at time $t$ is modelled as a Markov chain, where the probability of being in each state at time $t$ depends only on the state value at the previous time step [@AugerMethe2021, Fig. \ref{fig:hmm}]. Finally, an observation model relates the true locations to the estimated locations and their measurement errors obtained from `locate()`. The HMM therefore consists of three components and is implemented in the `track()` function.
 
 ### State process
 
@@ -103,11 +104,11 @@ An analysis of the input parameters `dTime` and `aRange` showed a moderate effec
 
 Overall, 68% of true locations fell within the 90% Highest Posterior Density Interval (HPDI) of the estimated positions for the corresponding time interval, and 85% were within the 99% HPDI. Positional accuracy varied with the distance between the aircraft and radio-telemetry stations, as well as the number of antennas receiving the signal simultaneously (Fig. \ref{fig:deviation_ant}). Greater distances and fewer receiving antennas correlated with reduced accuracy, underscoring the importance of station configuration and network density for effective tracking.
 
-![Influence of the input arguments `dTime` and `aRange` on the deviation between the estimated positions and the GPS track. \label{fig:deviation}](files/deviation.pdf){width="360pt"}
+![Influence of the input arguments `dTime` and `aRange` on the deviation between the estimated positions and the GPS track. \label{fig:deviation}](files/deviation.svg){width="360pt"}
 
-![Estimated positions (diamonds) over time together with a part of the test flight's GPS track (line). GPS locations with detections by radio-telemetry stations are indicated by dots, longitudinal and latitudinal model uncertainties (90% HPDI) are indicated by ellipses. \label{fig:map}](files/map.pdf){width="300pt"}
+![Estimated positions (diamonds) over time together with a part of the test flight's GPS track (line). GPS locations with detections by radio-telemetry stations are indicated by dots, longitudinal and latitudinal model uncertainties (90% HPDI) are indicated by ellipses. \label{fig:map}](files/map.svg){width="300pt"}
 
-![The deviation between the estimated positions and the GPS track varied based on the aircraft's distance to the nearest Motus station and the number of antennas simultaneously receiving the signal. \label{fig:deviation_ant}](files/deviation_ant.pdf){width="330pt"}
+![The deviation between the estimated positions and the GPS track varied based on the aircraft's distance to the nearest Motus station and the number of antennas simultaneously receiving the signal. \label{fig:deviation_ant}](files/deviation_ant.svg){width="330pt"}
 
 # Acknowledgements
 
